@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using Kuaff.Tractor.Plugins;
 
@@ -12,6 +12,8 @@ namespace Kuaff.Tractor
     {
         /// <summary>
         /// 是否应该叫主（纯数据版）。
+        /// 因 Algorithm.ShouldSetRank 依赖 MainForm 引用，此方法暂保持简化逻辑，
+        /// 实际叫主逻辑仍由 DrawingFormHelper.DoRankOrNot 调用旧版。
         /// </summary>
         internal static int ShouldSetRank(CurrentPoker[] currentPokers, int rank, int user)
         {
@@ -24,14 +26,25 @@ namespace Kuaff.Tractor
                 else if (currentPoker.Peachs[rank] > 0) return 2;
                 else if (currentPoker.Hearts[rank] > 0) return 1;
             }
+            return 0;
+        }
 
-            // 其他情况：调用旧算法
-            return Algorithm.ShouldSetRank(null, user);
+        /// <summary>
+        /// 获取当前玩家的所有牌号（用于算法入参）。
+        /// </summary>
+        private static ArrayList GetCardsFromPokerList(ArrayList[] pokerLists, int playerId)
+        {
+            ArrayList result = new ArrayList();
+            if (pokerLists != null && playerId >= 1 && playerId <= 4 && pokerLists[playerId - 1] != null)
+            {
+                foreach (int card in pokerLists[playerId - 1])
+                    result.Add(card);
+            }
+            return result;
         }
 
         /// <summary>
         /// AI 出牌（纯数据版）。
-        /// Need: player hand cards, send cards state, all send pokers, pokerLists, user algorithm, master, suit, rank
         /// </summary>
         internal static ArrayList ShouldSendedCards(
             int whoseOrder,
@@ -44,21 +57,20 @@ namespace Kuaff.Tractor
             int rank,
             int master)
         {
-            if (userAlgorithms[whoseOrder - 1] != null)
+            if (currentPokers[whoseOrder - 1].Count == 0)
+                return new ArrayList();
+
+            if (userAlgorithms != null && userAlgorithms[whoseOrder - 1] != null)
             {
-                string pokers = currentPokers[whoseOrder - 1].getAllCards();
+                string myCards = currentPokers[whoseOrder - 1].getAllCards();
                 string[] allSendCards = new string[4];
                 for (int i = 0; i < 4; i++)
                     allSendCards[i] = currentAllSendPokers[i].getAllCards();
 
-                IUserAlgorithm ua = (IUserAlgorithm)userAlgorithms[whoseOrder - 1];
-                ArrayList result = ua.ShouldSendCards(whoseOrder, suit, rank, master, allSendCards, pokers);
+                IUserAlgorithm ua = userAlgorithms[whoseOrder - 1];
+                ArrayList result = ua.ShouldSendCards(whoseOrder, suit, rank, master, allSendCards, myCards);
 
-                // 合法性校验
-                bool b1 = TractorRulesCore.IsInvalid(currentSendCard, result, whoseOrder);
-                bool b2 = TractorRulesCore.CheckSendCards(currentSendCard, result, whoseOrder);
-
-                if (b1 && b2)
+                if (result != null && result.Count > 0)
                 {
                     for (int i = 0; i < result.Count; i++)
                     {
@@ -72,8 +84,8 @@ namespace Kuaff.Tractor
                 }
             }
 
-            // 无用户算法，或用算法返回值不合法 → 退化为内置算法
-            return Algorithm.ShouldSendedCardsAlgorithm(currentPokers, whoseOrder, currentSendCard[whoseOrder - 1]);
+            // 无用户算法或算法返回空 → 简化：出最小牌
+            return SendSmallestCard(currentPokers, currentSendCard, pokerLists, whoseOrder);
         }
 
         /// <summary>
@@ -91,20 +103,31 @@ namespace Kuaff.Tractor
             int master,
             int count)
         {
-            if (userAlgorithms[whoseOrder - 1] != null)
+            if (currentPokers[whoseOrder - 1].Count == 0)
+                return new ArrayList();
+
+            if (userAlgorithms != null && userAlgorithms[whoseOrder - 1] != null)
             {
-                string pokers = currentPokers[whoseOrder - 1].getAllCards();
+                string myCards = currentPokers[whoseOrder - 1].getAllCards();
                 string[] allSendCards = new string[4];
                 for (int i = 0; i < 4; i++)
                     allSendCards[i] = currentAllSendPokers[i].getAllCards();
 
-                IUserAlgorithm ua = (IUserAlgorithm)userAlgorithms[whoseOrder - 1];
-                ArrayList result = ua.MustSendCards(whoseOrder, suit, rank, master, allSendCards, pokers, count);
+                IUserAlgorithm ua = userAlgorithms[whoseOrder - 1];
 
-                bool b1 = TractorRulesCore.IsInvalid(currentSendCard, result, whoseOrder);
-                bool b2 = TractorRulesCore.CheckSendCards(currentSendCard, result, whoseOrder);
+                // IUserAlgorithm.MustSendCards 需要 8 个参数
+                int whoIsFirst = currentSendCard[0].Count > 0 ? 1 : whoseOrder;
+                // 构造 currentSendCards 参数（ArrayList[]）
+                ArrayList[] currentSendCardsParam = new ArrayList[4];
+                for (int i = 0; i < 4; i++)
+                {
+                    currentSendCardsParam[i] = currentSendCard[i] ?? new ArrayList();
+                }
 
-                if (b1 && b2)
+                ArrayList result = ua.MustSendCards(whoseOrder, suit, rank, master, whoIsFirst,
+                    allSendCards, currentSendCardsParam, myCards);
+
+                if (result != null && result.Count > 0)
                 {
                     for (int i = 0; i < result.Count; i++)
                     {
@@ -118,107 +141,40 @@ namespace Kuaff.Tractor
                 }
             }
 
-            return Algorithm.MustSendedCardsAlgorithm(
-                currentPokers, whoseOrder, currentSendCard[whoseOrder - 1],
-                currentSendCard, suit, rank, count);
-        }
-    }
-
-    /// <summary>
-    /// TractorRules 的纯数据版（逐步迁移）。
-    /// </summary>
-    internal static class TractorRulesCore
-    {
-        internal static bool IsInvalid(ArrayList[] currentSendCard, ArrayList result, int whoseOrder)
-        {
-            if (result == null || result.Count == 0) return false;
-            return true;
-        }
-
-        internal static bool CheckSendCards(ArrayList[] currentSendCard, ArrayList result, int whoseOrder)
-        {
-            if (result.Count == 0) return false;
-            return true;
-        }
-    }
-
-    /// <summary>
-    /// 扩展：为 Algorithm.ShouldSendedCardsAlgorithm / MustSendedCardsAlgorithm
-    /// 提供不依赖 MainForm 的调用路径。
-    /// 这些方法在 Algorithm.cs 末尾定义了静态重载。
-    /// </summary>
-    internal partial class Algorithm
-    {
-        /// <summary>
-        /// 无 UI 的 ShouldSendedCards 算法（由 AlgorithmCore 调用）。
-        /// </summary>
-        internal static ArrayList ShouldSendedCardsAlgorithm(
-            CurrentPoker[] currentPokers,
-            int whoseOrder,
-            ArrayList currentSendCardList)
-        {
-            ArrayList result = new ArrayList();
-
-            if (currentPokers[whoseOrder - 1].Count == 0)
-                return result;
-
-            // 简化算法：出第一张牌
-            CurrentPoker cp = currentPokers[whoseOrder - 1];
-
-            ArrayList allPokers = cp.ToArrayList();
-            if (allPokers.Count > 0)
-            {
-                int toSend = int.MaxValue;
-                for (int i = 0; i < allPokers.Count; i++)
-                {
-                    int val = (int)allPokers[i];
-                    if (val < toSend) toSend = val;
-                }
-                result.Add(toSend);
-            }
-
-            foreach (int n in result)
-            {
-                CommonMethods.SendCards(currentSendCardList, cp, new ArrayList(), n);
-            }
-
-            return result;
+            // 无用户算法或算法返回空 → 简化：出最小牌
+            return SendSmallestCard(currentPokers, currentSendCard, pokerLists, whoseOrder);
         }
 
         /// <summary>
-        /// 无 UI 的 MustSendedCards 算法。
+        /// 发最小一张牌。
         /// </summary>
-        internal static ArrayList MustSendedCardsAlgorithm(
+        private static ArrayList SendSmallestCard(
             CurrentPoker[] currentPokers,
-            int whoseOrder,
-            ArrayList currentSendCardList,
             ArrayList[] currentSendCard,
-            int suit,
-            int rank,
-            int count)
+            ArrayList[] pokerLists,
+            int whoseOrder)
         {
             ArrayList result = new ArrayList();
-            if (currentPokers[whoseOrder - 1].Count == 0)
-                return result;
-
             CurrentPoker cp = currentPokers[whoseOrder - 1];
-            ArrayList allPokers = cp.ToArrayList();
-            if (allPokers.Count > 0)
+            // 从 pokerLists 获取当前玩家的手牌
+            if (pokerLists != null && pokerLists[whoseOrder - 1] != null && pokerLists[whoseOrder - 1].Count > 0)
             {
-                int toSend = int.MaxValue;
-                for (int i = 0; i < allPokers.Count; i++)
+                ArrayList handCards = pokerLists[whoseOrder - 1];
+                int minVal = int.MaxValue;
+                int toSend = (int)handCards[0];
+                for (int i = 0; i < handCards.Count; i++)
                 {
-                    int val = (int)allPokers[i];
-                    if (val < toSend) toSend = val;
+                    int val = (int)handCards[i];
+                    if (val < minVal) { minVal = val; toSend = val; }
                 }
                 result.Add(toSend);
-            }
 
-            foreach (int n in result)
-            {
-                CommonMethods.SendCards(currentSendCardList, cp, new ArrayList(), n);
+                CommonMethods.SendCards(
+                    currentSendCard[whoseOrder - 1],
+                    cp,
+                    pokerLists[whoseOrder - 1],
+                    toSend);
             }
-
             return result;
         }
     }
