@@ -852,6 +852,8 @@ namespace Kuaff.Tractor
                 {
                     currentState = engine.State;
                 }
+                // ensure whoIsBigger is valid before AI play dispatch
+                if (whoIsBigger < 1 || whoIsBigger > 4) whoIsBigger = whoseOrder;
                 bool needsRender = true;
                 foreach (var cmd in tickResult.RenderCommands)
                 {
