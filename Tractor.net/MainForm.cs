@@ -341,7 +341,7 @@ namespace Kuaff.Tractor
 
             // 同步 Engine 数据
             engine.NewGame();
-            engine.SetGameData(pokerList, currentPokers, gameConfig.IsDebug);
+            engine.SetGameData(pokerList, currentPokers, currentSendCards, send8Cards, gameConfig, gameConfig.IsDebug);
 
             //
             showSuits = 0;showSuits = 0;
@@ -416,7 +416,92 @@ namespace Kuaff.Tractor
 
        
 
+            internal void MainForm_MouseClick_New(object sender, MouseEventArgs e)
+        {
+            if (((currentState.CurrentCardCommands == CardCommands.WaitingForMySending) || 
+                 (currentState.CurrentCardCommands == CardCommands.WaitingForSending8Cards)) && 
+                 (whoseOrder == 1))
+            {
+                // Handle card selection (select/deselect cards on click)
+                HandleCardSelection(e);
+                
+                // Handle pig button click (confirm play)
+                Rectangle pigRect = new Rectangle(296, 300, 53, 46);
+                if (pigRect.Contains(e.Location))
+                {
+                    Graphics g = Graphics.FromImage(bmp);
+                    g.DrawImage(image, pigRect, pigRect, GraphicsUnit.Pixel);
+                    g.Dispose();
+                    
+                    // Collect selected card numbers
+                    List<int> selected = new List<int>();
+                    for (int i = 0; i < myCardIsReady.Count; i++)
+                        if ((bool)myCardIsReady[i]) selected.Add((int)myCardsNumber[i]);
+                    
+                    bool hasValidSelection = false;
+                    PlayResult result = null;
+                    
+                    if (currentState.CurrentCardCommands == CardCommands.WaitingForSending8Cards)
+                    {
+                        // 扣底牌 - 必须选8张
+                        if (selected.Count == 8)
+                        {
+                            result = engine.PlayerSend8Cards(selected);
+                            hasValidSelection = true;
+                        }
+                    }
+                    else if (currentState.CurrentCardCommands == CardCommands.WaitingForMySending)
+                    {
+                        // 出牌 - 至少选1张
+                        if (selected.Count > 0)
+                        {
+                            result = engine.PlayerPlayCard(1, selected);
+                            hasValidSelection = true;
+                        }
+                    }
+                    
+                    if (hasValidSelection && result != null)
+                    {
+                        currentState = engine.State;
+                        whoseOrder = engine.WhoseOrder;
+                        firstSend = engine.FirstSend;
+                        whoIsBigger = engine.WhoIsBigger;
+                        
+                        foreach (var cmd in result.RenderCommands)
+                            renderer.Execute(cmd, bmp, currentState);
+                        
+                        if (currentState.CurrentCardCommands == CardCommands.DrawMySortedCards)
+                        {
+                            drawingFormHelper.DrawMySortedCards(currentPokers[0], currentPokers[0].Count);
+                        }
+                        Refresh();
+                    }
+                }
+            }
+            else if (currentState.CurrentCardCommands == CardCommands.ReadyCards)
+            {
+                // Do nothing during dealing
+            }
+        }
+        
+        private void HandleCardSelection(MouseEventArgs e)
+        {
+            // Original click handling logic for selecting/deselecting cards
+            // Check if click is in player's card area
+            if (myCardsLocation.Count > 0 &&
+                e.X >= (int)myCardsLocation[0] && 
+                e.X <= ((int)myCardsLocation[myCardsLocation.Count - 1] + 71) && 
+                e.Y >= 355 && e.Y < 472)
+            {
+                drawingFormHelper.DrawMyPlayingCards(currentPokers[0]);
+                Refresh();
+            }
+        }
+        
         private void MainForm_MouseClick(object sender, MouseEventArgs e)
+        {
+            MainForm_MouseClick_New(sender, e);
+        }private void MainForm_MouseClick(object sender, MouseEventArgs e)
         {
             //this.Text = "X=" + e.X + ",Y=" + e.Y + ";" + e.Clicks;
 
@@ -742,79 +827,67 @@ namespace Kuaff.Tractor
                 SetPauseSet(gameConfig.Get8CardsTime, CardCommands.DrawCenter8Cards);
 
             }
-            else if (currentState.CurrentCardCommands == CardCommands.DrawCenter8Cards) //2.ץ����
+                        else if (currentState.CurrentCardCommands == CardCommands.DrawCenter8Cards) //通过 Engine 处理
             {
-
-                //�����������������
-                if (drawingFormHelper.DoRankNot())
+                TickResult tickResult = engine.Tick(DateTime.Now.Ticks);
+                if (tickResult.StateChanged)
                 {
-                    if (gameConfig.IsPass) //�������Ϊ����
+                    currentState = engine.State;
+                }
+                foreach (var cmd in tickResult.RenderCommands)
+                {
+                    if (cmd.Type == RenderCmdType.DrawCenter8)
                     {
-                        //��ͣ3��
-                        init();
-                        isNew = false;
-                        //��ͼƬ
-                        drawingFormHelper.DrawPassImage();
-                        SetPauseSet(gameConfig.NoRankPauseTime, CardCommands.WaitingShowPass);
-                        return;
-                    }
-                    else //�������Ϊ������
-                    {
-                        //�����Ƶĵ����ŵĻ�ɫ����Ϊ��
-                        ArrayList bottom = new ArrayList();
-                        bottom.Add(pokerList[0][0]);
-                        bottom.Add(pokerList[0][1]);
-                        bottom.Add(pokerList[1][0]);
-                        bottom.Add(pokerList[1][1]);
-                        bottom.Add(pokerList[2][0]);
-                        bottom.Add(pokerList[2][1]);
-                        bottom.Add(pokerList[3][0]);
-                        bottom.Add(pokerList[3][1]);
-                        int suit = CommonMethods.GetSuit((int)bottom[2]);
-                        currentState.Suit = suit;
-
-                        Graphics g = Graphics.FromImage(bmp);
-
-                        if (currentState.Master == 1 || currentState.Master == 2)
+                        // 复杂的叫主/定主逻辑暂时留在 MainForm
+                        if (drawingFormHelper.DoRankNot())
                         {
-                            drawingFormHelper.DrawSuit(g, suit, true, true);
+                            if (gameConfig.IsPass)
+                            {
+                                init();
+                                isNew = false;
+                                drawingFormHelper.DrawPassImage();
+                                SetPauseSet(gameConfig.NoRankPauseTime, CardCommands.WaitingShowPass);
+                                return;
+                            }
+                            else
+                            {
+                                ArrayList bottom = new ArrayList();
+                                bottom.Add(pokerList[0][0]);
+                                bottom.Add(pokerList[0][1]);
+                                bottom.Add(pokerList[1][0]);
+                                bottom.Add(pokerList[1][1]);
+                                bottom.Add(pokerList[2][0]);
+                                bottom.Add(pokerList[2][1]);
+                                bottom.Add(pokerList[3][0]);
+                                bottom.Add(pokerList[3][1]);
+                                int suit = CommonMethods.GetSuit((int)bottom[2]);
+                                currentState.Suit = suit;
+
+                                Graphics g = Graphics.FromImage(bmp);
+                                if (currentState.Master == 1 || currentState.Master == 2)
+                                    drawingFormHelper.DrawSuit(g, suit, true, true);
+                                else if (currentState.Master == 3 || currentState.Master == 4)
+                                    drawingFormHelper.DrawSuit(g, suit, false, true);
+                                g.Dispose();
+
+                                drawingFormHelper.DrawCenterImage();
+                                drawingFormHelper.DrawBottomCards(bottom);
+                                SetPauseSet(gameConfig.NoRankPauseTime, CardCommands.WaitingShowBottom);
+                                return;
+                            }
                         }
-                        else if (currentState.Master == 3 || currentState.Master == 4)
-                        {
-                            drawingFormHelper.DrawSuit(g, suit, false, true);
-                        }
 
-                        g.Dispose();
-
-                        //�����뻭8�ŵ���,��������΢����
-                        drawingFormHelper.DrawCenterImage();
-                        drawingFormHelper.DrawBottomCards(bottom);
-
-                        //��ͣһ��ʱ��,�ô���ܿ������ĵ���
-                        SetPauseSet(gameConfig.NoRankPauseTime, CardCommands.WaitingShowBottom);
-
-                        return;
+                        whoseOrder = currentState.Master;
+                        firstSend = whoseOrder;
+                        SetPauseSet(gameConfig.Get8CardsTime, CardCommands.DrawMySortedCards);
+                        drawingFormHelper.DrawCenter8Cards();
+                        initSendedCards();
+                        drawingFormHelper.DrawMySortedCards(currentPokers[0], currentPokers[0].Count);
+                        currentState.CurrentCardCommands = CardCommands.WaitingForSending8Cards;
+                        drawingFormHelper.DrawScoreImage(0);
                     }
                 }
-
-
-                whoseOrder = currentState.Master;//��һ�������ҷ���
-                firstSend = whoseOrder;
-
-                SetPauseSet(gameConfig.Get8CardsTime, CardCommands.DrawMySortedCards);
-
-                drawingFormHelper.DrawCenter8Cards();
-
-                initSendedCards();
-                drawingFormHelper.DrawMySortedCards(currentPokers[0], currentPokers[0].Count);
-                currentState.CurrentCardCommands = CardCommands.WaitingForSending8Cards; //������ϣ������ҵ���
-
-                //��ʼ���÷���
-                drawingFormHelper.DrawScoreImage(0);
-
-
-            }
-            else if (currentState.CurrentCardCommands == CardCommands.WaitingShowPass) //通过 Engine 处理
+            }else if (currentState.CurrentCardCommands == CardCommands.WaitingShowPass) //通过 Engine 处理
             {
                 TickResult tickResult = engine.Tick(DateTime.Now.Ticks);
                 if (tickResult.StateChanged)
@@ -831,40 +904,32 @@ namespace Kuaff.Tractor
                     Refresh();
                 }
             }
-            else if (currentState.CurrentCardCommands == CardCommands.WaitingForSending8Cards) //3.�۵���
+                        else if (currentState.CurrentCardCommands == CardCommands.WaitingForSending8Cards) //通过 Engine 处理
             {
-
-
-                //�����Ҫ
-                switch (currentState.Master)
+                TickResult tickResult = engine.Tick(DateTime.Now.Ticks);
+                if (tickResult.StateChanged)
                 {
-                    case 1:
-                        if (gameConfig.IsDebug)
+                    currentState = engine.State;
+                    engine.SyncOrder(whoseOrder, firstSend, whoIsBigger);
+                }
+                foreach (var cmd in tickResult.RenderCommands)
+                {
+                    if (cmd.Type == RenderCmdType.WaitingForPlayerAction)
+                    {
+                        var payload = (WaitPayload)cmd.Payload;
+                        if (payload.WaitingMode == "AutoSend8Cards")
                         {
-                            Algorithm.Send8Cards(this, 1);
+                            Algorithm.Send8Cards(this, payload.PlayerId);
                         }
-                        else
+                        else if (payload.WaitingMode == "Send8Cards")
                         {
                             drawingFormHelper.DrawMyPlayingCards(currentPokers[0]);
                             Refresh();
                             return;
                         }
-                        break;
-                    case 2:
-                        Algorithm.Send8Cards(this, 2);
-                        break;
-                    case 3:
-                        Algorithm.Send8Cards(this, 3);
-                        break;
-                    case 4:
-                        Algorithm.Send8Cards(this, 4);
-                        break;
+                    }
                 }
-
-
-
-            }
-            else if (currentState.CurrentCardCommands == CardCommands.DrawMySortedCards) //4.���ҵ���
+            }else if (currentState.CurrentCardCommands == CardCommands.DrawMySortedCards) //4.���ҵ���
             {
 
                 //������Լ����ƽ���������ʾ
@@ -876,52 +941,41 @@ namespace Kuaff.Tractor
                 currentState.CurrentCardCommands = CardCommands.WaitingForSend;
 
             }
-            else if (currentState.CurrentCardCommands == CardCommands.WaitingForSend) //�ȴ�����
+                        else if (currentState.CurrentCardCommands == CardCommands.WaitingForSend) //通过 Engine 处理
             {
-                //����ǶԼ�
-                if (whoseOrder == 2)
+                engine.SyncOrder(whoseOrder, firstSend, whoIsBigger);
+                TickResult tickResult = engine.Tick(DateTime.Now.Ticks);
+                if (tickResult.StateChanged)
                 {
-                    drawingFormHelper.DrawFrieldUserSendedCards();
+                    currentState = engine.State;
                 }
-                if (whoseOrder == 3)
+                bool needsRender = true;
+                foreach (var cmd in tickResult.RenderCommands)
                 {
-                    drawingFormHelper.DrawPreviousUserSendedCards();
-                }
-                if (whoseOrder == 4)
-                {
-                    drawingFormHelper.DrawNextUserSendedCards();
-                }
-                if (whoseOrder == 1)
-                {
-                    if (gameConfig.IsDebug)
+                    if (cmd.Type == RenderCmdType.AiPlayCard)
                     {
-                        if (firstSend == 1)
+                        var payload = (AiPlayPayload)cmd.Payload;
+                        int pid = payload.PlayerId;
+                        // 调用旧 DrawingFormHelper 的出牌方法（过渡期）
+                        if (pid == 2) drawingFormHelper.DrawFrieldUserSendedCards();
+                        else if (pid == 3) drawingFormHelper.DrawPreviousUserSendedCards();
+                        else if (pid == 4) drawingFormHelper.DrawNextUserSendedCards();
+                        else if (pid == 1) // debug AI
                         {
-                            Algorithm.ShouldSendedCards(this, 1, currentPokers, currentSendCards, currentState.Suit, currentRank);
+                            if (firstSend == 1)
+                                Algorithm.ShouldSendedCards(this, 1, currentPokers, currentSendCards, currentState.Suit, currentRank);
+                            else
+                                Algorithm.MustSendedCards(this, 1, currentPokers, currentSendCards, currentState.Suit, currentRank, currentSendCards[firstSend - 1].Count);
+                            drawingFormHelper.DrawMyFinishSendedCards();
                         }
-                        else
-                        {
-                            Algorithm.MustSendedCards(this, 1, currentPokers, currentSendCards, currentState.Suit, currentRank, currentSendCards[firstSend - 1].Count);
-                        }
-                        drawingFormHelper.DrawMyFinishSendedCards();
-                        if (currentSendCards[3].Count > 0) //�Ƿ����
-                        {
-                            currentState.CurrentCardCommands = CardCommands.Pause;
-                            SetPauseSet(gameConfig.FinishedOncePauseTime, CardCommands.DrawOnceFinished);
-                        }
-                        else
-                        {
-                            whoseOrder = 4;
-                            currentState.CurrentCardCommands = CardCommands.WaitingForSend;
-                        }
-                    }
-                    else
-                    {
-                        currentState.CurrentCardCommands = CardCommands.WaitingForMySending;//�ȴ�����¼�
+                        needsRender = false;
                     }
                 }
-            }
-            else if (currentState.CurrentCardCommands == CardCommands.Pause) //通过 Engine 处理暂停
+                if (needsRender)
+                {
+                    Refresh();
+                }
+            }else if (currentState.CurrentCardCommands == CardCommands.Pause) //通过 Engine 处理暂停
             {
                 TickResult tickResult = engine.Tick(DateTime.Now.Ticks);
                 if (tickResult.StateChanged)
