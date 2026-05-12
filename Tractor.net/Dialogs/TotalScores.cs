@@ -18,8 +18,8 @@ namespace Kuaff.Tractor
 
             this.form = form;
 
-            label2.Text = "µÚ" + (form.currentState.OurTotalRound + 1) + "ÂÖµÚ" + (form.currentState.OurCurrentRank + 1) + "¾Ö";
-            label3.Text = "µÚ" + (form.currentState.OpposedTotalRound + 1) + "ÂÖµÚ" + (form.currentState.OpposedCurrentRank + 1) + "¾Ö";
+            label2.Text = "ç¬¬" + (form.currentState.OurTotalRound + 1) + "è½®ç¬¬" + (form.currentState.OurCurrentRank + 1) + "å±€";
+            label3.Text = "ç¬¬" + (form.currentState.OpposedTotalRound + 1) + "è½®ç¬¬" + (form.currentState.OpposedCurrentRank + 1) + "å±€";
 
             label2.Select();
         }

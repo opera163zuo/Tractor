@@ -22,14 +22,14 @@ namespace Kuaff.Tractor
         {
             InitializeComponent();
             this.mainForm = mainForm;
-            //³õÊ¼»¯Ëã·¨
+            //åˆå§‹åŒ–ç®—æ³•
             ht = new Hashtable();
             InitUserAlgorithm();
 
-            comboBox1.Items.Add("ÄÚÖÃµÄËã·¨");
-            comboBox2.Items.Add("ÄÚÖÃµÄËã·¨");
-            comboBox3.Items.Add("ÄÚÖÃµÄËã·¨");
-            comboBox4.Items.Add("ÄÚÖÃµÄËã·¨");
+            comboBox1.Items.Add("å†…ç½®çš„ç®—æ³•");
+            comboBox2.Items.Add("å†…ç½®çš„ç®—æ³•");
+            comboBox3.Items.Add("å†…ç½®çš„ç®—æ³•");
+            comboBox4.Items.Add("å†…ç½®çš„ç®—æ³•");
 
             comboBox1.SelectedIndex = 0;
             comboBox2.SelectedIndex = 0;
@@ -96,7 +96,7 @@ namespace Kuaff.Tractor
                 foreach (Type type in types)
                 {
 
-                    if (type.IsClass && !type.IsAbstract) //Èç¹û¼Ì³Ð½Ó¿Ú
+                    if (type.IsClass && !type.IsAbstract) //å¦‚æžœç»§æ‰¿æŽ¥å£
                     {
                         IUserAlgorithm ua = Activator.CreateInstance(type) as IUserAlgorithm;
                         if (ua != null)
@@ -121,7 +121,7 @@ namespace Kuaff.Tractor
                 mainForm.UserAlgorithms[0] = null;
             }
 
-            //±±
+            //åŒ—
             if (comboBox2.SelectedIndex > 0)
             {
                 Type type = (Type)ht[comboBox2.SelectedItem];
@@ -133,7 +133,7 @@ namespace Kuaff.Tractor
                 mainForm.UserAlgorithms[1] = null;
             }
 
-            //Î÷
+            //è¥¿
             if (comboBox3.SelectedIndex > 0)
             {
                 Type type = (Type)ht[comboBox3.SelectedItem];
@@ -145,7 +145,7 @@ namespace Kuaff.Tractor
                 mainForm.UserAlgorithms[2] = null;
             }
 
-            //¶«
+            //ä¸œ
             if (comboBox4.SelectedIndex > 0)
             {
                 Type type = (Type)ht[comboBox4.SelectedItem];
@@ -173,7 +173,7 @@ namespace Kuaff.Tractor
             {
                 label12.Text = "smallnest";
                 label11.Text = "smallnest@gmail.com";
-                textBox3.Text = "ÄÚÖÃµÄ³öÅÆËã·¨";
+                textBox3.Text = "å†…ç½®çš„å‡ºç‰Œç®—æ³•";
             }
         }
 
@@ -192,7 +192,7 @@ namespace Kuaff.Tractor
             {
                 label17.Text = "smallnest";
                 label16.Text = "smallnest@gmail.com";
-                textBox4.Text = "ÄÚÖÃµÄ³öÅÆËã·¨";
+                textBox4.Text = "å†…ç½®çš„å‡ºç‰Œç®—æ³•";
             }
         }
 
@@ -211,7 +211,7 @@ namespace Kuaff.Tractor
             {
                 label7.Text = "smallnest";
                 label6.Text = "smallnest@gmail.com";
-                textBox2.Text = "ÄÚÖÃµÄ³öÅÆËã·¨";
+                textBox2.Text = "å†…ç½®çš„å‡ºç‰Œç®—æ³•";
             }
         }
 
@@ -230,7 +230,7 @@ namespace Kuaff.Tractor
             {
                 label4.Text = "smallnest";
                 label5.Text = "smallnest@gmail.com";
-                textBox1.Text = "ÄÚÖÃµÄ³öÅÆËã·¨";
+                textBox1.Text = "å†…ç½®çš„å‡ºç‰Œç®—æ³•";
             }
         }
     }

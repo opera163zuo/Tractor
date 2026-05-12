@@ -196,7 +196,7 @@ namespace Kuaff.Tractor
             
             
             form.gameConfig.MustRank = mustRank;
-            //╠ё╢Ф╣╫нд╪Ч
+            //Д©²Е╜≤Е┬╟Ф√┤Д╩╤
             SaveGameConfig();
         }
 
@@ -229,7 +229,7 @@ namespace Kuaff.Tractor
              }
 
             
-             //╠ё╢Ф╣╫нд╪Ч
+             //Д©²Е╜≤Е┬╟Ф√┤Д╩╤
              SaveGameConfig();
          }
 
@@ -266,7 +266,7 @@ namespace Kuaff.Tractor
                  form.gameConfig.IsPass = false;
              }
 
-             //╠ё╢Ф╣╫нд╪Ч
+             //Д©²Е╜≤Е┬╟Ф√┤Д╩╤
              SaveGameConfig();
          }
 
@@ -285,7 +285,7 @@ namespace Kuaff.Tractor
                  form.gameConfig.BottomAlgorithm = 3;
              }
 
-             //╠ё╢Ф╣╫нд╪Ч
+             //Д©²Е╜≤Е┬╟Ф√┤Д╩╤
              SaveGameConfig();
          }
 
@@ -317,7 +317,7 @@ namespace Kuaff.Tractor
                  form.gameConfig.CanMyStrengthen = false;
              }
 
-             //╠ё╢Ф╣╫нд╪Ч
+             //Д©²Е╜≤Е┬╟Ф√┤Д╩╤
              SaveGameConfig();
          }
     }

@@ -45,7 +45,7 @@ namespace Kuaff.Tractor
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //µÃµ½ÎÄ¼şÃû
+            //å¾—åˆ°æ–‡ä»¶å
             
             if (CustomCardsImage.Text.Length == 0)
             {

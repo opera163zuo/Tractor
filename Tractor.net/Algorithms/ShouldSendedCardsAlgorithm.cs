@@ -5,7 +5,7 @@ using System.Text;
 namespace Kuaff.Tractor
 {
     /// <summary>
-    /// Ê×ÏÈ³öÅÆµÄËã·¨
+    /// é¦–å…ˆå‡ºç‰Œçš„ç®—æ³•
     /// </summary>
     class ShouldSendedCardsAlgorithm
     {
@@ -18,13 +18,13 @@ namespace Kuaff.Tractor
 
             mainForm.whoIsBigger = whoseOrder;
 
-            //1.Ìô³ö×î´óµÄ¸±ÅÆ³ö
+            //1.æŒ‘å‡ºæœ€å¤§çš„å‰¯ç‰Œå‡º
             CurrentPoker cp = currentPokers[whoseOrder - 1];
 
            
 
-            #region Èç¹û¸±ÅÆÓĞÍÏÀ­»ú
-            int t = cp.GetNoRankNoSuitTractor(); //¸±ÅÆÍÏÀ­»ú
+            #region å¦‚æœå‰¯ç‰Œæœ‰æ‹–æ‹‰æœº
+            int t = cp.GetNoRankNoSuitTractor(); //å‰¯ç‰Œæ‹–æ‹‰æœº
             if (t > -1)
             {
                 int[] othercards = cp.GetTractorOtherCards(t);
@@ -37,12 +37,12 @@ namespace Kuaff.Tractor
 
                 return;
             }
-            #endregion // Èç¹û¸±ÅÆÓĞÍÏÀ­»ú
+            #endregion // å¦‚æœå‰¯ç‰Œæœ‰æ‹–æ‹‰æœº
 
            
 
 
-            #region Èç¹ûÓĞ¸±ÅÆ×î´óµÄ¶Ô
+            #region å¦‚æœæœ‰å‰¯ç‰Œæœ€å¤§çš„å¯¹
             if (cp.GetNoRankNoSuitPairs().Count > 0 )
             {
                 
@@ -54,7 +54,7 @@ namespace Kuaff.Tractor
                 bool b1 = cp.Rank != 12 && (((int)al[al.Count - 1] % 13) == 12) ;
                 bool b2 = cp.Rank == 12 && (((int)al[al.Count - 1] % 13) == 11) ;
 
-                if (b3 || b1 || b2) //²»´òAÊ±
+                if (b3 || b1 || b2) //ä¸æ‰“Aæ—¶
                 {
 
                     if (whoseOrder == 2)
@@ -66,7 +66,7 @@ namespace Kuaff.Tractor
                             CommonMethods.SendCards(sendedCards, currentPokers[whoseOrder - 1], mainForm.pokerList[whoseOrder - 1], max[0]);
 
 
-                            if ((mainForm.currentRank != 12) && (mainForm.currentRank != 11)) //Í¬Ê±Ë¦A
+                            if ((mainForm.currentRank != 12) && (mainForm.currentRank != 11)) //åŒæ—¶ç”©A
                             {
                                 if ((max[0] % 13) == 11)
                                 {
@@ -83,7 +83,7 @@ namespace Kuaff.Tractor
                                     }
                                 }
                             }
-                            else if ((mainForm.currentRank != 12) && (mainForm.currentRank == 11)) //Í¬Ê±Ë¦A
+                            else if ((mainForm.currentRank != 12) && (mainForm.currentRank == 11)) //åŒæ—¶ç”©A
                             {
                                 if ((max[0] % 13) == 10)
                                 {
@@ -100,7 +100,7 @@ namespace Kuaff.Tractor
                                     }
                                 }
                             }
-                            else if (mainForm.currentRank == 12) //Í¬Ê±Ë¦A
+                            else if (mainForm.currentRank == 12) //åŒæ—¶ç”©A
                             {
                                 if ((max[0] % 13) == 10)
                                 {
@@ -133,7 +133,7 @@ namespace Kuaff.Tractor
                             CommonMethods.SendCards(sendedCards, currentPokers[whoseOrder - 1], mainForm.pokerList[whoseOrder - 1], max[0]);
                             CommonMethods.SendCards(sendedCards, currentPokers[whoseOrder - 1], mainForm.pokerList[whoseOrder - 1], max[0]);
 
-                            if ((mainForm.currentRank != 12) && (mainForm.currentRank != 11)) //Í¬Ê±Ë¦A
+                            if ((mainForm.currentRank != 12) && (mainForm.currentRank != 11)) //åŒæ—¶ç”©A
                             {
                                 if ((max[0] % 13) == 11)
                                 {
@@ -150,7 +150,7 @@ namespace Kuaff.Tractor
                                     }
                                 }
                             }
-                            else if ((mainForm.currentRank != 12) && (mainForm.currentRank == 11)) //Í¬Ê±Ë¦A
+                            else if ((mainForm.currentRank != 12) && (mainForm.currentRank == 11)) //åŒæ—¶ç”©A
                             {
                                 if ((max[0] % 13) == 10)
                                 {
@@ -167,7 +167,7 @@ namespace Kuaff.Tractor
                                     }
                                 }
                             }
-                            else if (mainForm.currentRank == 12) //Í¬Ê±Ë¦A
+                            else if (mainForm.currentRank == 12) //åŒæ—¶ç”©A
                             {
                                 if ((max[0] % 13) == 10)
                                 {
@@ -198,7 +198,7 @@ namespace Kuaff.Tractor
                             CommonMethods.SendCards(sendedCards, currentPokers[whoseOrder - 1], mainForm.pokerList[whoseOrder - 1], max[0]);
                             CommonMethods.SendCards(sendedCards, currentPokers[whoseOrder - 1], mainForm.pokerList[whoseOrder - 1], max[0]);
 
-                            if ((mainForm.currentRank != 12) && (mainForm.currentRank != 11)) //Í¬Ê±Ë¦A
+                            if ((mainForm.currentRank != 12) && (mainForm.currentRank != 11)) //åŒæ—¶ç”©A
                             {
                                 if ((max[0] % 13) == 11)
                                 {
@@ -215,7 +215,7 @@ namespace Kuaff.Tractor
                                     }
                                 }
                             }
-                            else if ((mainForm.currentRank != 12) && (mainForm.currentRank == 11)) //Í¬Ê±Ë¦A
+                            else if ((mainForm.currentRank != 12) && (mainForm.currentRank == 11)) //åŒæ—¶ç”©A
                             {
                                 if ((max[0] % 13) == 10)
                                 {
@@ -232,7 +232,7 @@ namespace Kuaff.Tractor
                                     }
                                 }
                             }
-                            else if (mainForm.currentRank == 12) //Í¬Ê±Ë¦A
+                            else if (mainForm.currentRank == 12) //åŒæ—¶ç”©A
                             {
                                 if ((max[0] % 13) == 10)
                                 {
@@ -257,12 +257,12 @@ namespace Kuaff.Tractor
                     }
                 }
             }
-            #endregion // Èç¹ûÓĞ¸±ÅÆ×î´óµÄ¶Ô
+            #endregion // å¦‚æœæœ‰å‰¯ç‰Œæœ€å¤§çš„å¯¹
 
            
 
-            #region Èç¹ûÓĞµ¥ÕÅ×î´óµÄÅÆ
-            //ÅĞ¶Ïµ¥ÕÅÅÆ
+            #region å¦‚æœæœ‰å•å¼ æœ€å¤§çš„ç‰Œ
+            //åˆ¤æ–­å•å¼ ç‰Œ
             int maxCards = -1;
             for (int i = 1; i < 5; i++)
             {
@@ -308,12 +308,12 @@ namespace Kuaff.Tractor
                     }
                 }
             }
-            #endregion // Èç¹ûÓĞµ¥ÕÅ×î´óµÄÅÆ
+            #endregion // å¦‚æœæœ‰å•å¼ æœ€å¤§çš„ç‰Œ
 
           
 
 
-            #region ËäÈ»Ã»ÓĞ×î´ó¸±ÅÆ,¼ì²é¶Ô¼ÒÊÇ·ñÓĞ×î´óµÄ¸±ÅÆ
+            #region è™½ç„¶æ²¡æœ‰æœ€å¤§å‰¯ç‰Œ,æ£€æŸ¥å¯¹å®¶æ˜¯å¦æœ‰æœ€å¤§çš„å‰¯ç‰Œ
             for (int i = 1; i < 5; i++)
             {
                 if (i == cp.Suit)
@@ -394,13 +394,13 @@ namespace Kuaff.Tractor
                     }
                 }
             }
-            #endregion // ËäÈ»Ã»ÓĞ×î´ó¸±ÅÆ,¼ì²é¶Ô¼ÒÊÇ·ñÓĞ×î´óµÄ¸±ÅÆ
+            #endregion // è™½ç„¶æ²¡æœ‰æœ€å¤§å‰¯ç‰Œ,æ£€æŸ¥å¯¹å®¶æ˜¯å¦æœ‰æœ€å¤§çš„å‰¯ç‰Œ
 
            
 
-            //3.ÊÇ·ñÄÜÇåÖ÷
+            //3.æ˜¯å¦èƒ½æ¸…ä¸»
 
-            #region Èç¹ûÃ»ÓĞ¸±ÅÆ¿É³ö£¬µ÷Ö÷
+            #region å¦‚æœæ²¡æœ‰å‰¯ç‰Œå¯å‡ºï¼Œè°ƒä¸»
             if (currentPokers[whoseOrder - 1].GetMasterCardsTotal() > 0)
             {
                 t = currentPokers[whoseOrder - 1].GetMasterTractor();
@@ -416,7 +416,7 @@ namespace Kuaff.Tractor
                     return;
                 }
 
-                //¶Ô
+                //å¯¹
                 ArrayList al = currentPokers[whoseOrder - 1].GetMasterPairs();
 
                 int[] users = CommonMethods.OtherUsers(whoseOrder);
@@ -484,13 +484,13 @@ namespace Kuaff.Tractor
 
             }
             
-            //µ÷Ö÷µÄ¶Ô
+            //è°ƒä¸»çš„å¯¹
 
-            #endregion // Èç¹ûÃ»ÓĞ¸±ÅÆ¿É³ö£¬µ÷Ö÷
+            #endregion // å¦‚æœæ²¡æœ‰å‰¯ç‰Œå¯å‡ºï¼Œè°ƒä¸»
 
            
-            //5.Ëæ±ã³öĞ¡µÄ¸±ÅÆ
-            #region ²»ÄÜ¼ÌĞøµ÷Ö÷µÄ»°£¬Ëæ±ã³öÒ»ÕÅ²»ÊÇ·ÖµÄ¸±ÅÆ
+            //5.éšä¾¿å‡ºå°çš„å‰¯ç‰Œ
+            #region ä¸èƒ½ç»§ç»­è°ƒä¸»çš„è¯ï¼Œéšä¾¿å‡ºä¸€å¼ ä¸æ˜¯åˆ†çš„å‰¯ç‰Œ
             for (int i = 0; i < 5; i++)
             {
                 if (i == cp.Suit)
@@ -509,15 +509,15 @@ namespace Kuaff.Tractor
                     }
                 }
             }
-            #endregion // ²»ÄÜ¼ÌĞøµ÷Ö÷µÄ»°£¬Ëæ±ã³öÒ»ÕÅ²»ÊÇ·ÖµÄ¸±ÅÆ
+            #endregion // ä¸èƒ½ç»§ç»­è°ƒä¸»çš„è¯ï¼Œéšä¾¿å‡ºä¸€å¼ ä¸æ˜¯åˆ†çš„å‰¯ç‰Œ
 
 
             
 
-            //6.È«Ê£Ö÷ÅÆºÍ·Ö¸±ÅÆ£¬³öÖ÷
-            #region È«Ê£Ö÷ÅÆºÍ·Ö¸±ÅÆ
+            //6.å…¨å‰©ä¸»ç‰Œå’Œåˆ†å‰¯ç‰Œï¼Œå‡ºä¸»
+            #region å…¨å‰©ä¸»ç‰Œå’Œåˆ†å‰¯ç‰Œ
             ArrayList mPairs = currentPokers[whoseOrder - 1].GetMasterPairs();
-            if (mPairs.Count > 0) //ÏÈ³öÖ÷¶Ô
+            if (mPairs.Count > 0) //å…ˆå‡ºä¸»å¯¹
             {
                 int rt = (int)mPairs[mPairs.Count - 1];
                 CommonMethods.SendCards(sendedCards, currentPokers[whoseOrder - 1], mainForm.pokerList[whoseOrder - 1], rt);
@@ -544,7 +544,7 @@ namespace Kuaff.Tractor
                     return;
                 }
             }
-            #endregion // È«Ê£Ö÷ÅÆºÍ·Ö¸±ÅÆ
+            #endregion // å…¨å‰©ä¸»ç‰Œå’Œåˆ†å‰¯ç‰Œ
 
            
         }
