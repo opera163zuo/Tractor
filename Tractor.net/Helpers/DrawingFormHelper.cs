@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,7 +13,7 @@ using Kuaff.CardResouces;
 namespace Kuaff.Tractor
 {
     /// <summary>
-    /// ʵ�ִ󲿷ֵĻ滭����
+    /// 实现大部分的绘画操作
     /// </summary>
     class DrawingFormHelper
     {
@@ -24,36 +24,35 @@ namespace Kuaff.Tractor
         }
 
       
-        #region ���ƶ���
+        #region 发牌动画
 
         /// <summary>
-        /// ׼������.
-        /// �����ڳ������뻭��58-i*2����(ʵ��25+8�Ϳ����ˣ�Ϊ����ʾ�ƶ࣬������50+8),
-        /// ÿ��һ���ƣ��������š�
+        /// 准备发牌.
+        /// 首先在程序中央画好58-i*2张牌(实际25+8就可以了，为了显示牌多，这里用50+8),
+        /// 每发一次牌，减少两张。
         /// 
-        /// Ȼ��ÿ�������з�һ���ƣ�Ȼ����ҿ�ʼ�����λ��õ��ƺ�Ľ��档
-        /// ���������˻����ƺ�Ӧ�õ����㷨�еķ������ж��Ƿ�Ӧ��������
+        /// 然后，每个人手中发一次牌，然后从我开始，依次画得到牌后的界面。
+        /// 其他三个人画完牌后，应该调用算法中的方法，判断是否应该亮主。
         /// </summary>
-        /// <param name="count">���ƴ�����һ����25���ƣ�ÿ��25�ţ����ׯ���յ�</param>
-        internal void ReadyCards(int count)【已迁移到 GdiRenderer.DrawDealCard，请用 RenderDealRound】
-        
+        /// <param name="count">发牌次数，一共发25张牌，每人25张，最后庄家收底</param>
+        internal void ReadyCards(int count)
         {
 
-            //�õ�������ͼ���Graphics
+            //得到缓冲区图像的Graphics
             Graphics g = Graphics.FromImage(mainForm.bmp);
-            //���ƾֵ����룬ϴ�õ��ƣ�ʵ�ʻ�58��,ÿ��һ�ּ�������
+            //画牌局的中央，洗好的牌，实际画58张,每出一轮减少两张
             DrawCenterAllCards(g, 58 - count * 2);
 
-            //��ǰÿ�������е���
+            //当前每个人手中的牌
             mainForm.currentPokers[0].AddCard((int)mainForm.pokerList[0][count]);
             mainForm.currentPokers[1].AddCard((int)mainForm.pokerList[1][count]);
             mainForm.currentPokers[2].AddCard((int)mainForm.pokerList[2][count]);
             mainForm.currentPokers[3].AddCard((int)mainForm.pokerList[3][count]);
 
-            //���Լ���λ��
+            //画自己的位置
             DrawAnimatedCard(getPokerImageByNumber((int)mainForm.pokerList[0][count]), 260, 280, 71, 96);
             DrawMyCards(g, mainForm.currentPokers[0], count);
-            //�ж����Ƿ��������
+            //判断我是否可以亮主
             if (mainForm.gameConfig.IsDebug)
             {
                 DoRankOrNot(mainForm.currentPokers[0], 1);
@@ -65,31 +64,31 @@ namespace Kuaff.Tractor
             }
             mainForm.Refresh();
 
-            //���Լҵ�λ��
+            //画对家的位置
             DrawAnimatedCard(mainForm.gameConfig.BackImage, 400 - count * 13, 60, 71, 96);
             DrawMyImage(g, mainForm.gameConfig.BackImage, 437 - count * 13, 25, 71, 96);
             mainForm.Refresh();
 
-            //�Ƿ�����
+            //是否亮主
             DoRankOrNot(mainForm.currentPokers[1], 2);
 
-            //�����ҵ�λ��
+            //画西家的位置
             DrawAnimatedCard(mainForm.gameConfig.BackImage, 50, 160 + count * 4, 71, 96);
             DrawMyImage(g, mainForm.gameConfig.BackImage, 6, 145 + count * 4, 71, 96);
             mainForm.Refresh();
 
-            //�Ƿ�����
+            //是否亮主
             DoRankOrNot(mainForm.currentPokers[2], 3);
 
-            //�����ҵ�λ��
+            //画东家的位置
             DrawAnimatedCard(mainForm.gameConfig.BackImage, 520, 220 - count * 4, 71, 96);
             DrawMyImage(g, mainForm.gameConfig.BackImage, 554, 241 - count * 4, 71, 96);
             mainForm.Refresh();
 
 
-            //��������
+            //画亮的牌
             DrawSuitCards(g);
-            //�Ƿ�����
+            //是否亮主
             DoRankOrNot(mainForm.currentPokers[3], 4);
 
             mainForm.Refresh();
@@ -97,29 +96,28 @@ namespace Kuaff.Tractor
             g.Dispose();
         }
 
-        /// <summary>
-        /// 纯渲染方法：画第 count 轮的牌（步骤5新增）。
-        /// 不做 AddCard / DoRankOrNot（这些由 Engine 处理）。
-        /// </summary>
         internal void RenderDealRound(int count)
         {
             Graphics g = Graphics.FromImage(mainForm.bmp);
-            DrawCenterAllCards(g, 58 - count * 2);
+            for (int i = 0; i < 58 - count * 2; i++)
+            {
+                g.DrawImage(mainForm.gameConfig.BackImage, 260 + i * 2, 280, 71, 96);
+            }
 
             DrawAnimatedCard(getPokerImageByNumber((int)mainForm.pokerList[0][count]), 260, 280, 71, 96);
             DrawMyCards(g, mainForm.currentPokers[0], count);
             mainForm.Refresh();
 
             DrawAnimatedCard(mainForm.gameConfig.BackImage, 400 - count * 13, 60, 71, 96);
-            DrawMyImage(g, mainForm.gameConfig.BackImage, 437 - count * 13, 25, 71, 96);
+            g.DrawImage(mainForm.gameConfig.BackImage, 437 - count * 13, 25, 71, 96);
             mainForm.Refresh();
 
             DrawAnimatedCard(mainForm.gameConfig.BackImage, 50, 160 + count * 4, 71, 96);
-            DrawMyImage(g, mainForm.gameConfig.BackImage, 6, 145 + count * 4, 71, 96);
+            g.DrawImage(mainForm.gameConfig.BackImage, 6, 145 + count * 4, 71, 96);
             mainForm.Refresh();
 
             DrawAnimatedCard(mainForm.gameConfig.BackImage, 520, 220 - count * 4, 71, 96);
-            DrawMyImage(g, mainForm.gameConfig.BackImage, 554, 241 - count * 4, 71, 96);
+            g.DrawImage(mainForm.gameConfig.BackImage, 554, 241 - count * 4, 71, 96);
             mainForm.Refresh();
 
             g.Dispose();
@@ -168,7 +166,7 @@ namespace Kuaff.Tractor
                 }
             }
         }
-        //���������
+        //清除亮的牌
         private void ClearSuitCards(Graphics g)
         {
             g.DrawImage(mainForm.image, new Rectangle(80, 158, 71, 96), new Rectangle(80, 158, 71, 96), GraphicsUnit.Pixel);
@@ -176,17 +174,17 @@ namespace Kuaff.Tractor
             g.DrawImage(mainForm.image, new Rectangle(437, 124, 71, 96), new Rectangle(437, 124, 71, 96), GraphicsUnit.Pixel);
         }
 
-        #endregion // ���ƶ���
+        #endregion // 发牌动画
 
-        #region ������λ�õ���
+        #region 画中心位置的牌
         /// <summary>
-        /// ����ʱ���������.
-        /// ���ȴӵ�ͼ��ȡ��Ӧ��λ�ã��ػ���鱳����
-        /// Ȼ�����Ƶı��滭58-count*2���ơ�
+        /// 发牌时画中央的牌.
+        /// 首先从底图中取相应的位置，重画这块背景。
+        /// 然后用牌的背面画58-count*2张牌。
         /// 
         /// </summary>
-        /// <param name="g">������ͼƬ��Graphics</param>
-        /// <param name="num">�Ƶ�����=58-���ƴ���*2</param>
+        /// <param name="g">缓冲区图片的Graphics</param>
+        /// <param name="num">牌的数量=58-发牌次数*2</param>
         internal void DrawCenterAllCards(Graphics g, int num)
         {
             Rectangle rect = new Rectangle(200, 186, (num + 1) * 2 + 71, 96);
@@ -199,10 +197,10 @@ namespace Kuaff.Tractor
         }
 
         /// <summary>
-        /// ����һ���ƣ���Ҫ������������
+        /// 发完一次牌，需要清理程序中心
         /// </summary>
-        internal void DrawCenterImage()【已迁移到 GdiRenderer.DrawCenterImage】
-        
+        [Obsolete("已迁移到 GdiRenderer.DrawCenterImage")]
+        internal void DrawCenterImage()
         {
             Graphics g = Graphics.FromImage(mainForm.bmp);
             Rectangle rect = new Rectangle(77, 124, 476, 244);
@@ -211,10 +209,10 @@ namespace Kuaff.Tractor
         }
 
         /// <summary>
-        /// ������ͼƬ
+        /// 画流局图片
         /// </summary>
-        internal void DrawPassImage()【已迁移到 GdiRenderer.DrawPassImage】
-        
+        [Obsolete("已迁移到 GdiRenderer.DrawPassImage")]
+        internal void DrawPassImage()
         {
             Graphics g = Graphics.FromImage(mainForm.bmp);
             Rectangle rect = new Rectangle(110, 150, 400, 199);
@@ -222,27 +220,27 @@ namespace Kuaff.Tractor
             g.Dispose();
             mainForm.Refresh();
         }
-        #endregion // ������λ�õ���
+        #endregion // 画中心位置的牌
 
-        #region ���ƴ���
-        //�յ��ƵĶ���
+        #region 底牌处理
+        //收底牌的动画
         /// <summary>
-        /// ����25�κ����ʣ��8����.
-        /// ��ʱ�Ѿ�ȷ����ׯ�ң���8���ƽ���ׯ��,
-        /// ͬʱ�Զ����ķ�ʽ��ʾ��
+        /// 发牌25次后，最后剩余8张牌.
+        /// 这时已经确定了庄家，将8张牌交给庄家,
+        /// 同时以动画的方式显示。
         /// </summary>
         internal void DrawCenter8Cards()
         {
             Graphics g = Graphics.FromImage(mainForm.bmp);
             Rectangle rect = new Rectangle(200, 186, 90, 96);
             Rectangle backRect = new Rectangle(77, 121, 477, 254);
-            //���8�ŵ�ͼ��ȡ����
+            //最后8张的图像取出来
             Bitmap backup = mainForm.bmp.Clone(rect, PixelFormat.DontCare);
-            //����λ���ñ�������
+            //将其位置用背景贴上
             //g.DrawImage(mainForm.image, rect, rect, GraphicsUnit.Pixel);
             g.DrawImage(mainForm.image, backRect, backRect, GraphicsUnit.Pixel);
 
-            //������8�Ž���ׯ�ң�������ʽ��
+            //将底牌8张交给庄家（动画方式）
             if (mainForm.currentState.Master == 1)
             {
                 DrawAnimatedCard(backup, 300, 330, 90, 96);
@@ -267,7 +265,7 @@ namespace Kuaff.Tractor
 
             g.Dispose();
         }
-        //�����8�Ž���ׯ��
+        //将最后8张交给庄家
         private void Get8Cards(ArrayList list0, ArrayList list1, ArrayList list2, ArrayList list3)
         {
             list0.Add(list1[25]);
@@ -288,7 +286,7 @@ namespace Kuaff.Tractor
         {
             Graphics g = Graphics.FromImage(mainForm.bmp);
 
-            //������,��169��ʼ��
+            //画底牌,从169开始画
             for (int i = 0; i < 8; i++)
             {
                 if (i ==2)
@@ -305,12 +303,12 @@ namespace Kuaff.Tractor
 
             g.Dispose();
         }
-        #endregion // ���ƴ���
+        #endregion // 底牌处理
 
 
-        #region ����Sidebar��toolbar
+        #region 绘制Sidebar和toolbar
         /// <summary>
-        /// ����Sidebar
+        /// 绘制Sidebar
         /// </summary>
         /// <param name="g"></param>
         internal void DrawSidebar(Graphics g)
@@ -319,11 +317,11 @@ namespace Kuaff.Tractor
             DrawMyImage(g, Properties.Resources.Sidebar, 540, 30, 70, 89);
         }
         /// <summary>
-        /// �������ϱ�
+        /// 画东西南北
         /// </summary>
-        /// <param name="g">������ͼ���Graphics</param>
-        /// <param name="who">��˭</param>
-        /// <param name="b">�Ƿ���ɫ</param>
+        /// <param name="g">缓冲区图像的Graphics</param>
+        /// <param name="who">画谁</param>
+        /// <param name="b">是否画亮色</param>
         internal void DrawMaster(Graphics g, int who, int start)
         {
             if (who < 1 || who > 4)
@@ -364,7 +362,7 @@ namespace Kuaff.Tractor
         }
 
         /// <summary>
-        /// ��������ɫ
+        /// 画其他白色
         /// </summary>
         /// <param name="g"></param>
         /// <param name="who"></param>
@@ -402,11 +400,11 @@ namespace Kuaff.Tractor
 
 
         /// <summary>
-        /// ����Rank
+        /// 绘制Rank
         /// </summary>
-        /// <param name="g">������ͼ���Graphics</param>
-        /// <param name="me">���һ��ǻ��Է�</param>
-        /// <param name="b">��ɫ���ǰ�ɫ</param>
+        /// <param name="g">缓冲区图像的Graphics</param>
+        /// <param name="me">画我还是画对方</param>
+        /// <param name="b">两色还是暗色</param>
         internal void DrawRank(Graphics g, int number, bool me, bool b)
         {
             int X = 0;
@@ -427,7 +425,7 @@ namespace Kuaff.Tractor
 
 
 
-            //Ȼ��������д��
+            //然后将数字填写上
             if (!b)
             {
                 g.DrawImage(Properties.Resources.Sidebar, destRect, new Rectangle(26, 38, 20, 20), GraphicsUnit.Pixel);
@@ -488,14 +486,14 @@ namespace Kuaff.Tractor
 
 
         /// <summary>
-        /// ����ɫ
+        /// 画花色
         /// </summary>
         /// <param name="g"></param>
-        /// <param name="suit">��ɫ</param>
-        /// <param name="me">���ҷ����ǶԷ�</param>
-        /// <param name="b">�Ƿ���ɫ</param>
-        internal void DrawSuit(【已迁移到 GdiRenderer.DrawSuit】
-        Graphics g, int suit, bool me, bool b)
+        /// <param name="suit">花色</param>
+        /// <param name="me">画我方还是对方</param>
+        /// <param name="b">是否画亮色</param>
+        [Obsolete("已迁移到 GdiRenderer.DrawSuit")]
+        internal void DrawSuit(Graphics g, int suit, bool me, bool b)
         {
             int X = 0;
             int X2 = 0;
@@ -514,7 +512,7 @@ namespace Kuaff.Tractor
 
             Rectangle redrawRect = new Rectangle(X2, 88, 25, 25);
 
-            //�������ɫ
+            //如果画暗色
             if (!b)
             {
                 Rectangle srcRect = new Rectangle(250, 0, 25, 25);
@@ -538,7 +536,7 @@ namespace Kuaff.Tractor
                 g.DrawImage(Properties.Resources.Sidebar, redrawRect, new Rectangle(23, 58, 25, 25), GraphicsUnit.Pixel);
                 DrawSuit(g, 0, !me, false);
             }
-            else if (suit == 3) //����
+            else if (suit == 3) //方块
             {
                 Rectangle srcRect = new Rectangle(50, 0, 25, 25);
                 g.DrawImage(Properties.Resources.Sidebar, destRect, new Rectangle(23, 58, 25, 25), GraphicsUnit.Pixel);
@@ -546,7 +544,7 @@ namespace Kuaff.Tractor
                 g.DrawImage(Properties.Resources.Sidebar, redrawRect, new Rectangle(23, 58, 25, 25), GraphicsUnit.Pixel);
                 DrawSuit(g, 0, !me, false);
             }
-            else if (suit == 4)//÷��club
+            else if (suit == 4)//梅花club
             {
                 Rectangle srcRect = new Rectangle(75, 0, 25, 25);
                 g.DrawImage(Properties.Resources.Sidebar, destRect, new Rectangle(23, 58, 25, 25), GraphicsUnit.Pixel);
@@ -566,20 +564,20 @@ namespace Kuaff.Tractor
         }
 
         /// <summary>
-        /// ��������
+        /// 画工具栏
         /// </summary>
-        internal void DrawToolbar()【已迁移到 GdiRenderer.DrawToolbar】
-        
+        [Obsolete("已迁移到 GdiRenderer.DrawToolbar")]
+        internal void DrawToolbar()
         {
             Graphics g = Graphics.FromImage(mainForm.bmp);
             g.DrawImage(Properties.Resources.Toolbar, new Rectangle(415, 325, 129, 29), new Rectangle(0, 0, 129, 29), GraphicsUnit.Pixel);
-            //�����ְ���ɫ
+            //画五种暗花色
             g.DrawImage(Properties.Resources.Suit, new Rectangle(417, 327, 125, 25), new Rectangle(125, 0, 125, 25), GraphicsUnit.Pixel);
             g.Dispose();
         }
 
         /// <summary>
-        /// ��ȥ������
+        /// 擦去工具栏
         /// </summary>
         internal void RemoveToolbar()
         {
@@ -589,19 +587,19 @@ namespace Kuaff.Tractor
         }
 
 
-        #endregion // ����Sidebar��toolbar
+        #endregion // 绘制Sidebar和toolbar
 
 
-        #region �ж��Ƿ�����
-        //�Ƿ�Ӧ������,�����㷨
+        #region 判断是否亮主
+        //是否应该亮主,调用算法
         private void DoRankOrNot(CurrentPoker currentPoker, int user)
         {
-            //������������������ж�
+            //如果打无主，无需再判断
             if (currentPoker.Rank == 53)
                 return;
 
 
-            //�����δ������������
+            //如果还未设主，则设主
             if (mainForm.currentState.Suit == 0)
             {
                 int suit = Algorithm.ShouldSetRank(mainForm, user);
@@ -618,11 +616,11 @@ namespace Kuaff.Tractor
                         mainForm.currentState.Master = user; //
                     }
 
-                    //��Ȼ�Ѿ�ȷ����˭���ģ�˭�������򼸣���ô�ͻ���
+                    //既然已经确定了谁亮的，谁是主，打几，那么就画吧
 
                     Graphics g = Graphics.FromImage(mainForm.bmp);
 
-                    //������ʱ��ͬʱ����ɫ,��ɫ��ʾ��ׯ������
+                    //亮主的时候同时画花色,亮色显示在庄家下面
                     if ((mainForm.currentState.Master == 1) || (mainForm.currentState.Master == 2))
                     {
                         DrawSuit(g, suit, true, true);
@@ -635,9 +633,9 @@ namespace Kuaff.Tractor
                     }
 
 
-                    //��˭������,��ɫ��ʾ
+                    //画谁亮的主,绿色显示
                     //DrawMaster(g, user, 1);
-                    //��ׯ�ң�����ɫ
+                    //画庄家，画红色
                     DrawMaster(g, mainForm.currentState.Master, 1);
                     DrawOtherMaster(g, mainForm.currentState.Master, 1);
 
@@ -646,7 +644,7 @@ namespace Kuaff.Tractor
 
                 }
             }
-            else //�Ƿ���Է�
+            else //是否可以反
             {
                 int suit = Algorithm.ShouldSetRankAgain(mainForm, currentPoker);
 
@@ -655,14 +653,14 @@ namespace Kuaff.Tractor
                 if (suit > 0)
                 {
 
-                    //�Ƿ���Լӹ�
-                    if ((suit == mainForm.currentState.Suit) && (mainForm.whoShowRank == user) && (!mainForm.gameConfig.CanMyStrengthen))  //����������ӹ�
+                    //是否可以加固
+                    if ((suit == mainForm.currentState.Suit) && (mainForm.whoShowRank == user) && (!mainForm.gameConfig.CanMyStrengthen))  //如果不允许加固
                     {
                         return;
                     }
 
-                    //�Ǽӹ�ʱ,�����Է�
-                    if ((suit != mainForm.currentState.Suit) && (mainForm.whoShowRank == user) && (!mainForm.gameConfig.CanMyRankAgain))  //����������Է�
+                    //非加固时,考虑自反
+                    if ((suit != mainForm.currentState.Suit) && (mainForm.whoShowRank == user) && (!mainForm.gameConfig.CanMyRankAgain))  //如果不允许自反
                     {
                         return;
                     }
@@ -686,7 +684,7 @@ namespace Kuaff.Tractor
 
                     Graphics g = Graphics.FromImage(mainForm.bmp);
 
-                    //������ʱ��ͬʱ����ɫ,��ɫ��ʾ��ׯ������
+                    //亮主的时候同时画花色,亮色显示在庄家下面
                     if ((mainForm.currentState.Master == 1) || (mainForm.currentState.Master == 2))
                     {
                         DrawSuit(g, suit, true, true);
@@ -699,12 +697,12 @@ namespace Kuaff.Tractor
                     }
 
 
-                    //����ԭ��������
+                    //清理原来亮的牌
                     DrawOtherMaster(g, mainForm.currentState.Master, 1);
 
-                    //��˭������,��ɫ��ʾ
+                    //画谁亮的主,绿色显示
                     //DrawMaster(g, user, 1);
-                    //��ׯ�ң�����ɫ
+                    //画庄家，画红色
                     DrawMaster(g, mainForm.currentState.Master, 1);
 
                     g.Dispose();
@@ -716,10 +714,10 @@ namespace Kuaff.Tractor
 
         }
 
-        //�ж����Ƿ�����
+        //判断我是否亮主
         private void MyRankOrNot(CurrentPoker currentPoker)
         {
-            //������������������ж�
+            //如果打无主，无需再判断
             if (currentPoker.Rank == 53)
                 return;
             bool[] suits = Algorithm.CanSetRank(mainForm, currentPoker);
@@ -729,12 +727,12 @@ namespace Kuaff.Tractor
 
         }
 
-        //���ҵĹ�����
+        //画我的工具栏
         internal void ReDrawToolbar(bool[] suits)
         {
             Graphics g = Graphics.FromImage(mainForm.bmp);
             g.DrawImage(Properties.Resources.Toolbar, new Rectangle(415, 325, 129, 29), new Rectangle(0, 0, 129, 29), GraphicsUnit.Pixel);
-            //�����ְ���ɫ
+            //画五种暗花色
             for (int i = 0; i < 5; i++)
             {
                 if (suits[i])
@@ -751,8 +749,8 @@ namespace Kuaff.Tractor
 
 
         /// <summary>
-        /// �ж�����Ƿ���������.
-        /// �����㷨����������������򱾾����֣����·���
+        /// 判断最后是否有人亮主.
+        /// 根据算法，如果无人亮主，则本局流局，重新发牌
         /// </summary>
         /// <returns></returns>
         internal bool DoRankNot()
@@ -769,17 +767,17 @@ namespace Kuaff.Tractor
         }
 
         /// <summary>
-        /// �ж����Ƿ�������������.
-        /// �ڷ���ʱ�������¼�������ҽ����˵����
-        /// ��������������Ͻ����˵����
-        /// ����ҿ������������������
+        /// 判断我是否做了亮主动作.
+        /// 在发牌时检测鼠标事件，如果我进行了点击：
+        /// 如果我在亮主栏上进行了点击，
+        /// 如果我可以亮主，则进行亮主
         /// </summary>
         /// <param name="e"></param>
         internal void IsClickedRanked(MouseEventArgs e)
         {
             bool[] suits = Algorithm.CanSetRank(mainForm, mainForm.currentPokers[0]);
 
-            if (suits[0]) //�������
+            if (suits[0]) //如果红桃
             {
                 Region region = new Region(new Rectangle(417, 327, 25, 25));
                 if (region.IsVisible(e.X, e.Y))
@@ -813,7 +811,7 @@ namespace Kuaff.Tractor
                     g.Dispose();
                 }
             }
-            if (suits[1]) //�������
+            if (suits[1]) //如果黑桃
             {
                 Region region = new Region(new Rectangle(443, 327, 25, 25));
                 if (region.IsVisible(e.X, e.Y))
@@ -847,7 +845,7 @@ namespace Kuaff.Tractor
                     g.Dispose();
                 }
             }
-            if (suits[2]) //�������
+            if (suits[2]) //如果方块
             {
                 Region region = new Region(new Rectangle(468, 327, 25, 25));
                 if (region.IsVisible(e.X, e.Y))
@@ -882,7 +880,7 @@ namespace Kuaff.Tractor
                     g.Dispose();
                 }
             }
-            if (suits[3]) //���÷��
+            if (suits[3]) //如果梅花
             {
                 Region region = new Region(new Rectangle(493, 327, 25, 25));
                 if (region.IsVisible(e.X, e.Y))
@@ -916,7 +914,7 @@ namespace Kuaff.Tractor
                     g.Dispose();
                 }
             }
-            if (suits[4]) //�����
+            if (suits[4]) //如果王
             {
                 Region region = new Region(new Rectangle(518, 327, 25, 25));
                 if (region.IsVisible(e.X, e.Y))
@@ -953,79 +951,79 @@ namespace Kuaff.Tractor
                 }
             }
         }
-        #endregion // �ж��Ƿ�����
+        #endregion // 判断是否亮主
 
 
-        #region �ڸ�������»��Լ�����
+        #region 在各种情况下画自己的牌
 
         /// <summary>
-        /// �����ڼ���л����ҵ�����.
-        /// ���ջ�ɫ�����ƽ������֡�
+        /// 发牌期间进行绘制我的区域.
+        /// 按照花色和主牌进行区分。
         /// </summary>
-        /// <param name="g">������ͼƬ��Graphics</param>
-        /// <param name="currentPoker">�ҵ�ǰ�õ�����</param>
-        /// <param name="index">�����Ƶ�����</param>
+        /// <param name="g">缓冲区图片的Graphics</param>
+        /// <param name="currentPoker">我当前得到的牌</param>
+        /// <param name="index">手中牌的数量</param>
         internal void DrawMyCards(Graphics g, CurrentPoker currentPoker, int index)
         {
             int j = 0;
 
-            //���������Ļ
+            //清下面的屏幕
             Rectangle rect = new Rectangle(30, 360, 560, 96);
             g.DrawImage(mainForm.image, rect, rect, GraphicsUnit.Pixel);
 
-            //ȷ���滭��ʼλ��
+            //确定绘画起始位置
             int start = (int)((2780 - index * 75) / 10);
 
-            //����
+            //红桃
             j = DrawMyHearts(g, currentPoker, j, start);
-            //��ɫ֮��ӿ�϶
+            //花色之间加空隙
             j++;
 
 
-            //����
+            //黑桃
             j = DrawMyPeachs(g, currentPoker, j, start);
-            //��ɫ֮��ӿ�϶
+            //花色之间加空隙
             j++;
 
 
-            //����
+            //方块
             j = DrawMyDiamonds(g, currentPoker, j, start);
-            //��ɫ֮��ӿ�϶
+            //花色之间加空隙
             j++;
 
 
-            //÷��
+            //梅花
             j = DrawMyClubs(g, currentPoker, j, start);
-            //��ɫ֮��ӿ�϶
+            //花色之间加空隙
             j++;
 
-            //Rank(�ݲ���������Rank)
+            //Rank(暂不分主、副Rank)
             j = DrawHeartsRank(g, currentPoker, j, start);
             j = DrawPeachsRank(g, currentPoker, j, start);
             j = DrawClubsRank(g, currentPoker, j, start);
             j = DrawDiamondsRank(g, currentPoker, j, start);
 
-            //С��
+            //小王
             j = DrawSmallJack(g, currentPoker, j, start);
-            //����
+            //大王
             j = DrawBigJack(g, currentPoker, j, start);
 
 
         }
 
-        //���Լ�����õ���,һ���������ƺ����,�ͳ�һ���ƺ����
+        //画自己排序好的牌,一般在摸完牌后调用,和出一次牌后调用
         /// <summary>
-        /// �ڳ���ײ������Ѿ�����õ���.
-        /// ��������»�ʹ�����������
-        /// 1.�����׼������ʱ
-        /// 2.����һ����,��Ҫ�ػ��ײ�
+        /// 在程序底部绘制已经排序好的牌.
+        /// 两种情况下会使用这个方法：
+        /// 1.收完底准备出牌时
+        /// 2.出完一次牌,需要重画底部
         /// </summary>
         /// <param name="currentPoker"></param>
         internal void DrawMySortedCards(CurrentPoker currentPoker, int index)
         {
 
-            //����ʱ�������
-            //��������ʱ������¼�����е��Ƶ�λ�á���С���Ƿ񱻵��
+            //将临时变量清空
+            //这三个临时变量记录我手中的牌的位置、大小和是否被点出
             mainForm.myCardsLocation = new ArrayList();
             mainForm.myCardsNumber = new ArrayList();
             mainForm.myCardIsReady = new ArrayList();
@@ -1033,19 +1031,19 @@ namespace Kuaff.Tractor
 
             Graphics g = Graphics.FromImage(mainForm.bmp);
 
-            //���������Ļ
+            //清下面的屏幕
             Rectangle rect = new Rectangle(30, 355, 600, 116);
             g.DrawImage(mainForm.image, rect, rect, GraphicsUnit.Pixel);
 
-            //�����ʼλ��
+            //计算初始位置
             int start = (int)((2780 - index * 75) / 10);
 
 
-            //��¼ÿ���Ƶ�Xֵ
+            //记录每张牌的X值
             int j = 0;
-            //��ʱ���������������ж��Ƿ�ĳ��ɫȱʧ
+            //临时变量，用来辅助判断是否某花色缺失
             int k = 0;
-            if (mainForm.currentState.Suit == 1)//����
+            if (mainForm.currentState.Suit == 1)//红桃
             {
                 j = DrawMyPeachs(g, currentPoker, j, start) + 1;
                 IsSuitLost(ref j, ref k);
@@ -1060,7 +1058,7 @@ namespace Kuaff.Tractor
                 j = DrawClubsRank(g, currentPoker, j, start);
                 j = DrawHeartsRank(g, currentPoker, j, start);
             }
-            else if (mainForm.currentState.Suit == 2) //����
+            else if (mainForm.currentState.Suit == 2) //黑桃
             {
 
                 j = DrawMyDiamonds(g, currentPoker, j, start) + 1;
@@ -1077,7 +1075,7 @@ namespace Kuaff.Tractor
                 j = DrawHeartsRank(g, currentPoker, j, start);
                 j = DrawPeachsRank(g, currentPoker, j, start);
             }
-            else if (mainForm.currentState.Suit == 3)  //��Ƭ
+            else if (mainForm.currentState.Suit == 3)  //方片
             {
 
                 j = DrawMyClubs(g, currentPoker, j, start) + 1;
@@ -1092,7 +1090,7 @@ namespace Kuaff.Tractor
                 j = DrawClubsRank(g, currentPoker, j, start);
                 j = DrawHeartsRank(g, currentPoker, j, start);
                 j = DrawPeachsRank(g, currentPoker, j, start);
-                j = DrawDiamondsRank(g, currentPoker, j, start);//����
+                j = DrawDiamondsRank(g, currentPoker, j, start);//方块
             }
             else if (mainForm.currentState.Suit == 4)
             {
@@ -1109,7 +1107,7 @@ namespace Kuaff.Tractor
                 j = DrawHeartsRank(g, currentPoker, j, start);
                 j = DrawPeachsRank(g, currentPoker, j, start);
                 j = DrawDiamondsRank(g, currentPoker, j, start);
-                j = DrawClubsRank(g, currentPoker, j, start);//÷��
+                j = DrawClubsRank(g, currentPoker, j, start);//梅花
             }
             else if (mainForm.currentState.Suit == 5)
             {
@@ -1128,10 +1126,10 @@ namespace Kuaff.Tractor
                 j = DrawClubsRank(g, currentPoker, j, start);
             }
 
-            //С��
+            //小王
             j = DrawSmallJack(g, currentPoker, j, start);
 
-            //����
+            //大王
             j = DrawBigJack(g, currentPoker, j, start);
 
             g.Dispose();
@@ -1147,11 +1145,11 @@ namespace Kuaff.Tractor
         }
 
         /// <summary>
-        /// �ػ������е���.
-        /// ���������˵��������һ�֮����л��ơ�
+        /// 重画我手中的牌.
+        /// 在鼠标进行了单击或者右击之后进行绘制。
         /// </summary>
-        /// <param name="currentPoker">��ǰ�����е���</param>
-        /// <param name="index">�Ƶ�����</param>
+        /// <param name="currentPoker">当前我手中的牌</param>
+        /// <param name="index">牌的数量</param>
         internal void DrawMyPlayingCards(CurrentPoker currentPoker)
         {
             int index = currentPoker.Count;
@@ -1161,17 +1159,17 @@ namespace Kuaff.Tractor
 
             Graphics g = Graphics.FromImage(mainForm.bmp);
 
-            //���������Ļ
+            //清下面的屏幕
             Rectangle rect = new Rectangle(30, 355, 600, 116);
             g.DrawImage(mainForm.image, rect, rect, GraphicsUnit.Pixel);
             DrawScoreImage(mainForm.Scores);
 
             int start = (int)((2780 - index * 75) / 10);
 
-            //Rank(��������Rank)
-            //��¼ÿ���Ƶ�Xֵ
+            //Rank(分主、副Rank)
+            //记录每张牌的X值
             int j = 0;
-            //��ʱ���������������ж��Ƿ�ĳ��ɫȱʧ
+            //临时变量，用来辅助判断是否某花色缺失
             int k = 0;
 
             if (mainForm.currentState.Suit == 1)
@@ -1187,7 +1185,7 @@ namespace Kuaff.Tractor
                 j = DrawPeachsRank2(g, currentPoker, j, start);
                 j = DrawDiamondsRank2(g, currentPoker, j, start);
                 j = DrawClubsRank2(g, currentPoker, j, start);
-                j = DrawHeartsRank2(g, currentPoker, j, start);//����
+                j = DrawHeartsRank2(g, currentPoker, j, start);//红桃
             }
             else if (mainForm.currentState.Suit == 2)
             {
@@ -1203,7 +1201,7 @@ namespace Kuaff.Tractor
                 j = DrawDiamondsRank2(g, currentPoker, j, start);
                 j = DrawClubsRank2(g, currentPoker, j, start);
                 j = DrawHeartsRank2(g, currentPoker, j, start);
-                j = DrawPeachsRank2(g, currentPoker, j, start);//����
+                j = DrawPeachsRank2(g, currentPoker, j, start);//黑桃
             }
             else if (mainForm.currentState.Suit == 3)
             {
@@ -1219,7 +1217,7 @@ namespace Kuaff.Tractor
                 j = DrawClubsRank2(g, currentPoker, j, start);
                 j = DrawHeartsRank2(g, currentPoker, j, start);
                 j = DrawPeachsRank2(g, currentPoker, j, start);
-                j = DrawDiamondsRank2(g, currentPoker, j, start);//����
+                j = DrawDiamondsRank2(g, currentPoker, j, start);//方块
             }
             else if (mainForm.currentState.Suit == 4)
             {
@@ -1235,7 +1233,7 @@ namespace Kuaff.Tractor
                 j = DrawHeartsRank2(g, currentPoker, j, start);
                 j = DrawPeachsRank2(g, currentPoker, j, start);
                 j = DrawDiamondsRank2(g, currentPoker, j, start);
-                j = DrawClubsRank2(g, currentPoker, j, start);//÷��
+                j = DrawClubsRank2(g, currentPoker, j, start);//梅花
             }
             else if (mainForm.currentState.Suit == 5)
             {
@@ -1254,14 +1252,14 @@ namespace Kuaff.Tractor
                 j = DrawClubsRank2(g, currentPoker, j, start);
             }
 
-            //С��
+            //小王
             j = DrawSmallJack2(g, currentPoker, j, start);
 
-            //����
+            //大王
             j = DrawBigJack2(g, currentPoker, j, start);
 
 
-            //�жϵ�ǰ�ĳ������Ƿ���Ч,�����Ч����С��
+            //判断当前的出的牌是否有效,如果有效，画小猪
             Rectangle pigRect = new Rectangle(296, 300, 53, 46);
             if (TractorRules.IsInvalid(mainForm, mainForm.currentSendCards, 1) && (mainForm.currentState.CurrentCardCommands == CardCommands.WaitingForMySending))
             {
@@ -1280,7 +1278,7 @@ namespace Kuaff.Tractor
 
         private void My8CardsIsReady(Graphics g)
         {
-            //������ҿ���
+            //如果等我扣牌
             if ((mainForm.currentState.CurrentCardCommands == CardCommands.WaitingForSending8Cards))
             {
                 int total = 0;
@@ -1306,9 +1304,9 @@ namespace Kuaff.Tractor
 
 
         /// <summary>
-        /// ����Ļ��������ҳ�����
+        /// 在屏幕中央绘制我出的牌
         /// </summary>
-        /// <param name="readys">�ҳ����Ƶ��б�</param>
+        /// <param name="readys">我出的牌的列表</param>
         internal void DrawMySendedCardsAction(ArrayList readys)
         {
             int start = 285 - readys.Count * 7;
@@ -1324,7 +1322,7 @@ namespace Kuaff.Tractor
         }
 
         /// <summary>
-        /// ���Լҵ���
+        /// 画对家的牌
         /// </summary>
         /// <param name="readys"></param>
         private void DrawFrieldUserSendedCardsAction(ArrayList readys)
@@ -1346,7 +1344,7 @@ namespace Kuaff.Tractor
             Rectangle rect = new Rectangle(105, 25, 420, 96);
             g.DrawImage(mainForm.image, rect, rect, GraphicsUnit.Pixel);
             int start = (int)((2500 + cp.Count * 75) / 10);
-            for (int i = 0; i < cp.Count; i++) //��໭25����
+            for (int i = 0; i < cp.Count; i++) //最多画25张牌
             {
                 DrawMyImage(g, mainForm.gameConfig.BackImage, start, 25, 71, 96);
                 start -= 13;
@@ -1355,7 +1353,7 @@ namespace Kuaff.Tractor
 
 
         /// <summary>
-        /// ���ϼ�Ӧ�ó�����
+        /// 画上家应该出的牌
         /// </summary>
         /// <param name="readys"></param>
         private void DrawPreviousUserSendedCardsAction(ArrayList readys)
@@ -1377,7 +1375,7 @@ namespace Kuaff.Tractor
             g.DrawImage(mainForm.image, rect, rect, GraphicsUnit.Pixel);
 
             int start = 195 - cp.Count * 2;
-            for (int i = 0; i < cp.Count; i++)  //��໭25��,��Ϊ���˲��û��ˣ���ʹ�յ�
+            for (int i = 0; i < cp.Count; i++)  //最多画25张,因为多了不好画了，即使收底
             {
                 DrawMyImage(g, mainForm.gameConfig.BackImage, 6, start, 71, 96);
                 start += 4;
@@ -1386,7 +1384,7 @@ namespace Kuaff.Tractor
 
 
         /// <summary>
-        /// ���¼�Ӧ�ó�����
+        /// 画下家应该出的牌
         /// </summary>
         /// <param name="readys"></param>
         private void DrawNextUserSendedCardsAction(ArrayList readys)
@@ -1416,10 +1414,10 @@ namespace Kuaff.Tractor
         }
 
 
-        #endregion // �ڸ�������»��Լ�����
+        #endregion // 在各种情况下画自己的牌
 
 
-        #region ���Լ�������(���ֻ�ɫ�����ֻ�ɫRank����С��)
+        #region 画自己的牌面(四种花色、四种花色Rank、大小王)
         private int DrawBigJack(Graphics g, CurrentPoker currentPoker, int j, int start)
         {
             j = DrawMyOneOrTwoCards(g, currentPoker.BigJack, 53, j, start);
@@ -1494,10 +1492,10 @@ namespace Kuaff.Tractor
             return j;
         }
 
-        //��������
+        //辅助方法
         private int DrawMyOneOrTwoCards(Graphics g, int count, int number, int j, int start)
         {
-            //�������������������Ҫ��������������һ��
+            //如果是我亮的主，我需要将亮的主往上提一下
             bool b = (number == 52) || (number == 53);
             b = b & (mainForm.currentState.Suit == 5);
             if (number == (mainForm.currentState.Suit-1)*13 + mainForm.currentRank)
@@ -1514,7 +1512,7 @@ namespace Kuaff.Tractor
                 {
                     if (number == 52 || number == 53)
                     {
-                        g.DrawImage(getPokerImageByNumber(number), start + j * 13, 375, 71, 96); //����������������
+                        g.DrawImage(getPokerImageByNumber(number), start + j * 13, 375, 71, 96); //单个的王不被提上
                     }
                     else
                     {
@@ -1558,9 +1556,9 @@ namespace Kuaff.Tractor
         }
 
 
-        #endregion // ���Լ�������
+        #endregion // 画自己的牌面
 
-        #region ���Լ�����ķ���
+        #region 画自己牌面的方法
         private int DrawBigJack2(Graphics g, CurrentPoker currentPoker, int j, int start)
         {
             if (currentPoker.BigJack == 1)
@@ -1713,7 +1711,7 @@ namespace Kuaff.Tractor
             return j;
         }
 
-        //��������
+        //辅助方法
         private int DrawMyOneOrTwoCards2(Graphics g, int j, int number, int x, int y, int width, int height)
         {
             if ((bool)mainForm.myCardIsReady[mainForm.cardsOrderNumber])
@@ -1728,15 +1726,15 @@ namespace Kuaff.Tractor
             mainForm.cardsOrderNumber++;
             return j;
         }
-        #endregion // ���ƵĻ��Լ�����ķ���
+        #endregion // 类似的画自己牌面的方法
 
-        #region ���Ƹ��ҳ����ƣ�������������֪ͨ��һ��
+        #region 绘制各家出的牌，并计算结果或者通知下一家
         /// <summary>
-        /// ���Լ�������
+        /// 画自己出的牌
         /// </summary>
         internal void DrawMyFinishSendedCards()
         {
-            //�����뻭���������
+            //在中央画出点出的牌
             DrawMySendedCardsAction(mainForm.currentSendCards[0]);
 
             for (int i = 0; i < mainForm.currentSendCards[0].Count; i++)
@@ -1745,12 +1743,12 @@ namespace Kuaff.Tractor
             }
 
 
-            //�ػ��Լ����е���
+            //重画自己手中的牌
             if (mainForm.currentPokers[0].Count > 0)
             {
                 DrawMySortedCards(mainForm.currentPokers[0], mainForm.currentPokers[0].Count);
             }
-            else //�����²��ռ�
+            else //重新下部空间
             {
                 Rectangle rect = new Rectangle(30, 355, 560, 116);
                 Graphics g = Graphics.FromImage(mainForm.bmp);
@@ -1761,9 +1759,9 @@ namespace Kuaff.Tractor
             DrawScoreImage(mainForm.Scores);
             mainForm.Refresh();
 
-            //����Ŀǰ˭�������
+            //计算目前谁的牌最大
 
-            if (mainForm.currentSendCards[3].Count > 0) //�Ƿ����
+            if (mainForm.currentSendCards[3].Count > 0) //是否完成
             {
                 mainForm.currentState.CurrentCardCommands = CardCommands.Pause;
                 mainForm.SetPauseSet(mainForm.gameConfig.FinishedOncePauseTime, CardCommands.DrawOnceFinished);
@@ -1782,13 +1780,13 @@ namespace Kuaff.Tractor
         }
 
         /// <summary>
-        /// �¼ҳ���
+        /// 下家出牌
         /// </summary>
         internal void DrawNextUserSendedCards()
         {
             mainForm.currentState.CurrentCardCommands = CardCommands.Undefined;
-            //��NextUser������
-            if (mainForm.currentSendCards[0].Count > 0) //����
+            //画NextUser出的牌
+            if (mainForm.currentSendCards[0].Count > 0) //随牌
             {
                 DrawNextUserSendedCardsAction(Algorithm.MustSendedCards(mainForm, 4, mainForm.currentPokers, mainForm.currentSendCards, mainForm.currentState.Suit, mainForm.currentRank, mainForm.currentSendCards[mainForm.firstSend - 1].Count));
             }
@@ -1798,8 +1796,8 @@ namespace Kuaff.Tractor
                 mainForm.whoseOrder = 2;
             }
 
-            //�����Ƿ��ס������
-            //���Ѿ����ƣ�Ӧ�ý����ػ�
+            //考虑是否盖住的问题
+            //我已经出牌，应该将我重画
             int myCount = mainForm.currentSendCards[0].Count;
             if (myCount > 0)
             {
@@ -1836,13 +1834,13 @@ namespace Kuaff.Tractor
         }
 
         /// <summary>
-        /// �Լҳ���
+        /// 对家出牌
         /// </summary>
         internal void DrawFrieldUserSendedCards()
         {
             mainForm.currentState.CurrentCardCommands = CardCommands.Undefined;
-            //��FrieldUser������
-            if (mainForm.currentSendCards[3].Count > 0) //����
+            //画FrieldUser出的牌
+            if (mainForm.currentSendCards[3].Count > 0) //随牌
             {
                 DrawFrieldUserSendedCardsAction(Algorithm.MustSendedCards(mainForm, 2, mainForm.currentPokers, mainForm.currentSendCards, mainForm.currentState.Suit, mainForm.currentRank, mainForm.currentSendCards[mainForm.firstSend - 1].Count));
             }
@@ -1852,8 +1850,8 @@ namespace Kuaff.Tractor
             }
 
 
-            //�����Ƿ��ס������
-            //����¼��Ѿ����ƣ�Ӧ�ý��¼��ػ�,�ػ��¼�ʱ���п��ܸ�ס��
+            //考虑是否盖住的问题
+            //如果下家已经出牌，应该将下家重画,重画下家时，有可能盖住我
             int myCount = mainForm.currentSendCards[3].Count;
             if (myCount > 0)
             {
@@ -1900,13 +1898,13 @@ namespace Kuaff.Tractor
         }
 
         /// <summary>
-        /// �ϼҳ���
+        /// 上家出牌
         /// </summary>
         internal void DrawPreviousUserSendedCards()
         {
             mainForm.currentState.CurrentCardCommands = CardCommands.Undefined;
-            //��PreviousUser������
-            if (mainForm.currentSendCards[1].Count > 0) //����
+            //画PreviousUser出的牌
+            if (mainForm.currentSendCards[1].Count > 0) //随牌
             {
                 DrawPreviousUserSendedCardsAction(Algorithm.MustSendedCards(mainForm, 3, mainForm.currentPokers, mainForm.currentSendCards, mainForm.currentState.Suit, mainForm.currentRank, mainForm.currentSendCards[mainForm.firstSend - 1].Count));
             }
@@ -1916,8 +1914,8 @@ namespace Kuaff.Tractor
             }
 
 
-            //�����Ƿ��ס������
-            //���Ѿ����ƣ�Ӧ�ý����ػ�
+            //考虑是否盖住的问题
+            //我已经出牌，应该将我重画
             int myCount = mainForm.currentSendCards[0].Count;
             if (myCount > 0)
             {
@@ -1954,7 +1952,7 @@ namespace Kuaff.Tractor
 
         }
 
-        //��Ҷ�����һ���ƣ������÷ֶ��٣��´θ�˭����
+        //大家都出完一次牌，则计算得分多少，下次该谁出牌
         internal void DrawFinishedOnceSendedCards()
         {
             if (mainForm.currentPokers[0].Count == 0)
@@ -1964,7 +1962,7 @@ namespace Kuaff.Tractor
             }
 
 
-            #region ����
+            #region 测试
             if (mainForm.gameConfig.IsDebug)
             {
                 int f1 = mainForm.currentPokers[0].Count;
@@ -2016,29 +2014,29 @@ namespace Kuaff.Tractor
                    
                 }
             } 
-            #endregion // ����
+            #endregion // 测试
  
 
 
-            //�����˭����
+            //计算该谁发牌
             mainForm.whoseOrder = TractorRules.GetNextOrder(mainForm);
 
             int newFirst = mainForm.whoseOrder;
 
 
-            #region ����
+            #region 测试
             //if (mainForm.gameConfig.IsDebug) 
             if (1==0)
             {
                 if (mainForm.whoIsBigger != newFirst && mainForm.currentSendCards[0].Count == 1)
                 {
                     Console.WriteLine("*******************************************************");
-                    Console.WriteLine("���ȳ���:" + mainForm.firstSend + ", ��ɫ=" + mainForm.currentState.Suit + ", Rank=" + mainForm.currentRank);
-                    Console.WriteLine("�����������:" + mainForm.whoIsBigger + ", ���ռ���" + newFirst);
+                    Console.WriteLine("首先出牌:" + mainForm.firstSend + ", 花色=" + mainForm.currentState.Suit + ", Rank=" + mainForm.currentRank);
+                    Console.WriteLine("按步计算最大:" + mainForm.whoIsBigger + ", 最终计算" + newFirst);
 
                     Console.WriteLine("");
                     Console.WriteLine("");
-                    Console.WriteLine("�Լ�");
+                    Console.WriteLine("自己");
                     for (int i = 0; i < mainForm.pokerList[0].Count; i++)
                     {
                         Console.Write(mainForm.pokerList[0][i] + " ");
@@ -2050,7 +2048,7 @@ namespace Kuaff.Tractor
                     }
 
                     Console.WriteLine("");
-                    Console.WriteLine("�Լ�");
+                    Console.WriteLine("对家");
                     for (int i = 0; i < mainForm.pokerList[1].Count; i++)
                     {
                         Console.Write(mainForm.pokerList[1][i] + " ");
@@ -2062,7 +2060,7 @@ namespace Kuaff.Tractor
                     }
 
                     Console.WriteLine("");
-                    Console.WriteLine("����");
+                    Console.WriteLine("西家");
                     for (int i = 0; i < mainForm.pokerList[2].Count; i++)
                     {
                         Console.Write(mainForm.pokerList[2][i] + " ");
@@ -2074,7 +2072,7 @@ namespace Kuaff.Tractor
                     }
 
                     Console.WriteLine("");
-                    Console.WriteLine("����");
+                    Console.WriteLine("东家");
                     for (int i = 0; i < mainForm.pokerList[3].Count; i++)
                     {
                         Console.Write(mainForm.pokerList[3][i] + " ");
@@ -2087,7 +2085,7 @@ namespace Kuaff.Tractor
                     Console.WriteLine("");
                     Console.WriteLine("*******************************************************");
 
-                    //��ԭ
+                    //复原
                     int[] users = CommonMethods.OtherUsers(mainForm.firstSend);
 
                     int tmp = mainForm.whoIsBigger;
@@ -2120,7 +2118,7 @@ namespace Kuaff.Tractor
                     mainForm.timer.Stop();
                 }
             }
-            #endregion // ����
+            #endregion // 测试
 
 
 
@@ -2161,28 +2159,28 @@ namespace Kuaff.Tractor
 
         private void DrawWhoWinThisTime()
         {
-            //˭Ӯ����һȦ
+            //谁赢了这一圈
             int whoWin = TractorRules.GetNextOrder(mainForm);
 
-            if (whoWin == 1) //��
+            if (whoWin == 1) //我
             {
                 Graphics g = Graphics.FromImage(mainForm.bmp);
                 g.DrawImage(Properties.Resources.Winner, 437, 310, 33, 53);
                 g.Dispose();
             }
-            else if (whoWin == 2) //�Լ�
+            else if (whoWin == 2) //对家
             {
                 Graphics g = Graphics.FromImage(mainForm.bmp);
                 g.DrawImage(Properties.Resources.Winner, 437, 120, 33, 53);
                 g.Dispose();
             }
-            else if (whoWin == 3) //����
+            else if (whoWin == 3) //西家
             {
                 Graphics g = Graphics.FromImage(mainForm.bmp);
                 g.DrawImage(Properties.Resources.Winner, 90, 218, 33, 53);
                 g.Dispose();
             }
-            else if (whoWin == 4) //����
+            else if (whoWin == 4) //东家
             {
                 Graphics g = Graphics.FromImage(mainForm.bmp);
                 g.DrawImage(Properties.Resources.Winner, 516, 218, 33, 53);
@@ -2192,12 +2190,12 @@ namespace Kuaff.Tractor
             mainForm.Refresh();
         }
 
-        internal void DrawScoreImage【已迁移到 GdiRenderer.DrawScoreImage】
-        (int scores)
+        [Obsolete("已迁移到 GdiRenderer.DrawScoreImage")]
+        internal void DrawScoreImage(int scores)
         {
             Graphics g = Graphics.FromImage(mainForm.bmp);
             Bitmap bmp = global::Kuaff.Tractor.Properties.Resources.scores;
-            Font font = new Font("����", 12, FontStyle.Bold);
+            Font font = new Font("宋体", 12, FontStyle.Bold);
 
             if (mainForm.currentState.Master == 2 || mainForm.currentState.Master == 4)
             {
@@ -2243,28 +2241,28 @@ namespace Kuaff.Tractor
             g.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.White)), 77, 124, 476, 244);
             g.DrawRectangle(pen, 77, 124, 476, 244);
 
-            //������,��169��ʼ��
+            //画底牌,从169开始画
             for (int i = 0; i < 8; i++)
             {
                 g.DrawImage(getPokerImageByNumber((int)mainForm.send8Cards[i]), 230 + i * 14, 130, 71, 96);
             }
 
-            //��СѾ
+            //画小丫
             g.DrawImage(global::Kuaff.Tractor.Properties.Resources.Logo, 160, 237, 110, 112);
 
-            //���÷�
-            Font font = new Font("����", 16, FontStyle.Bold);
-            g.DrawString("�ܵ÷� " + mainForm.Scores, font, Brushes.Blue, 310, 286);
+            //画得分
+            Font font = new Font("宋体", 16, FontStyle.Bold);
+            g.DrawString("总得分 " + mainForm.Scores, font, Brushes.Blue, 310, 286);
 
             g.Dispose();
         }
 
-        //��Ҷ������ƣ������÷ֶ��٣��´θ�˭����
+        //大家都出完牌，则计算得分多少，下次该谁出牌
         internal void DrawFinishedSendedCards()
         {
             mainForm.isNew = false;
 
-           //����÷֣�ȷ����һ��ׯ�ң�ȷ����һ�ε�Rank
+           //计算得分，确定下一次庄家，确定下一次的Rank
             TractorRules.GetNextMasterUser(mainForm);
 
 
@@ -2281,40 +2279,40 @@ namespace Kuaff.Tractor
 
            
         }
-        #endregion // ���Ƹ��ҳ����ƣ�������������֪ͨ��һ��
+        #endregion // 绘制各家出的牌，并计算结果或者通知下一家
 
 
-        #region ����ʱ�ĸ�������
+        #region 画牌时的辅助方法
 
-        private Bitmap getPokerImageByNumber(int number)【已迁移到 GdiRenderer.GetPokerImageByNumber】
-        
+        //根据牌号得到相应的牌的图片
+        private Bitmap getPokerImageByNumber(int number)
         {
             Bitmap bitmap = null;
 
-            if (mainForm.gameConfig.CardImageName.Length == 0) //����Ƕ��ͼ���ж�ȡ
+            if (mainForm.gameConfig.CardImageName.Length == 0) //从内嵌的图案中读取
             {
                  bitmap = (Bitmap)mainForm.gameConfig.CardsResourceManager.GetObject("_" + number, Kuaff_Cards.Culture);
             }
             else
             {
-                bitmap = mainForm.cardsImages[number]; //���Զ����ͼƬ�ж�ȡ
+                bitmap = mainForm.cardsImages[number]; //从自定义的图片中读取
             }
 
             return bitmap;
         }
 
         /// <summary>
-        /// �ػ����򱳾�
+        /// 重画程序背景
         /// </summary>
-        /// <param name="g">������ͼ���Graphics</param>
-        internal void DrawBackground【已迁移到 GdiRenderer.DrawBackground】
-        (Graphics g)
+        /// <param name="g">缓冲区图像的Graphics</param>
+        [Obsolete("已迁移到 GdiRenderer.DrawBackground")]
+        internal void DrawBackground(Graphics g)
         {
             //Bitmap image = global::Kuaff.Tractor.Properties.Resources.Backgroud;
             g.DrawImage(mainForm.image, mainForm.ClientRectangle, mainForm.ClientRectangle,GraphicsUnit.Pixel);
         }
 
-        //�����ƶ��������м�֡�������ú���ȥ��
+        //画发牌动画，将中间帧动画画好后再去除
         private void DrawAnimatedCard(Bitmap card, int x, int y, int width, int height)
         {
             Graphics g = Graphics.FromImage(mainForm.bmp);
@@ -2325,58 +2323,58 @@ namespace Kuaff.Tractor
             g.Dispose();
         }
 
-        //��ͼ�ķ���
+        //画图的方法
         private void DrawMyImage(Graphics g, Bitmap bmp, int x, int y, int width, int height)
         {
             g.DrawImage(bmp, x, y, width, height);
         }
 
-        //���õ�ǰ���Ƶ���Ϣ
+        //设置当前的牌的信息
         private void SetCardsInformation(int x, int number, bool ready)
         {
             mainForm.myCardsLocation.Add(x);
             mainForm.myCardsNumber.Add(number);
             mainForm.myCardIsReady.Add(ready);
         }
-        #endregion // ����ʱ�ĸ�������
+        #endregion // 画牌时的辅助方法
 
 
 
-        //���Է���
+        //测试方法
         internal void TestCards()
         {
             Graphics g = Graphics.FromImage(mainForm.bmp);
 
             int count = mainForm.pokerList[0].Count;
-            Font font = new Font("����", 9);
+            Font font = new Font("宋体", 9);
 
-            g.DrawString("�Լ���", font, Brushes.Red, 80, 130);
-            g.DrawString("�Լң�", font, Brushes.Red, 80, 170);
-            g.DrawString("���ң�", font, Brushes.Red, 80, 210);
-            g.DrawString("���ң�", font, Brushes.Red, 80, 250);
+            g.DrawString("自己：", font, Brushes.Red, 80, 130);
+            g.DrawString("对家：", font, Brushes.Red, 80, 170);
+            g.DrawString("西家：", font, Brushes.Red, 80, 210);
+            g.DrawString("东家：", font, Brushes.Red, 80, 250);
 
 
-            Console.Write("�Լ���");
+            Console.Write("自己：");
             for (int i = 0; i < count; i++)
             {
                 g.DrawString(mainForm.pokerList[0][i].ToString(), font, Brushes.Red, 120 + i * 15, 130);
                 Console.Write(mainForm.pokerList[0][i].ToString() + ",");
             }
-            Console.Write("\r\n�Լң�");
+            Console.Write("\r\n对家：");
             count = mainForm.pokerList[1].Count;
             for (int i = 0; i < count; i++)
             {
                 g.DrawString(mainForm.pokerList[1][i].ToString(), font, Brushes.Red, 120 + i * 15, 170);
                 Console.Write(mainForm.pokerList[1][i].ToString() + ",");
             }
-            Console.Write("\r\n���ң�");
+            Console.Write("\r\n西家：");
             count = mainForm.pokerList[2].Count;
             for (int i = 0; i < count; i++)
             {
                 g.DrawString(mainForm.pokerList[2][i].ToString(), font, Brushes.Red, 120 + i * 15, 210);
                 Console.Write(mainForm.pokerList[2][i].ToString() + ",");
             }
-            Console.Write("\r\n���ң�");
+            Console.Write("\r\n东家：");
             count = mainForm.pokerList[3].Count;
             for (int i = 0; i < count; i++)
             {

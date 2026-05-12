@@ -1,4 +1,4 @@
-# 09 — 具体迁移指令：逐步改造为 Engine + Renderer 分离架构
+﻿# 09 — 具体迁移指令：逐步改造为 Engine + Renderer 分离架构
 
 > **目标**：将拖拉机游戏从 "MainForm 大杂烩 + DrawingFormHelper 混合体" 改造为 **GameEngine（纯逻辑）+ GdiRenderer（纯渲染）+ MainForm（协调者）** 三层架构。
 >

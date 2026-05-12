@@ -1,4 +1,4 @@
-# 数据流与依赖分析报告 — MainForm 与外部类的数据依赖关系
+﻿# 数据流与依赖分析报告 — MainForm 与外部类的数据依赖关系
 
 **项目**: 四人拖拉机 (升级/80分) Windows 桌面游戏 (C# WinForms .NET 4.6.1)
 **分析范围**: MainForm、DrawingFormHelper、CalculateRegionHelper、CurrentPoker、Algorithm、TractorRules、MustSendCardsAlgorithm、ShouldSendedCardsAlgorithm、GameConfig、DefinedConstant、CommonMethods

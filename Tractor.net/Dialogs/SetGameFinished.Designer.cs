@@ -1,4 +1,4 @@
-namespace Kuaff.Tractor
+ï»¿é”˜ç¸©amespace Kuaff.Tractor
 {
     partial class SetGameFinished
     {
@@ -46,7 +46,7 @@ namespace Kuaff.Tractor
             this.groupBox1.Size = new System.Drawing.Size(188, 87);
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "ÌáÊ¾";
+            this.groupBox1.Text = "æç¤º";
             // 
             // textBox1
             // 
@@ -58,7 +58,7 @@ namespace Kuaff.Tractor
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(176, 66);
             this.textBox1.TabIndex = 8;
-            this.textBox1.Text = "´Ó2´òµ½ÍõÎªÒ»ÂÖ£»\r\nÃ¿´òÒ»¸öÊı×ÖÎªÒ»¾Ö£»\r\nÈç¹ûÉèÖÃ½áÊøÂÖÊıÎª1,ÔòÏÈ´òÍêÒ»ÂÖµÄÒ»·½»ñÊ¤£»\r\n0ÎªÓÀ²»½áÊø£¬ÎŞÏŞÑ­»·£»";
+            this.textBox1.Text = "ä»2æ‰“åˆ°ç‹ä¸ºä¸€è½®ï¼›\r\næ¯æ‰“ä¸€ä¸ªæ•°å­—ä¸ºä¸€å±€ï¼›\r\nå¦‚æœè®¾ç½®ç»“æŸè½®æ•°ä¸º1,åˆ™å…ˆæ‰“å®Œä¸€è½®çš„ä¸€æ–¹è·èƒœï¼›\r\n0ä¸ºæ°¸ä¸ç»“æŸï¼Œæ— é™å¾ªç¯ï¼›";
             // 
             // label1
             // 
@@ -67,7 +67,7 @@ namespace Kuaff.Tractor
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(89, 12);
             this.label1.TabIndex = 5;
-            this.label1.Text = "ÓÎÏ·½áÊøÂÖÊı£º";
+            this.label1.Text = "æ¸¸æˆç»“æŸè½®æ•°ï¼š";
             // 
             // textBox2
             // 
@@ -84,7 +84,7 @@ namespace Kuaff.Tractor
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(62, 26);
             this.button1.TabIndex = 9;
-            this.button1.Text = "±£´æ";
+            this.button1.Text = "ä¿å­˜";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -95,7 +95,7 @@ namespace Kuaff.Tractor
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(62, 26);
             this.button2.TabIndex = 10;
-            this.button2.Text = "È¡Ïû";
+            this.button2.Text = "å–æ¶ˆ";
             this.button2.UseVisualStyleBackColor = true;
             // 
             // SetGameFinished
@@ -114,7 +114,7 @@ namespace Kuaff.Tractor
             this.MinimizeBox = false;
             this.Name = "SetGameFinished";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "ÉèÖÃÓÎÏ·½áÊøÂÖÊı";
+            this.Text = "è®¾ç½®æ¸¸æˆç»“æŸè½®æ•°";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

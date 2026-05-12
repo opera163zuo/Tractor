@@ -1,4 +1,4 @@
-namespace Kuaff.Tractor
+ÔªøÈîòÁ∏©amespace Kuaff.Tractor
 {
     partial class About
     {
@@ -55,73 +55,73 @@ namespace Kuaff.Tractor
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("ÀŒÃÂ", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label1.Font = new System.Drawing.Font("ÂÆã‰Ωì", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
             this.label1.Location = new System.Drawing.Point(179, 12);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(93, 16);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Õœ¿≠ª˙¥Û’Ω";
+            this.label1.Text = "ÊãñÊãâÊú∫Â§ßÊàò";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("ÀŒÃÂ", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label2.Font = new System.Drawing.Font("ÂÆã‰Ωì", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label2.Location = new System.Drawing.Point(170, 49);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(63, 14);
             this.label2.TabIndex = 2;
-            this.label2.Text = "≥Ã–Úø™∑¢";
+            this.label2.Text = "Á®ãÂ∫èÂºÄÂèë";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("ÀŒÃÂ", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label3.Font = new System.Drawing.Font("ÂÆã‰Ωì", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label3.Location = new System.Drawing.Point(170, 77);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(63, 14);
             this.label3.TabIndex = 3;
-            this.label3.Text = "≥Ã–Ú≤‚ ‘";
+            this.label3.Text = "Á®ãÂ∫èÊµãËØï";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("ÀŒÃÂ", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label4.Font = new System.Drawing.Font("ÂÆã‰Ωì", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label4.Location = new System.Drawing.Point(170, 103);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(63, 14);
             this.label4.TabIndex = 4;
-            this.label4.Text = "√¿    π§";
+            this.label4.Text = "Áæé    Â∑•";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("ÀŒÃÂ", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label5.Font = new System.Drawing.Font("ÂÆã‰Ωì", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label5.Location = new System.Drawing.Point(239, 49);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(52, 14);
             this.label5.TabIndex = 5;
-            this.label5.Text = "ÍÀ‘¿≈ ";
+            this.label5.Text = "ÊôÅÂ≤≥ÊîÄ";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("ÀŒÃÂ", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label6.Font = new System.Drawing.Font("ÂÆã‰Ωì", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label6.Location = new System.Drawing.Point(239, 76);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(52, 14);
             this.label6.TabIndex = 6;
-            this.label6.Text = "÷Ï¡¢ª¿";
+            this.label6.Text = "Êú±Á´ãÁÑï";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("ÀŒÃÂ", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label7.Font = new System.Drawing.Font("ÂÆã‰Ωì", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label7.Location = new System.Drawing.Point(239, 104);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(52, 14);
             this.label7.TabIndex = 7;
-            this.label7.Text = "÷Ï¡¢ª¿";
+            this.label7.Text = "Êú±Á´ãÁÑï";
             // 
             // label8
             // 
@@ -141,7 +141,7 @@ namespace Kuaff.Tractor
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(230, 15);
             this.label9.TabIndex = 9;
-            this.label9.Text = "Õ¯÷∑£∫http://smallnest.googlepages.com";
+            this.label9.Text = "ÁΩëÂùÄÔºöhttp://smallnest.googlepages.com";
             // 
             // label10
             // 
@@ -169,14 +169,14 @@ namespace Kuaff.Tractor
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
-            this.Font = new System.Drawing.Font("ÀŒÃÂ", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.Font = new System.Drawing.Font("ÂÆã‰Ωì", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "About";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "πÿ”⁄";
+            this.Text = "ÂÖ≥‰∫é";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

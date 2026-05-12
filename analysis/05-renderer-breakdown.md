@@ -1,4 +1,4 @@
-# 渲染层拆解分析 — DrawingFormHelper (2355行)
+﻿# 渲染层拆解分析 — DrawingFormHelper (2355行)
 
 **项目**: 四人拖拉机 (升级/80分) Windows 桌面游戏 (C# WinForms .NET 4.6.1)
 **分析范围**: DrawingFormHelper.cs (`/tmp/tractor-analysis/Tractor.net/Helpers/DrawingFormHelper.cs`)

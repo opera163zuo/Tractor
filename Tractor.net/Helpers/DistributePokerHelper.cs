@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Collections;
 using System.Text;
@@ -6,15 +6,15 @@ using System.Text;
 namespace Kuaff.Tractor
 {
     /// <summary>
-    /// ¸ºÔğ·Ö·¢ÆË¿ËÅÆ.
-    /// ÓÉ³ÌĞòËæ»úÉú³É108ÕÅÅÆµÄĞòÁĞ£¬·Ö·¢¸øËÄ¸öÓÃ»§.
+    /// è´Ÿè´£åˆ†å‘æ‰‘å…‹ç‰Œ.
+    /// ç”±ç¨‹åºéšæœºç”Ÿæˆ108å¼ ç‰Œçš„åºåˆ—ï¼Œåˆ†å‘ç»™å››ä¸ªç”¨æˆ·.
     /// 
     /// </summary>
     class DistributePokerHelper
     {
-        //Î´´òÂÒµÄ¼¯ºÏ
+        //æœªæ‰“ä¹±çš„é›†åˆ
         StringBuilder sb = new StringBuilder("000001002003004005006007008009");
-        //´òÂÒºóµÄ¶ÓÁĞ
+        //æ‰“ä¹±åçš„é˜Ÿåˆ—
         Queue[] queues = new Queue[4] { new Queue(), new Queue(), new Queue(), new Queue()};
         ArrayList[] list = new ArrayList[4] { new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList() };
 

@@ -1,4 +1,4 @@
-namespace Kuaff.Tractor
+ÔªøÈîòÁ∏©amespace Kuaff.Tractor
 {
     partial class SelectUserAlgorithm
     {
@@ -98,7 +98,7 @@ namespace Kuaff.Tractor
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(271, 191);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "ƒœº“";
+            this.tabPage1.Text = "ÂçóÂÆ∂";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // textBox1
@@ -111,7 +111,7 @@ namespace Kuaff.Tractor
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(221, 73);
             this.textBox1.TabIndex = 6;
-            this.textBox1.Text = "≥Ã–Úƒ⁄÷√µƒÀ„∑®";
+            this.textBox1.Text = "Á®ãÂ∫èÂÜÖÁΩÆÁöÑÁÆóÊ≥ï";
             // 
             // label5
             // 
@@ -138,7 +138,7 @@ namespace Kuaff.Tractor
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(65, 12);
             this.label3.TabIndex = 3;
-            this.label3.Text = "À„∑®ΩÈ…‹£∫";
+            this.label3.Text = "ÁÆóÊ≥ï‰ªãÁªçÔºö";
             // 
             // label2
             // 
@@ -147,7 +147,7 @@ namespace Kuaff.Tractor
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(47, 12);
             this.label2.TabIndex = 2;
-            this.label2.Text = "email£∫";
+            this.label2.Text = "emailÔºö";
             // 
             // label1
             // 
@@ -156,7 +156,7 @@ namespace Kuaff.Tractor
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(65, 12);
             this.label1.TabIndex = 1;
-            this.label1.Text = "À„∑®◊˜’ﬂ£∫";
+            this.label1.Text = "ÁÆóÊ≥ï‰ΩúËÄÖÔºö";
             // 
             // comboBox1
             // 
@@ -181,7 +181,7 @@ namespace Kuaff.Tractor
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(271, 191);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "±±º“";
+            this.tabPage2.Text = "ÂåóÂÆ∂";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // textBox2
@@ -194,7 +194,7 @@ namespace Kuaff.Tractor
             this.textBox2.ReadOnly = true;
             this.textBox2.Size = new System.Drawing.Size(221, 73);
             this.textBox2.TabIndex = 13;
-            this.textBox2.Text = "≥Ã–Úƒ⁄÷√µƒÀ„∑®";
+            this.textBox2.Text = "Á®ãÂ∫èÂÜÖÁΩÆÁöÑÁÆóÊ≥ï";
             // 
             // label6
             // 
@@ -221,7 +221,7 @@ namespace Kuaff.Tractor
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(65, 12);
             this.label8.TabIndex = 10;
-            this.label8.Text = "À„∑®ΩÈ…‹£∫";
+            this.label8.Text = "ÁÆóÊ≥ï‰ªãÁªçÔºö";
             // 
             // label9
             // 
@@ -230,7 +230,7 @@ namespace Kuaff.Tractor
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(47, 12);
             this.label9.TabIndex = 9;
-            this.label9.Text = "email£∫";
+            this.label9.Text = "emailÔºö";
             // 
             // label10
             // 
@@ -239,7 +239,7 @@ namespace Kuaff.Tractor
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(65, 12);
             this.label10.TabIndex = 8;
-            this.label10.Text = "À„∑®◊˜’ﬂ£∫";
+            this.label10.Text = "ÁÆóÊ≥ï‰ΩúËÄÖÔºö";
             // 
             // comboBox2
             // 
@@ -263,7 +263,7 @@ namespace Kuaff.Tractor
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(271, 191);
             this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Œ˜º“";
+            this.tabPage3.Text = "Ë•øÂÆ∂";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // textBox3
@@ -276,7 +276,7 @@ namespace Kuaff.Tractor
             this.textBox3.ReadOnly = true;
             this.textBox3.Size = new System.Drawing.Size(221, 73);
             this.textBox3.TabIndex = 13;
-            this.textBox3.Text = "≥Ã–Úƒ⁄÷√µƒÀ„∑®";
+            this.textBox3.Text = "Á®ãÂ∫èÂÜÖÁΩÆÁöÑÁÆóÊ≥ï";
             // 
             // label11
             // 
@@ -303,7 +303,7 @@ namespace Kuaff.Tractor
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(65, 12);
             this.label13.TabIndex = 10;
-            this.label13.Text = "À„∑®ΩÈ…‹£∫";
+            this.label13.Text = "ÁÆóÊ≥ï‰ªãÁªçÔºö";
             // 
             // label14
             // 
@@ -312,7 +312,7 @@ namespace Kuaff.Tractor
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(47, 12);
             this.label14.TabIndex = 9;
-            this.label14.Text = "email£∫";
+            this.label14.Text = "emailÔºö";
             // 
             // label15
             // 
@@ -321,7 +321,7 @@ namespace Kuaff.Tractor
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(65, 12);
             this.label15.TabIndex = 8;
-            this.label15.Text = "À„∑®◊˜’ﬂ£∫";
+            this.label15.Text = "ÁÆóÊ≥ï‰ΩúËÄÖÔºö";
             // 
             // comboBox3
             // 
@@ -345,7 +345,7 @@ namespace Kuaff.Tractor
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Size = new System.Drawing.Size(271, 191);
             this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "∂´º“";
+            this.tabPage4.Text = "‰∏úÂÆ∂";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // textBox4
@@ -358,7 +358,7 @@ namespace Kuaff.Tractor
             this.textBox4.ReadOnly = true;
             this.textBox4.Size = new System.Drawing.Size(221, 73);
             this.textBox4.TabIndex = 13;
-            this.textBox4.Text = "≥Ã–Úƒ⁄÷√µƒÀ„∑®";
+            this.textBox4.Text = "Á®ãÂ∫èÂÜÖÁΩÆÁöÑÁÆóÊ≥ï";
             // 
             // label16
             // 
@@ -385,7 +385,7 @@ namespace Kuaff.Tractor
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(65, 12);
             this.label18.TabIndex = 10;
-            this.label18.Text = "À„∑®ΩÈ…‹£∫";
+            this.label18.Text = "ÁÆóÊ≥ï‰ªãÁªçÔºö";
             // 
             // label19
             // 
@@ -394,7 +394,7 @@ namespace Kuaff.Tractor
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(47, 12);
             this.label19.TabIndex = 9;
-            this.label19.Text = "email£∫";
+            this.label19.Text = "emailÔºö";
             // 
             // label20
             // 
@@ -403,7 +403,7 @@ namespace Kuaff.Tractor
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(65, 12);
             this.label20.TabIndex = 8;
-            this.label20.Text = "À„∑®◊˜’ﬂ£∫";
+            this.label20.Text = "ÁÆóÊ≥ï‰ΩúËÄÖÔºö";
             // 
             // comboBox4
             // 
@@ -421,7 +421,7 @@ namespace Kuaff.Tractor
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(58, 23);
             this.button1.TabIndex = 1;
-            this.button1.Text = "»∑∂®";
+            this.button1.Text = "Á°ÆÂÆö";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -432,7 +432,7 @@ namespace Kuaff.Tractor
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(58, 23);
             this.button2.TabIndex = 2;
-            this.button2.Text = "»°œ˚";
+            this.button2.Text = "ÂèñÊ∂à";
             this.button2.UseVisualStyleBackColor = true;
             // 
             // SelectUserAlgorithm
@@ -449,7 +449,7 @@ namespace Kuaff.Tractor
             this.MinimizeBox = false;
             this.Name = "SelectUserAlgorithm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "…Ë÷√≥ˆ≈∆À„∑®";
+            this.Text = "ËÆæÁΩÆÂá∫ÁâåÁÆóÊ≥ï";
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();

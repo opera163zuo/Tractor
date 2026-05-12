@@ -1,4 +1,4 @@
-namespace Kuaff.Tractor
+ÔªøÈîòÁ∏©amespace Kuaff.Tractor
 {
     partial class SetRules
     {
@@ -96,7 +96,7 @@ namespace Kuaff.Tractor
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(264, 184);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "±ÿ¥Ú";
+            this.tabPage1.Text = "ÂøÖÊâì";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // button1
@@ -105,7 +105,7 @@ namespace Kuaff.Tractor
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(61, 27);
             this.button1.TabIndex = 7;
-            this.button1.Text = "±£¥Ê";
+            this.button1.Text = "‰øùÂ≠ò";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -141,7 +141,7 @@ namespace Kuaff.Tractor
             this.checkBox5.Name = "checkBox5";
             this.checkBox5.Size = new System.Drawing.Size(37, 16);
             this.checkBox5.TabIndex = 4;
-            this.checkBox5.Text = "Õı";
+            this.checkBox5.Text = "Áéã";
             this.checkBox5.UseVisualStyleBackColor = true;
             // 
             // checkBox4
@@ -208,7 +208,7 @@ namespace Kuaff.Tractor
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(264, 184);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "‘ˆ«ø";
+            this.tabPage2.Text = "Â¢ûÂº∫";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // button2
@@ -217,7 +217,7 @@ namespace Kuaff.Tractor
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(61, 27);
             this.button2.TabIndex = 8;
-            this.button2.Text = "±£¥Ê";
+            this.button2.Text = "‰øùÂ≠ò";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -229,7 +229,7 @@ namespace Kuaff.Tractor
             this.checkBox9.Name = "checkBox9";
             this.checkBox9.Size = new System.Drawing.Size(70, 16);
             this.checkBox9.TabIndex = 1;
-            this.checkBox9.Text = "“ªQµΩ∞Î";
+            this.checkBox9.Text = "‰∏ÄQÂà∞Âçä";
             this.checkBox9.UseVisualStyleBackColor = true;
             // 
             // checkBox8
@@ -240,7 +240,7 @@ namespace Kuaff.Tractor
             this.checkBox8.Name = "checkBox8";
             this.checkBox8.Size = new System.Drawing.Size(70, 16);
             this.checkBox8.TabIndex = 0;
-            this.checkBox8.Text = "“ªJµΩµ◊";
+            this.checkBox8.Text = "‰∏ÄJÂà∞Â∫ï";
             this.checkBox8.UseVisualStyleBackColor = true;
             // 
             // tabPage3
@@ -253,7 +253,7 @@ namespace Kuaff.Tractor
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(264, 184);
             this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "¡˜æ÷";
+            this.tabPage3.Text = "ÊµÅÂ±Ä";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // button3
@@ -262,7 +262,7 @@ namespace Kuaff.Tractor
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(61, 27);
             this.button3.TabIndex = 9;
-            this.button3.Text = "±£¥Ê";
+            this.button3.Text = "‰øùÂ≠ò";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
@@ -275,7 +275,7 @@ namespace Kuaff.Tractor
             this.radioButton2.Size = new System.Drawing.Size(179, 16);
             this.radioButton2.TabIndex = 1;
             this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "∑≠µ◊≈∆£¨—°µ⁄»˝’≈ª®…´◊ˆ÷˜";
+            this.radioButton2.Text = "ÁøªÂ∫ïÁâåÔºåÈÄâÁ¨¨‰∏âÂº†Ëä±Ëâ≤ÂÅö‰∏ª";
             this.radioButton2.UseVisualStyleBackColor = true;
             // 
             // radioButton1
@@ -288,7 +288,7 @@ namespace Kuaff.Tractor
             this.radioButton1.Size = new System.Drawing.Size(114, 16);
             this.radioButton1.TabIndex = 0;
             this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "Œﬁ»À¡¡÷˜£¨¡˜æ÷";
+            this.radioButton1.Text = "Êó†‰∫∫‰∫Æ‰∏ªÔºåÊµÅÂ±Ä";
             this.radioButton1.UseVisualStyleBackColor = true;
             // 
             // tabPage4
@@ -303,7 +303,7 @@ namespace Kuaff.Tractor
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Size = new System.Drawing.Size(264, 184);
             this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "ø€µ◊";
+            this.tabPage4.Text = "Êâ£Â∫ï";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // button4
@@ -312,7 +312,7 @@ namespace Kuaff.Tractor
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(61, 27);
             this.button4.TabIndex = 10;
-            this.button4.Text = "±£¥Ê";
+            this.button4.Text = "‰øùÂ≠ò";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
@@ -324,7 +324,7 @@ namespace Kuaff.Tractor
             this.radioButton5.Name = "radioButton5";
             this.radioButton5.Size = new System.Drawing.Size(49, 16);
             this.radioButton5.TabIndex = 3;
-            this.radioButton5.Text = "±£ ÿ";
+            this.radioButton5.Text = "‰øùÂÆà";
             this.radioButton5.UseVisualStyleBackColor = true;
             // 
             // radioButton4
@@ -337,7 +337,7 @@ namespace Kuaff.Tractor
             this.radioButton4.Size = new System.Drawing.Size(49, 16);
             this.radioButton4.TabIndex = 2;
             this.radioButton4.TabStop = true;
-            this.radioButton4.Text = "÷–”π";
+            this.radioButton4.Text = "‰∏≠Â∫∏";
             this.radioButton4.UseVisualStyleBackColor = true;
             // 
             // label1
@@ -348,7 +348,7 @@ namespace Kuaff.Tractor
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(122, 12);
             this.label1.TabIndex = 1;
-            this.label1.Text = "º∆À„ª˙ø€µ◊≈∆µƒ≤ﬂ¬‘";
+            this.label1.Text = "ËÆ°ÁÆóÊú∫Êâ£Â∫ïÁâåÁöÑÁ≠ñÁï•";
             // 
             // radioButton3
             // 
@@ -358,7 +358,7 @@ namespace Kuaff.Tractor
             this.radioButton3.Name = "radioButton3";
             this.radioButton3.Size = new System.Drawing.Size(49, 16);
             this.radioButton3.TabIndex = 0;
-            this.radioButton3.Text = "º§Ω¯";
+            this.radioButton3.Text = "ÊøÄËøõ";
             this.radioButton3.UseVisualStyleBackColor = true;
             // 
             // tabPage5
@@ -372,7 +372,7 @@ namespace Kuaff.Tractor
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Size = new System.Drawing.Size(264, 184);
             this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "¡¡÷˜";
+            this.tabPage5.Text = "‰∫Æ‰∏ª";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
             // checkBox12
@@ -385,7 +385,7 @@ namespace Kuaff.Tractor
             this.checkBox12.Name = "checkBox12";
             this.checkBox12.Size = new System.Drawing.Size(76, 16);
             this.checkBox12.TabIndex = 10;
-            this.checkBox12.Text = "‘ –Ìº”πÃ";
+            this.checkBox12.Text = "ÂÖÅËÆ∏Âä†Âõ∫";
             this.checkBox12.UseVisualStyleBackColor = true;
             // 
             // button5
@@ -394,7 +394,7 @@ namespace Kuaff.Tractor
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(61, 27);
             this.button5.TabIndex = 9;
-            this.button5.Text = "±£¥Ê";
+            this.button5.Text = "‰øùÂ≠ò";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
@@ -408,7 +408,7 @@ namespace Kuaff.Tractor
             this.checkBox10.Name = "checkBox10";
             this.checkBox10.Size = new System.Drawing.Size(76, 16);
             this.checkBox10.TabIndex = 3;
-            this.checkBox10.Text = "‘ –ÌŒﬁ÷˜";
+            this.checkBox10.Text = "ÂÖÅËÆ∏Êó†‰∏ª";
             this.checkBox10.UseVisualStyleBackColor = true;
             // 
             // checkBox11
@@ -421,7 +421,7 @@ namespace Kuaff.Tractor
             this.checkBox11.Name = "checkBox11";
             this.checkBox11.Size = new System.Drawing.Size(76, 16);
             this.checkBox11.TabIndex = 2;
-            this.checkBox11.Text = "‘ –Ì◊‘∑¥";
+            this.checkBox11.Text = "ÂÖÅËÆ∏Ëá™Âèç";
             this.checkBox11.UseVisualStyleBackColor = true;
             // 
             // checkBox13
@@ -432,7 +432,7 @@ namespace Kuaff.Tractor
             this.checkBox13.Name = "checkBox13";
             this.checkBox13.Size = new System.Drawing.Size(64, 16);
             this.checkBox13.TabIndex = 9;
-            this.checkBox13.Text = "“ªAµΩJ";
+            this.checkBox13.Text = "‰∏ÄAÂà∞J";
             this.checkBox13.UseVisualStyleBackColor = true;
             // 
             // SetRules
@@ -447,7 +447,7 @@ namespace Kuaff.Tractor
             this.MinimizeBox = false;
             this.Name = "SetRules";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "πÊ‘Ú…Ë÷√";
+            this.Text = "ËßÑÂàôËÆæÁΩÆ";
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();

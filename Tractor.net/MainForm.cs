@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -27,94 +27,93 @@ namespace Kuaff.Tractor
 {
     internal partial class MainForm : Form
     {
-        #region ��������
-        //������ͼ��
+        #region 变量声明
+        //缓冲区图像
         internal Bitmap bmp = null;
-        //ԭʼ����ͼƬ
+        //原始背景图片
         internal Bitmap image = null;
       
 
-        //*״̬
-        //��ǰ��״̬
+        //*状态
+        //当前的状态
         internal CurrentState currentState ;
-        //��ǰ��Rank,������ǰ�ƾֵ�Rank,0����ʵ�ʵ��ƾ�2.....11����K,12����A,53��������
+        //当前的Rank,代表当前牌局的Rank,0代表实际的牌局2.....11代表K,12代表A,53代表打王
         internal int currentRank = 0;
-        //�Ƿ����¿�ʼ����Ϸ
+        //是否是新开始的游戏
         internal bool isNew = true;
 
-        //���ƵĴ���
+        //亮牌的次数
         internal int showSuits = 0;
-        //˭������
+        //谁亮的牌
         internal int whoShowRank = 0;
 
 
-        //*��������
-        //�õ�һ�η��Ƶ�����,dpokerʱ���Ƶİ����࣬pokerList��ÿ�������е��Ƶ��б�
+        //*发牌序列
+        //得到一次发牌的序列,dpoker时发牌的帮助类，pokerList是每个人手中的牌的列表
         internal DistributePokerHelper dpoker = null;
         internal ArrayList[] pokerList = null;
 
-        //ÿ�������н����õ���
+        //每个人手中解析好的牌
         internal CurrentPoker[] currentPokers = { new CurrentPoker(), new CurrentPoker(), new CurrentPoker(), new CurrentPoker() };
-        //��ͼ�Ĵ��������ڷ���ʱʹ�ã�
+        //画图的次数（仅在发牌时使用）
         internal int currentCount = 0;
-        //��ǰһ�ָ��ҵĳ������
+        //当前一轮各家的出牌情况
         internal ArrayList[] currentSendCards = new ArrayList[4];
-        //Ӧ��˭����
-        internal int whoseOrder = 0;//0δ��,1�ң�2�Լң�3����,4����
-        //һ�γ�����˭���ȿ�ʼ������
+        //应该谁出牌
+        internal int whoseOrder = 0;//0未定,1我，2对家，3西家,4东家
+        //一次出来中谁最先开始出的牌
         internal int firstSend = 0;
 
-        //*��������
-        //��ǰ�����Ƶ�����
+        //*辅助变量
+        //当前手中牌的坐标
         internal ArrayList myCardsLocation = new ArrayList();
-        //��ǰ�����Ƶ���ֵ
+        //当前手中牌的数值
         internal ArrayList myCardsNumber = new ArrayList();
-        //��ǰ�����Ƶ��Ƿ񱻵��
+        //当前手中牌的是否被点出
         internal ArrayList myCardIsReady = new ArrayList();
-        //��ǰ�۵׵���
+        //当前扣底的牌
         internal ArrayList send8Cards = new ArrayList();
 
-        //*���ҵ��Ƶĸ�������
-        //����˳��
+        //*画我的牌的辅助变量
+        //画牌顺序
         internal int cardsOrderNumber = 0;
 
-        //ȷ���������ߵ��ʱ��
+        //确定程序休眠的最长时间
         internal long sleepTime;
         internal long sleepMaxTime = 2000;
         internal CardCommands wakeupCardCommands;
 
-        // ====== 步骤4：Engine + Renderer 实例 ======
         internal GameEngine engine = new GameEngine();
         internal GdiRenderer renderer;
 
-        //*�滭������
-        //DrawingForm����
+        //*绘画辅助类
+        //DrawingForm变量
         internal DrawingFormHelper drawingFormHelper = null;
-        internal��CalculateRegionHelper calculateRegionHelper = null;
+        internal　CalculateRegionHelper calculateRegionHelper = null;
 
-        //��¼���ε÷�
+        //记录本次得分
         internal int Scores = 0;
 
        
-        //��Ϸ����
+        //游戏设置
         internal GameConfig gameConfig = new GameConfig();
 
-        //����ʱĿǰ��������һ��
+        //出牌时目前牌最大的那一家
         internal int whoIsBigger = 0;
 
 
-        //�����ļ�
+        //音乐文件
         private string musicFile = "";
-        //����ͼ��
+        //牌面图案
         internal Bitmap[] cardsImages = new Bitmap[54];
 
-        //�����㷨
+        //出牌算法
         internal object[] UserAlgorithms = { null, null, null, null };
 
-        //��ǰһ���Ѿ�������
+        //当前一局已经出的牌
         internal CurrentPoker[] currentAllSendPokers = { new CurrentPoker(), new CurrentPoker(), new CurrentPoker(), new CurrentPoker() };
 
-        #endregion // ��������
+        #endregion // 变量声明
 
     
         internal MainForm()
@@ -127,20 +126,19 @@ namespace Kuaff.Tractor
             SetStyle(ControlStyles.StandardDoubleClick, true);
 
            
-            //��ȡ��������
+            //读取程序配置
             InitAppSetting();
             
             notifyIcon.Text = Text;
             BackgroundImage = image;
         
-            //������ʼ��
+            //变量初始化
             bmp = new Bitmap(ClientRectangle.Width, ClientRectangle.Height);
             
             
             drawingFormHelper = new DrawingFormHelper(this);
             calculateRegionHelper = new CalculateRegionHelper(this);
             renderer = new GdiRenderer(gameConfig);
-
             renderer.FallbackRender = (cmdType, payload, bmp) =>
             {
                 switch (cmdType)
@@ -170,17 +168,18 @@ namespace Kuaff.Tractor
                 }
             };
             renderer.BackgroundImage = image;
+            
 
 
             for (int i = 0; i < 54; i++)
             {
-                cardsImages[i] = null; //��ʼ��
+                cardsImages[i] = null; //初始化
             }
         }
 
         private void InitAppSetting()
         {
-            //û�������ļ������config�ļ��ж�ȡ
+            //没有配置文件，则从config文件中读取
             if (!File.Exists("gameConfig"))
             {
                 AppSettingsReader reader = new AppSettingsReader();
@@ -190,7 +189,7 @@ namespace Kuaff.Tractor
                 }
                 catch (Exception ex)
                 {
-                    Text = "��������ս";
+                    Text = "拖拉机大战";
                 }
 
                 try
@@ -222,7 +221,7 @@ namespace Kuaff.Tractor
             }
             else
             {
-                //ʵ�ʴ�gameConfig�ļ��ж�ȡ
+                //实际从gameConfig文件中读取
                 Stream stream = null;
                 try
                 {
@@ -244,7 +243,7 @@ namespace Kuaff.Tractor
                 }
             }
 
-            //δ���л���ֵ
+            //未序列化的值
             AppSettingsReader myreader = new AppSettingsReader();
             gameConfig.CardsResourceManager = Kuaff_Cards.ResourceManager;
             try
@@ -279,65 +278,65 @@ namespace Kuaff.Tractor
 
 
 
-        #region �����¼���������
+        #region 窗口事件处理程序
 
         internal void MenuItem_Click(object sender, EventArgs e)
         {
 
             ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-            if (menuItem.Text.Equals("�˳�"))
+            if (menuItem.Text.Equals("退出"))
             {
                 this.Close();
             }
 
-            if (menuItem.Text.Equals("��ʼ����Ϸ"))
+            if (menuItem.Text.Equals("开始新游戏"))
             {
-                PauseGametoolStripMenuItem.Text = "��ͣ��Ϸ";
+                PauseGametoolStripMenuItem.Text = "暂停游戏";
 
 
-                //����Ϸ��ʼ״̬���ҼҺ͵з�����2��ʼ������Ϊ��ʼ����
+                //新游戏初始状态，我家和敌方都从2开始，令牌为开始发牌
                 currentState = new CurrentState(0, 0, 0, 0,0,0,CardCommands.ReadyCards);
                 currentRank = 0;
 
                 isNew = true;
                 whoIsBigger = 0;
 
-                //��ʼ��
+                //初始化
                 init();
 
-                //��ʼ��ʱ�������з���
+                //开始定时器，进行发牌
                 timer.Start();
             }
 
         }
 
 
-        //��ʼ��
+        //初始化
         internal void init()
         {
-            //ÿ�γ�ʼ�����ػ汳��
+            //每次初始化都重绘背景
             Graphics g = Graphics.FromImage(bmp);
             drawingFormHelper.DrawBackground(g);
 
 
-            //��һ����
+            //发一次牌
             dpoker = new DistributePokerHelper();
             pokerList = dpoker.Distribute();
 
-            //ÿ�������е������,׼������
+            //每个人手中的牌清空,准备摸牌
             currentPokers[0].Clear();
             currentPokers[1].Clear(); 
             currentPokers[2].Clear();
             currentPokers[3].Clear();
 
-            //����ѷ��͵���
+            //清空已发送的牌
             currentAllSendPokers[0].Clear();
             currentAllSendPokers[1].Clear();
             currentAllSendPokers[2].Clear();
             currentAllSendPokers[3].Clear();
 
 
-            //Ϊÿ���˵�currentPokers����Rank
+            //为每个人的currentPokers设置Rank
             currentPokers[0].Rank = currentRank;
             currentPokers[1].Rank = currentRank;
             currentPokers[2].Rank = currentRank;
@@ -360,29 +359,28 @@ namespace Kuaff.Tractor
             send8Cards= new ArrayList();
 
 
-            //��������
+            //设置命令
             currentState.CurrentCardCommands = CardCommands.ReadyCards;
             currentState.Suit = 0;
         
 
-            //���û�δ����,ѭ��25�ν��Ʒ���
+            //设置还未发牌,循环25次将牌发完
             currentCount = 0;
 
-            // 同步 Engine 数据
+
             engine.NewGame();
             engine.SetGameData(pokerList, currentPokers, currentSendCards, send8Cards, gameConfig, gameConfig.IsDebug);
-
-            //
-            showSuits = 0;showSuits = 0;
+            //目前不可以反牌
+            showSuits = 0;
             whoShowRank = 0;
 
-            //�÷�����
+            //得分清零
             Scores = 0;
             
 
-            //����Sidebar
+            //绘制Sidebar
             drawingFormHelper.DrawSidebar(g);
-            //���ƶ�������
+            //绘制东南西北
             drawingFormHelper.DrawOtherMaster(g, 0, 0);
             
             if (currentState.Master != 0)
@@ -391,16 +389,16 @@ namespace Kuaff.Tractor
                 drawingFormHelper.DrawOtherMaster(g, currentState.Master, 1);
             }
 
-            //����Rank
+            //绘制Rank
             drawingFormHelper.DrawRank(g,currentState.OurCurrentRank,true,false);
             drawingFormHelper.DrawRank(g, currentState.OpposedCurrentRank, false, false);
 
-            //���ƻ�ɫ
+            //绘制花色
             drawingFormHelper.DrawSuit(g, 0, true, false);
             drawingFormHelper.DrawSuit(g, 0, false, false);
 
             send8Cards = new ArrayList();
-            //������ɫ
+            //调整花色
             if (currentRank == 53)
             {
                 currentState.Suit = 5;
@@ -408,7 +406,7 @@ namespace Kuaff.Tractor
 
             whoIsBigger = 0;
 
-            //�����������Ϸ��ֹ����ֹͣ��Ϸ
+            //如果设置了游戏截止，则停止游戏
             if (gameConfig.WhenFinished > 0)
             {
                 
@@ -425,7 +423,7 @@ namespace Kuaff.Tractor
                 if (b)
                 {
                     timer.Stop();
-                    PauseGametoolStripMenuItem.Text = "������Ϸ";
+                    PauseGametoolStripMenuItem.Text = "继续游戏";
                     PauseGametoolStripMenuItem.Image = Properties.Resources.MenuResume;
                 }
             }
@@ -434,27 +432,25 @@ namespace Kuaff.Tractor
        
 
 
-        //���ڻ滭����,��������ͼ�񻭵�������
+        //窗口绘画处理,将缓冲区图像画到窗口上
         private void MainForm_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-            //��bmp����������
+            //将bmp画到窗口上
             g.DrawImage(bmp, 0, 0);
         }
 
 
        
 
-            internal void MainForm_MouseClick_New(object sender, MouseEventArgs e)
+                private void MainForm_MouseClick_New(object sender, MouseEventArgs e)
         {
             if (((currentState.CurrentCardCommands == CardCommands.WaitingForMySending) || 
                  (currentState.CurrentCardCommands == CardCommands.WaitingForSending8Cards)) && 
                  (whoseOrder == 1))
             {
-                // Handle card selection (select/deselect cards on click)
                 HandleCardSelection(e);
                 
-                // Handle pig button click (confirm play)
                 Rectangle pigRect = new Rectangle(296, 300, 53, 46);
                 if (pigRect.Contains(e.Location))
                 {
@@ -462,34 +458,31 @@ namespace Kuaff.Tractor
                     g.DrawImage(image, pigRect, pigRect, GraphicsUnit.Pixel);
                     g.Dispose();
                     
-                    // Collect selected card numbers
                     List<int> selected = new List<int>();
                     for (int i = 0; i < myCardIsReady.Count; i++)
                         if ((bool)myCardIsReady[i]) selected.Add((int)myCardsNumber[i]);
                     
-                    bool hasValidSelection = false;
+                    bool hasValid = false;
                     PlayResult result = null;
                     
                     if (currentState.CurrentCardCommands == CardCommands.WaitingForSending8Cards)
                     {
-                        // 扣底牌 - 必须选8张
                         if (selected.Count == 8)
                         {
                             result = engine.PlayerSend8Cards(selected);
-                            hasValidSelection = true;
+                            hasValid = true;
                         }
                     }
                     else if (currentState.CurrentCardCommands == CardCommands.WaitingForMySending)
                     {
-                        // 出牌 - 至少选1张
                         if (selected.Count > 0)
                         {
                             result = engine.PlayerPlayCard(1, selected);
-                            hasValidSelection = true;
+                            hasValid = true;
                         }
                     }
                     
-                    if (hasValidSelection && result != null)
+                    if (hasValid && result != null)
                     {
                         currentState = engine.State;
                         whoseOrder = engine.WhoseOrder;
@@ -509,14 +502,11 @@ namespace Kuaff.Tractor
             }
             else if (currentState.CurrentCardCommands == CardCommands.ReadyCards)
             {
-                // Do nothing during dealing
             }
         }
         
         private void HandleCardSelection(MouseEventArgs e)
         {
-            // Original click handling logic for selecting/deselecting cards
-            // Check if click is in player's card area
             if (myCardsLocation.Count > 0 &&
                 e.X >= (int)myCardsLocation[0] && 
                 e.X <= ((int)myCardsLocation[myCardsLocation.Count - 1] + 71) && 
@@ -538,7 +528,7 @@ namespace Kuaff.Tractor
             //if (e.Button == MouseButtons.Right)
             //    return;
 
-            //�����ǰû���ƿɳ� 
+            //如果当前没有牌可出 
             if (currentPokers[0].Count == 0)
             {
                 return;
@@ -553,15 +543,15 @@ namespace Kuaff.Tractor
             currentSendCards[0]= new ArrayList();
 
 
-            //���ƣ����Բ�ȥС��
+            //出牌，所以擦去小猪
             Rectangle pigRect = new Rectangle(296, 300, 53, 46);
             Graphics g = Graphics.FromImage(bmp);
             g.DrawImage(image, pigRect, pigRect, GraphicsUnit.Pixel);
            
            
 
-            //���ƻ��ǳ���
-            if ((currentState.CurrentCardCommands == CardCommands.WaitingForSending8Cards) && (whoseOrder == 1)) //������ҿ���
+            //扣牌还是出牌
+            if ((currentState.CurrentCardCommands == CardCommands.WaitingForSending8Cards) && (whoseOrder == 1)) //如果等我扣牌
             {
                 ArrayList readyCards = new ArrayList();
                 for (int i = 0; i < myCardIsReady.Count; i++)
@@ -585,7 +575,7 @@ namespace Kuaff.Tractor
 
 
             }
-            else if (currentState.CurrentCardCommands == CardCommands.WaitingForMySending) //������ҷ���
+            else if (currentState.CurrentCardCommands == CardCommands.WaitingForMySending) //如果等我发牌
             {
                
 
@@ -639,10 +629,10 @@ namespace Kuaff.Tractor
 
         }
 
-        //��ʼ��ÿ���˳�����
+        //初始化每个人出的牌
         internal void initSendedCards()
         {
-            //���½���ÿ�������е���
+            //重新解析每个人手中的牌
             currentPokers[0] = CommonMethods.parse(pokerList[0], currentState.Suit, currentRank);
             currentPokers[1] = CommonMethods.parse(pokerList[1], currentState.Suit, currentRank);
             currentPokers[2] = CommonMethods.parse(pokerList[2], currentState.Suit, currentRank);
@@ -650,10 +640,10 @@ namespace Kuaff.Tractor
         }
 
 
-        #endregion // �����¼���������
+        #endregion // 窗口事件处理程序
 
 
-        //��ʱ��,������ʾ����ʱ�Ķ���
+        //定时器,用来显示发牌时的动画
         internal void timer_Tick(object sender, EventArgs e)
         {
 
@@ -667,35 +657,34 @@ namespace Kuaff.Tractor
             {
                 PlayRandomSongs();
             }
-            //1.���� — 通过 Engine 处理
-            if (currentState.CurrentCardCommands == CardCommands.ReadyCards)
+            //1.分牌
+            if (currentState.CurrentCardCommands == CardCommands.ReadyCards) //分牌
             {
-                TickResult tickResult = engine.Tick(DateTime.Now.Ticks);
-                if (tickResult.StateChanged)
+                if (currentCount ==0)
                 {
-                    currentState = engine.State;
-                }
-                foreach (var cmd in tickResult.RenderCommands)
-                {
-                    if (cmd.Type == RenderCmdType.ShowToolbar)
+                    //画工具栏
+                    if (!gameConfig.IsDebug)
                     {
                         drawingFormHelper.DrawToolbar();
                     }
-                    else if (cmd.Type == RenderCmdType.DealCard)
-                    {
-                        var payload = (DealCardPayload)cmd.Payload;
-                        // Engine 已完成 card distribution data work
-                        // DrawingFormHelper 只做渲染（无 AddCard / DoRankOrNot）
-                        drawingFormHelper.RenderDealRound(payload.Round);
-                    }
+
                 }
-                // 同步 currentCount（虽然 Engine 已管理，保留兼容）
-                currentCount = engine.DealCount;
+
+                if (currentCount < 25)
+                {
+                    drawingFormHelper.ReadyCards(currentCount);
+                    currentCount++;
+                    
+                }
+                else
+                {
+                    currentState.CurrentCardCommands = CardCommands.DrawCenter8Cards;
+                }
             }
-            else if (currentState.CurrentCardCommands == CardCommands.WaitingShowBottom) //��������Ϻ����������
+            else if (currentState.CurrentCardCommands == CardCommands.WaitingShowBottom) //翻底牌完毕后的清理工作
             {
                 drawingFormHelper.DrawCenterImage();
-                //��8���Ƶı���
+                //画8张牌的背面
                 Graphics g = Graphics.FromImage(bmp);
 
                 for (int i = 0; i < 8; i++)
@@ -706,7 +695,7 @@ namespace Kuaff.Tractor
                 SetPauseSet(gameConfig.Get8CardsTime, CardCommands.DrawCenter8Cards);
 
             }
-                        else if (currentState.CurrentCardCommands == CardCommands.DrawCenter8Cards) //通过 Engine 处理
+                        else if (currentState.CurrentCardCommands == CardCommands.DrawCenter8Cards)
             {
                 TickResult tickResult = engine.Tick(DateTime.Now.Ticks);
                 if (tickResult.StateChanged)
@@ -717,7 +706,6 @@ namespace Kuaff.Tractor
                 {
                     if (cmd.Type == RenderCmdType.DrawCenter8)
                     {
-                        // 复杂的叫主/定主逻辑暂时留在 MainForm
                         if (drawingFormHelper.DoRankNot())
                         {
                             if (gameConfig.IsPass)
@@ -731,31 +719,24 @@ namespace Kuaff.Tractor
                             else
                             {
                                 ArrayList bottom = new ArrayList();
-                                bottom.Add(pokerList[0][0]);
-                                bottom.Add(pokerList[0][1]);
-                                bottom.Add(pokerList[1][0]);
-                                bottom.Add(pokerList[1][1]);
-                                bottom.Add(pokerList[2][0]);
-                                bottom.Add(pokerList[2][1]);
-                                bottom.Add(pokerList[3][0]);
-                                bottom.Add(pokerList[3][1]);
+                                bottom.Add(pokerList[0][0]); bottom.Add(pokerList[0][1]);
+                                bottom.Add(pokerList[1][0]); bottom.Add(pokerList[1][1]);
+                                bottom.Add(pokerList[2][0]); bottom.Add(pokerList[2][1]);
+                                bottom.Add(pokerList[3][0]); bottom.Add(pokerList[3][1]);
                                 int suit = CommonMethods.GetSuit((int)bottom[2]);
                                 currentState.Suit = suit;
-
                                 Graphics g = Graphics.FromImage(bmp);
                                 if (currentState.Master == 1 || currentState.Master == 2)
                                     drawingFormHelper.DrawSuit(g, suit, true, true);
                                 else if (currentState.Master == 3 || currentState.Master == 4)
                                     drawingFormHelper.DrawSuit(g, suit, false, true);
                                 g.Dispose();
-
                                 drawingFormHelper.DrawCenterImage();
                                 drawingFormHelper.DrawBottomCards(bottom);
                                 SetPauseSet(gameConfig.NoRankPauseTime, CardCommands.WaitingShowBottom);
                                 return;
                             }
                         }
-
                         whoseOrder = currentState.Master;
                         firstSend = whoseOrder;
                         SetPauseSet(gameConfig.Get8CardsTime, CardCommands.DrawMySortedCards);
@@ -766,24 +747,16 @@ namespace Kuaff.Tractor
                         drawingFormHelper.DrawScoreImage(0);
                     }
                 }
-            }else if (currentState.CurrentCardCommands == CardCommands.WaitingShowPass) //通过 Engine 处理
-            {
-                TickResult tickResult = engine.Tick(DateTime.Now.Ticks);
-                if (tickResult.StateChanged)
-                {
-                    currentState = engine.State;
-                }
-                foreach (var cmd in tickResult.RenderCommands)
-                {
-                    renderer.Execute(cmd, bmp, currentState);
-                }
-                if (currentState.CurrentCardCommands == CardCommands.ReadyCards)
-                {
-                    drawingFormHelper.DrawCenterImage();
-                    Refresh();
-                }
             }
-                        else if (currentState.CurrentCardCommands == CardCommands.WaitingForSending8Cards) //通过 Engine 处理
+            else if (currentState.CurrentCardCommands == CardCommands.WaitingShowPass) //显示流局信息
+            {
+                //将流局图片清理掉
+                drawingFormHelper.DrawCenterImage();
+                //drawingFormHelper.DrawScoreImage(0);
+                Refresh();
+                currentState.CurrentCardCommands = CardCommands.ReadyCards;
+            }
+                        else if (currentState.CurrentCardCommands == CardCommands.WaitingForSending8Cards)
             {
                 TickResult tickResult = engine.Tick(DateTime.Now.Ticks);
                 if (tickResult.StateChanged)
@@ -808,10 +781,11 @@ namespace Kuaff.Tractor
                         }
                     }
                 }
-            }else if (currentState.CurrentCardCommands == CardCommands.DrawMySortedCards) //4.���ҵ���
+            }
+            else if (currentState.CurrentCardCommands == CardCommands.DrawMySortedCards) //4.画我的牌
             {
 
-                //������Լ����ƽ���������ʾ
+                //将最后自己的牌进行排序显示
                 SetPauseSet(gameConfig.SortCardsTime, CardCommands.DrawMySortedCards);
 
                 drawingFormHelper.DrawMySortedCards(currentPokers[0], currentPokers[0].Count);
@@ -820,7 +794,7 @@ namespace Kuaff.Tractor
                 currentState.CurrentCardCommands = CardCommands.WaitingForSend;
 
             }
-                        else if (currentState.CurrentCardCommands == CardCommands.WaitingForSend) //通过 Engine 处理
+                        else if (currentState.CurrentCardCommands == CardCommands.WaitingForSend)
             {
                 engine.SyncOrder(whoseOrder, firstSend, whoIsBigger);
                 TickResult tickResult = engine.Tick(DateTime.Now.Ticks);
@@ -835,11 +809,10 @@ namespace Kuaff.Tractor
                     {
                         var payload = (AiPlayPayload)cmd.Payload;
                         int pid = payload.PlayerId;
-                        // 调用旧 DrawingFormHelper 的出牌方法（过渡期）
                         if (pid == 2) drawingFormHelper.DrawFrieldUserSendedCards();
                         else if (pid == 3) drawingFormHelper.DrawPreviousUserSendedCards();
                         else if (pid == 4) drawingFormHelper.DrawNextUserSendedCards();
-                        else if (pid == 1) // debug AI
+                        else if (pid == 1)
                         {
                             if (firstSend == 1)
                                 Algorithm.ShouldSendedCards(this, 1, currentPokers, currentSendCards, currentState.Suit, currentRank);
@@ -854,7 +827,8 @@ namespace Kuaff.Tractor
                 {
                     Refresh();
                 }
-            }else if (currentState.CurrentCardCommands == CardCommands.Pause) //通过 Engine 处理暂停
+            }
+                        else if (currentState.CurrentCardCommands == CardCommands.Pause)
             {
                 TickResult tickResult = engine.Tick(DateTime.Now.Ticks);
                 if (tickResult.StateChanged)
@@ -862,25 +836,24 @@ namespace Kuaff.Tractor
                     currentState = engine.State;
                 }
             }
-            else if (currentState.CurrentCardCommands == CardCommands.DrawOnceFinished) //����Ǵ�Ҷ�������
+            else if (currentState.CurrentCardCommands == CardCommands.DrawOnceFinished) //如果是大家都出完牌
             {
-                drawingFormHelper.DrawFinishedOnceSendedCards(); //�����������
+                drawingFormHelper.DrawFinishedOnceSendedCards(); //完成清理工作
                 if (currentPokers[0].Count > 0)
                 {
                     currentState.CurrentCardCommands = CardCommands.WaitingForSend;
                 }
             }
-            else if (currentState.CurrentCardCommands == CardCommands.DrawOnceRank) //������ִ�Ҷ�������
+            else if (currentState.CurrentCardCommands == CardCommands.DrawOnceRank) //如果本轮大家都出完牌
             {
                 currentState.CurrentCardCommands = CardCommands.Undefined;
                 init();
             }
         }
 
-        //������ͣ�����ʱ�䣬�Լ���ͣ�������ִ������
+        //设置暂停的最大时间，以及暂停结束后的执行命令
         internal void SetPauseSet(int max, CardCommands wakeup)
         {
-            // 过渡期：Engine 和 MainForm 双写暂停状态
             engine.SetPause(max, wakeup);
             sleepMaxTime = max;
             sleepTime = DateTime.Now.Ticks;
@@ -889,13 +862,13 @@ namespace Kuaff.Tractor
         }
 
 
-        #region �˵��¼�����
-        //����ͼ��
+        #region 菜单事件处理
+        //牌面图案
         private void SelectCardImage_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
 
-            if (menuItem.Text.Equals("��ͨͼ��"))
+            if (menuItem.Text.Equals("普通图案"))
             {
                 gameConfig.CardsResourceManager = Kuaff_Cards.ResourceManager;
                 CommonToolStripMenuItem.CheckState = CheckState.Checked;
@@ -903,11 +876,11 @@ namespace Kuaff.Tractor
                 OperaToolStripMenuItem.CheckState = CheckState.Unchecked;
                 CustomCardImageToolStripMenuItem.CheckState = CheckState.Unchecked;
 
-                CustomCardImageToolStripMenuItem.Text = "�Զ���";
+                CustomCardImageToolStripMenuItem.Text = "自定义";
                 gameConfig.CardImageName = "";
 
             }
-            else if (menuItem.Text.Equals("�㳵��Ů"))
+            else if (menuItem.Text.Equals("香车美女"))
             {
                 gameConfig.CardsResourceManager = Kuaff_Model.ResourceManager;
                 CommonToolStripMenuItem.CheckState = CheckState.Unchecked;
@@ -915,10 +888,10 @@ namespace Kuaff.Tractor
                 OperaToolStripMenuItem.CheckState = CheckState.Unchecked;
                 CustomCardImageToolStripMenuItem.CheckState = CheckState.Unchecked;
 
-                CustomCardImageToolStripMenuItem.Text = "�Զ���";
+                CustomCardImageToolStripMenuItem.Text = "自定义";
                 gameConfig.CardImageName = "";
             }
-            else if (menuItem.Text.Equals("��������"))
+            else if (menuItem.Text.Equals("京剧脸谱"))
             {
                 gameConfig.CardsResourceManager = Kuaff_Opera.ResourceManager;
                 CommonToolStripMenuItem.CheckState = CheckState.Unchecked;
@@ -926,16 +899,16 @@ namespace Kuaff.Tractor
                 OperaToolStripMenuItem.CheckState = CheckState.Checked;
                 CustomCardImageToolStripMenuItem.CheckState = CheckState.Unchecked;
 
-                CustomCardImageToolStripMenuItem.Text = "�Զ���";
+                CustomCardImageToolStripMenuItem.Text = "自定义";
                 gameConfig.CardImageName = "";
             }
-            else if (menuItem.Text.StartsWith("�Զ���"))
+            else if (menuItem.Text.StartsWith("自定义"))
             {
                 SelectCardsImage sci = new SelectCardsImage(this);
                 if (sci.ShowDialog(this) == DialogResult.OK)
                 {
                     gameConfig.CardImageName = sci.CardsName;
-                    menuItem.Text = "�Զ���--" + gameConfig.CardImageName;
+                    menuItem.Text = "自定义--" + gameConfig.CardImageName;
 
                     CommonToolStripMenuItem.CheckState = CheckState.Unchecked;
                     ModelToolStripMenuItem.CheckState = CheckState.Unchecked;
@@ -944,12 +917,12 @@ namespace Kuaff.Tractor
                 }
             }
         }
-        //�Ʊ�ͼƬ
+        //牌背图片
         private void SelectBackImage_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
 
-            if (menuItem.Text.Equals("ε������"))
+            if (menuItem.Text.Equals("蔚蓝世界"))
             {
                 gameConfig.BackImage = Kuaff_Cards.back;
                 BlueWorldToolStripMenuItem.CheckState = CheckState.Checked;
@@ -957,9 +930,9 @@ namespace Kuaff.Tractor
                 AntelopeToolStripMenuItem.CheckState = CheckState.Unchecked;
 
                 CustomBackImageToolStripMenuItem.CheckState = CheckState.Unchecked;
-                CustomBackImageToolStripMenuItem.Text = "�Զ���";
+                CustomBackImageToolStripMenuItem.Text = "自定义";
             }
-            else if (menuItem.Text.Equals("��ɬ�껪"))
+            else if (menuItem.Text.Equals("青涩年华"))
             {
                 gameConfig.BackImage = Kuaff_Cards.back2;
                 BlueWorldToolStripMenuItem.CheckState = CheckState.Unchecked;
@@ -967,9 +940,9 @@ namespace Kuaff.Tractor
                 AntelopeToolStripMenuItem.CheckState = CheckState.Unchecked;
 
                 CustomBackImageToolStripMenuItem.CheckState = CheckState.Unchecked;
-                CustomBackImageToolStripMenuItem.Text = "�Զ���";
+                CustomBackImageToolStripMenuItem.Text = "自定义";
             }
-            else if (menuItem.Text.Equals("��ԭ����"))
+            else if (menuItem.Text.Equals("草原羚羊"))
             {
                 gameConfig.BackImage = Kuaff_Cards.back3;
                 BlueWorldToolStripMenuItem.CheckState = CheckState.Unchecked;
@@ -977,14 +950,14 @@ namespace Kuaff.Tractor
                 AntelopeToolStripMenuItem.CheckState = CheckState.Checked;
 
                 CustomBackImageToolStripMenuItem.CheckState = CheckState.Unchecked;
-                CustomBackImageToolStripMenuItem.Text = "�Զ���";
+                CustomBackImageToolStripMenuItem.Text = "自定义";
             }
-            else if (menuItem.Text.StartsWith("�Զ���"))
+            else if (menuItem.Text.StartsWith("自定义"))
             {
                 SelectCardbackImage sci = new SelectCardbackImage(this);
                 if (sci.ShowDialog(this) == DialogResult.OK)
                 {
-                    menuItem.Text = "�Զ���--" + sci.CardBackImageName;
+                    menuItem.Text = "自定义--" + sci.CardBackImageName;
 
                     BlueWorldToolStripMenuItem.CheckState = CheckState.Unchecked;
                     GreenAgeToolStripMenuItem.CheckState = CheckState.Unchecked;
@@ -995,13 +968,13 @@ namespace Kuaff.Tractor
             }
         }
 
-        //ѡ�񱳾�ͼƬ
+        //选择背景图片
         private void SelectImage_Click(object sender, EventArgs e)
         {
-            PauseGametoolStripMenuItem.Text = "��ͣ��Ϸ";
+            PauseGametoolStripMenuItem.Text = "暂停游戏";
 
             ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-            if (menuItem.Text.Equals("�丸�Ƽ�"))
+            if (menuItem.Text.Equals("夸父科技"))
             {
                 KuaffToolStripMenuItem.CheckState = CheckState.Checked;
                 image = global::Kuaff.Tractor.Properties.Resources.Backgroud;
@@ -1011,7 +984,7 @@ namespace Kuaff.Tractor
                 g.DrawImage(image, ClientRectangle, ClientRectangle,GraphicsUnit.Pixel);
 
                 init();
-                //���ƶ�������
+                //绘制东南西北
 
                 drawingFormHelper.DrawOtherMaster(g, 0, 0);
               
@@ -1029,7 +1002,7 @@ namespace Kuaff.Tractor
                 g.Dispose();
                 Refresh();
             }
-            else if (menuItem.Text.Equals("�Զ���ͼƬ"))
+            else if (menuItem.Text.Equals("自定义图片"))
             {
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -1042,7 +1015,7 @@ namespace Kuaff.Tractor
                     g.DrawImage(image, ClientRectangle, ClientRectangle, GraphicsUnit.Pixel);
                    
                     init();
-                    //���ƶ�������
+                    //绘制东南西北
 
                     drawingFormHelper.DrawOtherMaster(g, 0, 0);
                    
@@ -1065,7 +1038,7 @@ namespace Kuaff.Tractor
 
         }
 
-        //�����¼�����
+        //托盘事件处理
         private void notifyIcon_MouseClick(object sender, MouseEventArgs e)
         {
             this.Show();
@@ -1089,13 +1062,13 @@ namespace Kuaff.Tractor
             }
         }
 
-        //������Ϸ�ٶ�
+        //设置游戏速度
         private void GameSpeedToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SetSpeedDialog dialog = new SetSpeedDialog(this);
             if (dialog.ShowDialog(this) == DialogResult.OK)
             {
-                //�����ٶ�
+                //调整速度
                 gameConfig.FinishedOncePauseTime = (int)(150 * Math.Pow(10, dialog.trackBar1.Value / 25.0));
                 gameConfig.NoRankPauseTime = (int)(500 * Math.Pow(10, dialog.trackBar2.Value / 25.0));
                 gameConfig.Get8CardsTime = (int)(100 * Math.Pow(10, dialog.trackBar3.Value / 25.0));
@@ -1106,7 +1079,7 @@ namespace Kuaff.Tractor
             }
         }
 
-        //�����ƾ�
+        //保存牌局
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Stream stream = null;
@@ -1129,10 +1102,10 @@ namespace Kuaff.Tractor
             }
         }
 
-        //��ȡ�ƾ�
+        //读取牌局
         private void RestoreToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PauseGametoolStripMenuItem.Text = "��ͣ��Ϸ";
+            PauseGametoolStripMenuItem.Text = "暂停游戏";
 
             Stream stream = null;
             try
@@ -1176,7 +1149,7 @@ namespace Kuaff.Tractor
             }
         }
 
-        //��ʾ����
+        //显示帮助
         private void GameHelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Help.ShowHelp(this,"Tractor.CHM");
@@ -1192,16 +1165,16 @@ namespace Kuaff.Tractor
         private void PauseGametoolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-            if (menuItem.Text.Equals("��ͣ��Ϸ"))
+            if (menuItem.Text.Equals("暂停游戏"))
             {
                 timer.Stop();
-                menuItem.Text = "������Ϸ";
+                menuItem.Text = "继续游戏";
                 menuItem.Image = Properties.Resources.MenuResume;
             }
             else
             {
                 timer.Start();
-                menuItem.Text = "��ͣ��Ϸ";
+                menuItem.Text = "暂停游戏";
                 menuItem.Image = Properties.Resources.MenuPause;
             }
         }
@@ -1236,13 +1209,13 @@ namespace Kuaff.Tractor
 
         private void PlayMusicToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //������������ѡ��Ի���
+            //弹出内置音乐选择对话框
             SelectMusic sem = new SelectMusic();
             if (sem.ShowDialog(this) == DialogResult.OK)
             {
                 NoBackMusicToolStripMenuItem.CheckState = CheckState.Unchecked;
 
-                //���ѡ����һ�����ӣ��򲥷�
+                //如果选择了一首曲子，则播放
                 try
                 {
                     string music = (string)sem.music.SelectedItem;
@@ -1291,7 +1264,7 @@ namespace Kuaff.Tractor
             PlayMusicToolStripMenuItem.CheckState = CheckState.Unchecked;
         }
 
-        //�����������
+        //随机播放音乐
         private void PlayRandomSongs()
         {
             try
@@ -1317,13 +1290,13 @@ namespace Kuaff.Tractor
             }
         }
 
-        private void FereToolStripMenuItem_Click(object sender, EventArgs e) //����������
+        private void FereToolStripMenuItem_Click(object sender, EventArgs e) //拖拉机伴侣
         {
             Fere fere = new Fere();
             fere.Show(this);
         }
 
-        private void SeeTotalScoresToolStripMenuItem_Click(object sender, EventArgs e) //�÷�ͳ��
+        private void SeeTotalScoresToolStripMenuItem_Click(object sender, EventArgs e) //得分统计
         {
             TotalScores ts = new TotalScores(this);
             ts.Show(this);
@@ -1335,7 +1308,7 @@ namespace Kuaff.Tractor
             sua.ShowDialog(this);
         }
 
-        #endregion // �˵��¼�����
+        #endregion // 菜单事件处理
 
         private void SetGameFinishedtoolStripMenuItem_Click(object sender, EventArgs e)
         {

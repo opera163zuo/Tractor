@@ -1,4 +1,4 @@
-namespace Kuaff.Tractor
+ï»¿é”˜ç¸©amespace Kuaff.Tractor
 {
     partial class SetSpeedDialog
     {
@@ -60,7 +60,7 @@ namespace Kuaff.Tractor
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(83, 12);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Ã¿È¦ÔİÍ£Ê±¼ä";
+            this.label1.Text = "æ¯åœˆæš‚åœæ—¶é—´";
             // 
             // label2
             // 
@@ -70,7 +70,7 @@ namespace Kuaff.Tractor
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(83, 12);
             this.label2.TabIndex = 2;
-            this.label2.Text = "Á÷¾ÖÔİÍ£Ê±¼ä";
+            this.label2.Text = "æµå±€æš‚åœæ—¶é—´";
             // 
             // label3
             // 
@@ -80,7 +80,7 @@ namespace Kuaff.Tractor
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(70, 12);
             this.label3.TabIndex = 3;
-            this.label3.Text = "ÊÕµ×ÅÆÊ±¼ä";
+            this.label3.Text = "æ”¶åº•ç‰Œæ—¶é—´";
             // 
             // label4
             // 
@@ -90,7 +90,7 @@ namespace Kuaff.Tractor
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(57, 12);
             this.label4.TabIndex = 4;
-            this.label4.Text = "¿ÛÅÆÊ±¼ä";
+            this.label4.Text = "æ‰£ç‰Œæ—¶é—´";
             // 
             // label5
             // 
@@ -100,7 +100,7 @@ namespace Kuaff.Tractor
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(83, 12);
             this.label5.TabIndex = 5;
-            this.label5.Text = "Ã¿¾ÖÔİÍ£Ê±¼ä";
+            this.label5.Text = "æ¯å±€æš‚åœæ—¶é—´";
             // 
             // button1
             // 
@@ -109,7 +109,7 @@ namespace Kuaff.Tractor
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(76, 25);
             this.button1.TabIndex = 10;
-            this.button1.Text = "È·¶¨";
+            this.button1.Text = "ç¡®å®š";
             this.button1.UseVisualStyleBackColor = true;
             // 
             // button2
@@ -119,7 +119,7 @@ namespace Kuaff.Tractor
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(76, 25);
             this.button2.TabIndex = 11;
-            this.button2.Text = "È¡Ïû";
+            this.button2.Text = "å–æ¶ˆ";
             this.button2.UseVisualStyleBackColor = true;
             // 
             // trackBar1
@@ -184,7 +184,7 @@ namespace Kuaff.Tractor
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(57, 12);
             this.label6.TabIndex = 17;
-            this.label6.Text = "³öÅÆËÙ¶È";
+            this.label6.Text = "å‡ºç‰Œé€Ÿåº¦";
             // 
             // button3
             // 
@@ -192,7 +192,7 @@ namespace Kuaff.Tractor
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(76, 25);
             this.button3.TabIndex = 19;
-            this.button3.Text = "Ä¬ÈÏ";
+            this.button3.Text = "é»˜è®¤";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
@@ -222,7 +222,7 @@ namespace Kuaff.Tractor
             this.MinimizeBox = false;
             this.Name = "SetSpeedDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "ÉèÖÃÓÎÏ·ËÙ¶È";
+            this.Text = "è®¾ç½®æ¸¸æˆé€Ÿåº¦";
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar3)).EndInit();

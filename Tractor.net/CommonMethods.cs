@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -6,36 +6,36 @@ using System.Text;
 namespace Kuaff.Tractor
 {
     /// <summary>
-    /// Í¨ÓÃ´¦ÀíÀà.
-    /// ÓÃÀ´´¦Àí³ÌĞòÖĞ³£ÓÃµÄ·½·¨£¬±ÈÈç½âÎöµÈ.
+    /// é€šç”¨å¤„ç†ç±».
+    /// ç”¨æ¥å¤„ç†ç¨‹åºä¸­å¸¸ç”¨çš„æ–¹æ³•ï¼Œæ¯”å¦‚è§£æç­‰.
     /// </summary>
     class CommonMethods
     {
         
         /// <summary>
-        /// ¶ÔÒ»¸öËæ»ú²úÉúµÄĞòÁĞ½øĞĞ½âÎö
+        /// å¯¹ä¸€ä¸ªéšæœºäº§ç”Ÿçš„åºåˆ—è¿›è¡Œè§£æ
         /// </summary>
-        /// <param name="list">ÒªÅÅĞòµÄÁĞ±í</param>
-        /// <param name="suit">µ±Ç°»¨É«</param>
-        /// <param name="rank">µ±Ç°ÅÆ¾Ö</param>
-        /// <returns>·µ»ØCurrentPoker¶ÔÏó</returns>
+        /// <param name="list">è¦æ’åºçš„åˆ—è¡¨</param>
+        /// <param name="suit">å½“å‰èŠ±è‰²</param>
+        /// <param name="rank">å½“å‰ç‰Œå±€</param>
+        /// <returns>è¿”å›CurrentPokerå¯¹è±¡</returns>
         internal static CurrentPoker parse(ArrayList list, int suit, int rank)
         {
-            //ºìÌÒ0-12
-            //ºÚÌÒ13-25
-            //·½¿é26-38
-            //Ã·»¨39-51
-            //Ğ¡Íõ52
-            //´óÍõ53
+            //çº¢æ¡ƒ0-12
+            //é»‘æ¡ƒ13-25
+            //æ–¹å—26-38
+            //æ¢…èŠ±39-51
+            //å°ç‹52
+            //å¤§ç‹53
             CurrentPoker poker = new CurrentPoker();
 
             poker.Rank = rank;
             poker.Suit = suit;
 
-            //½âÎöÓÃ»§µÄÅÆ¾Ö
+            //è§£æç”¨æˆ·çš„ç‰Œå±€
             foreach (int i in list)
             {
-                //´óÍõ
+                //å¤§ç‹
                 if (i == 53)
                 {
                     poker.BigJack++;
@@ -118,10 +118,10 @@ namespace Kuaff.Tractor
         }
 
         /// <summary>
-        /// ÅĞ¶Ïµ±Ç°·¢³öµÄÅÆÖĞ°üº¬µÄ·ÖÊı
+        /// åˆ¤æ–­å½“å‰å‘å‡ºçš„ç‰Œä¸­åŒ…å«çš„åˆ†æ•°
         /// </summary>
-        /// <param name="currentSendCards">¸÷¼Ò³öµÄÅÆ</param>
-        /// <returns>¼ÆËã³öµÄ·ÖÊı</returns>
+        /// <param name="currentSendCards">å„å®¶å‡ºçš„ç‰Œ</param>
+        /// <returns>è®¡ç®—å‡ºçš„åˆ†æ•°</returns>
         internal static int GetScores(ArrayList[] currentSendCards)
         {
             int scores = 0;
@@ -148,9 +148,9 @@ namespace Kuaff.Tractor
         }
 
         /// <summary>
-        /// ¼ÆËãÆäËû¸÷¼ÒÓÃ»§µÄ±àºÅ
+        /// è®¡ç®—å…¶ä»–å„å®¶ç”¨æˆ·çš„ç¼–å·
         /// </summary>
-        /// <param name="me">»ù×¼ÓÃ»§µÄ±àºÅ</param>
+        /// <param name="me">åŸºå‡†ç”¨æˆ·çš„ç¼–å·</param>
         /// <returns></returns>
         internal static int[] OtherUsers(int me)
         {
@@ -184,7 +184,7 @@ namespace Kuaff.Tractor
         }
 
         /// <summary>
-        /// ÅĞ¶ÏÒ»ÕÅÅÆÊÇ·ñÊÇÖ÷
+        /// åˆ¤æ–­ä¸€å¼ ç‰Œæ˜¯å¦æ˜¯ä¸»
         /// </summary>
         /// <param name="number"></param>
         /// <param name="suit"></param>
@@ -249,23 +249,23 @@ namespace Kuaff.Tractor
         }
 
         /// <summary>
-        /// ±È½ÏÊÇ·ñÊÇÍ¬Ò»»¨É«
+        /// æ¯”è¾ƒæ˜¯å¦æ˜¯åŒä¸€èŠ±è‰²
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
-        /// <param name="suit">Ö÷»¨É«</param>
-        /// <param name="rank">Ö÷Êı×Ö</param>
+        /// <param name="suit">ä¸»èŠ±è‰²</param>
+        /// <param name="rank">ä¸»æ•°å­—</param>
         /// <returns></returns>
         internal static bool IsSameSuit(int a, int b, int suit, int rank)
         {
             bool b1 = IsMaster(a, suit, rank);
             bool b2 = IsMaster(a, suit, rank);
 
-            if ((b1) && (b2)) //¶¼ÊÇÖ÷£¬±È½ÏÖ÷
+            if ((b1) && (b2)) //éƒ½æ˜¯ä¸»ï¼Œæ¯”è¾ƒä¸»
             {
                 return true;
             }
-            else if ((!b1) && (!b2)) //¶¼ÊÇ¸±
+            else if ((!b1) && (!b2)) //éƒ½æ˜¯å‰¯
             {
                 int suit1 = GetSuit(a);
                 int suit2 = GetSuit(b);
@@ -283,10 +283,10 @@ namespace Kuaff.Tractor
         }
 
         /// <summary>
-        /// µÃµ½Ò»¸öÅÆµÄ»¨É«
+        /// å¾—åˆ°ä¸€ä¸ªç‰Œçš„èŠ±è‰²
         /// </summary>
-        /// <param name="a">ÅÆÖµ</param>
-        /// <returns>»¨É«</returns>
+        /// <param name="a">ç‰Œå€¼</param>
+        /// <returns>èŠ±è‰²</returns>
         internal static int GetSuit(int a)
         {
             if (a >= 0 && a < 13)
@@ -314,12 +314,12 @@ namespace Kuaff.Tractor
         }
 
         /// <summary>
-        /// µÃµ½Ò»ÕÅÅÆµÄ»¨É«£¬Èç¹ûÊÇÖ÷£¬Ôò·µ»ØÖ÷µÄ»¨É«
+        /// å¾—åˆ°ä¸€å¼ ç‰Œçš„èŠ±è‰²ï¼Œå¦‚æœæ˜¯ä¸»ï¼Œåˆ™è¿”å›ä¸»çš„èŠ±è‰²
         /// </summary>
-        /// <param name="a">ÅÆÖµ</param>
-        /// <param name="suit">Ö÷»¨É«</param>
-        /// <param name="rank">Ö÷Rank</param>
-        /// <returns>»¨É«</returns>
+        /// <param name="a">ç‰Œå€¼</param>
+        /// <param name="suit">ä¸»èŠ±è‰²</param>
+        /// <param name="rank">ä¸»Rank</param>
+        /// <returns>èŠ±è‰²</returns>
         internal static int GetSuit(int a,int suit,int rank)
         {
             int firstSuit = 0;
@@ -341,12 +341,12 @@ namespace Kuaff.Tractor
         }
 
         /// <summary>
-        /// ´ÓÒ»¶ÑÅÆÖĞÕÒ³ö×î´óµÄÅÆ£¬¿¼ÂÇÖ÷
+        /// ä»ä¸€å †ç‰Œä¸­æ‰¾å‡ºæœ€å¤§çš„ç‰Œï¼Œè€ƒè™‘ä¸»
         /// </summary>
-        /// <param name="sendCards">Ò»¶ÑÖ÷</param>
-        /// <param name="suit">»¨É«</param>
-        /// <param name="rank">Ö÷</param>
-        /// <returns>×î´óµÄÅÆ</returns>
+        /// <param name="sendCards">ä¸€å †ä¸»</param>
+        /// <param name="suit">èŠ±è‰²</param>
+        /// <param name="rank">ä¸»</param>
+        /// <returns>æœ€å¤§çš„ç‰Œ</returns>
         internal static int GetMaxCard(ArrayList sendCards,int suit,int rank)
         {
             CurrentPoker cp = new CurrentPoker();
@@ -365,20 +365,20 @@ namespace Kuaff.Tractor
             int pairTotal = cp.GetPairs().Count;
             int count = cp.Count;
 
-            //Èç¹ûÍÏÀ­»ú
+            //å¦‚æœæ‹–æ‹‰æœº
             if (hasTractor)
             {
                 return cp.GetTractor();
             }
-            else if (count == 1) //µ¥ÕÅÅÆ
+            else if (count == 1) //å•å¼ ç‰Œ
             {
                 return (int)sendCards[0];
             }
-            else if (count == pairTotal * 2 && (count > 1)) //¶¼ÊÇ¶Ô
+            else if (count == pairTotal * 2 && (count > 1)) //éƒ½æ˜¯å¯¹
             {
                 return (int)cp.GetPairs()[pairTotal - 1];
             }
-            else //ÓĞ¶ÔºÍÓĞµ¥ÕÅÅÆ£¬µÃµ½¶ÔµÄ×î´óÖµ
+            else //æœ‰å¯¹å’Œæœ‰å•å¼ ç‰Œï¼Œå¾—åˆ°å¯¹çš„æœ€å¤§å€¼
             {
                 if (pairTotal>0)
                 {
@@ -395,13 +395,13 @@ namespace Kuaff.Tractor
         }
 
         /// <summary>
-        /// µÃµ½Ä³ÖÖ»¨É«ÅÆµÄÊıÁ¿
+        /// å¾—åˆ°æŸç§èŠ±è‰²ç‰Œçš„æ•°é‡
         /// </summary>
-        /// <param name="cp">ÅÆ</param>
-        /// <param name="suit">Ö÷»¨É«</param>
-        /// <param name="rank">Ö÷Rank</param>
-        /// <param name="mysuit">²éÕÒµÄ»¨É«</param>
-        /// <returns>ÅÆµÄÊıÁ¿</returns>
+        /// <param name="cp">ç‰Œ</param>
+        /// <param name="suit">ä¸»èŠ±è‰²</param>
+        /// <param name="rank">ä¸»Rank</param>
+        /// <param name="mysuit">æŸ¥æ‰¾çš„èŠ±è‰²</param>
+        /// <returns>ç‰Œçš„æ•°é‡</returns>
         internal static int GetSuitCount(CurrentPoker cp,int suit,int rank,int mysuit)
         {
             if (suit == mysuit)
@@ -461,14 +461,14 @@ namespace Kuaff.Tractor
         }
 
         /// <summary>
-        /// ±È½ÏÁ½ÕÅÅÆÊë´óÊëĞ¡
+        /// æ¯”è¾ƒä¸¤å¼ ç‰Œå­°å¤§å­°å°
         /// </summary>
-        /// <param name="a">µÚÒ»ÕÅÅÆ</param>
-        /// <param name="b">µÚ¶şÕÅÅÆ</param>
-        /// <param name="suit">Ö÷»¨É«</param>
-        /// <param name="rank">Ö÷Rank</param>
-        /// <param name="firstSuit">µÚÒ»ÕÅÅÆµÄ»¨É«</param>
-        /// <returns>Èç¹ûµÚÒ»ÕÅ´óÓÚµÈÓÚµÚ¶şÕÅÅÆ£¬·µ»Øtrue,·ñÔò·µ»Øfalse</returns>
+        /// <param name="a">ç¬¬ä¸€å¼ ç‰Œ</param>
+        /// <param name="b">ç¬¬äºŒå¼ ç‰Œ</param>
+        /// <param name="suit">ä¸»èŠ±è‰²</param>
+        /// <param name="rank">ä¸»Rank</param>
+        /// <param name="firstSuit">ç¬¬ä¸€å¼ ç‰Œçš„èŠ±è‰²</param>
+        /// <returns>å¦‚æœç¬¬ä¸€å¼ å¤§äºç­‰äºç¬¬äºŒå¼ ç‰Œï¼Œè¿”å›true,å¦åˆ™è¿”å›false</returns>
         internal static bool CompareTo(int a,int b,int suit,int rank, int firstSuit)
         {
             if ((a == -1) && (b == -1))
@@ -611,12 +611,12 @@ namespace Kuaff.Tractor
         }
 
         /// <summary>
-        /// ³öÅÆµÄÍ¨ÓÃ×ö·¨£¬´ÓCurrentPokerÖĞÉ¾³ı´ËÅÆ£¬´ÓpokerListÖĞÉ¾³ı´ËÅÆ£¬½«´ËÅÆ·ÅÈë³öÅÆÁĞ±íÖĞ
+        /// å‡ºç‰Œçš„é€šç”¨åšæ³•ï¼Œä»CurrentPokerä¸­åˆ é™¤æ­¤ç‰Œï¼Œä»pokerListä¸­åˆ é™¤æ­¤ç‰Œï¼Œå°†æ­¤ç‰Œæ”¾å…¥å‡ºç‰Œåˆ—è¡¨ä¸­
         /// </summary>
-        /// <param name="sends">³öÅÆÊı×éÁĞ±í</param>
-        /// <param name="cp">CurrentPoker¶ÔÏó</param>
-        /// <param name="pokerList">pokerList¶ÔÏó</param>
-        /// <param name="number">³öÅÆÊı×Ö</param>
+        /// <param name="sends">å‡ºç‰Œæ•°ç»„åˆ—è¡¨</param>
+        /// <param name="cp">CurrentPokerå¯¹è±¡</param>
+        /// <param name="pokerList">pokerListå¯¹è±¡</param>
+        /// <param name="number">å‡ºç‰Œæ•°å­—</param>
         internal static void SendCards(ArrayList sends,CurrentPoker cp,ArrayList pokerList,int number)
         {
             sends.Add(number);
