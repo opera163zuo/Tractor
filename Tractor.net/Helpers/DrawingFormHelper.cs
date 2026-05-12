@@ -2286,7 +2286,6 @@ namespace Kuaff.Tractor
 
         #region ����ʱ�ĸ�������
 
-        //�����ƺŵõ���Ӧ���Ƶ�ͼƬ
         private Bitmap getPokerImageByNumber(int number)【已迁移到 GdiRenderer.GetPokerImageByNumber】
         
         {

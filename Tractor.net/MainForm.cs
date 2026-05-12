@@ -165,7 +165,7 @@ namespace Kuaff.Tractor
                         drawingFormHelper.DrawFinishedScoreImage();
                         break;
                     case RenderCmdType.ShowBottomCards:
-                        drawingFormHelper.DrawBottomCards(mainForm.send8Cards);
+                        drawingFormHelper.DrawBottomCards(send8Cards);
                         break;
                 }
             };
