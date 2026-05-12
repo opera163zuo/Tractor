@@ -319,9 +319,11 @@ namespace Kuaff.Tractor
                 _pauseMaxMs = gs.Config?.FinishedOncePauseTime ?? 1500;
                 _pauseStartTicks = DateTime.Now.Ticks;
                 _wakeupCommand = CardCommands.DrawOnceFinished;
-                // 简化：先出者赢（后续 Phase C 接入 TractorRules）
-                newWhoIsBigger = gs.FirstSend;
+                newWhoIsBigger = ResolveTrickWinner(
+                    gs.CurrentSendCards, gs.State.Suit, gs.State.Rank, gs.FirstSend);
                 nextOrder = newWhoIsBigger;
+                // 累加本墩得分
+                gs.Scores += CalculateTrickScore(gs.CurrentSendCards);
             }
             else
             {

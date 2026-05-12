@@ -78,7 +78,11 @@ namespace Kuaff.Tractor
                     break;
 
                 case RenderCmdType.DrawPlayedCards:
-                    // 复杂渲染→fallback
+                    if (State != null && cmd.Payload is PlayedCardsPayload played)
+                    {
+                        DrawOtherPlayerPlayedCards(bmp, State, played.PlayerId);
+                        handled = true;
+                    }
                     break;
 
                 case RenderCmdType.ShowToolbar:
@@ -100,11 +104,19 @@ namespace Kuaff.Tractor
                     break;
 
                 case RenderCmdType.ShowRoundWinner:
-                    // 复杂渲染→fallback
+                    if (State != null)
+                    {
+                        DrawFinishedOnceSendedCards(bmp, State);
+                        handled = true;
+                    }
                     break;
 
                 case RenderCmdType.ShowRankResult:
-                    // 复杂渲染→fallback
+                    if (State != null)
+                    {
+                        DrawFinishedScoreImage(bmp, State);
+                        handled = true;
+                    }
                     break;
 
                 case RenderCmdType.None:
@@ -280,6 +292,152 @@ namespace Kuaff.Tractor
                 }
             }
         }
+
+
+        #region 对手出牌渲染（Phase B 批 2）
+
+        public void DrawOtherPlayerPlayedCards(Bitmap bmp, GameState state, int playerId)
+        {
+            if (playerId < 2 || playerId > 4) return;
+            if (state.CurrentSendCards == null) return;
+            var cards = state.CurrentSendCards[playerId - 1];
+            if (cards == null || cards.Count == 0) return;
+
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                int x, y, dx;
+                int firstSuit = state.State.Suit;
+                int rank = state.State.Rank;
+                int count = cards.Count;
+
+                switch (playerId)
+                {
+                    case 2: // 对家（上方横排）
+                        x = 320 - count * 10;
+                        y = 55;
+                        dx = 20;
+                        for (int i = 0; i < cards.Count; i++)
+                        {
+                            g.DrawImage(GetCardImageFunc((int)cards[i]), x + i * dx, y, 71, 96);
+                        }
+                        break;
+                    case 3: // 上家（左侧竖排）
+                        x = 50;
+                        y = 290 - count * 10;
+                        dx = 0;
+                        for (int i = 0; i < cards.Count; i++)
+                        {
+                            g.DrawImage(GetCardImageFunc((int)cards[i]), x, y - i * 10, 71, 96);
+                        }
+                        break;
+                    case 4: // 下家（右侧竖排）
+                        x = 530;
+                        y = 290 - count * 10;
+                        dx = 0;
+                        for (int i = 0; i < cards.Count; i++)
+                        {
+                            g.DrawImage(GetCardImageFunc((int)cards[i]), x, y - i * 10, 71, 96);
+                        }
+                        break;
+                }
+            }
+        }
+
+        public void DrawFinishedOnceSendedCards(Bitmap bmp, GameState state)
+        {
+            if (state == null || state.CurrentSendCards == null) return;
+            // 仅绘制，不修改状态 — 状态修改由 MainForm 负责
+        }
+
+        public void DrawFinishedScoreImage(Bitmap bmp, GameState state)
+        {
+            if (state == null) return;
+            DrawScoreImage(bmp, BackgroundImage, state.Scores, state.State.Master);
+        }
+
+        #endregion
+
+        #region 界面装饰（Phase B 批 1）
+
+        public void DrawSidebar(Bitmap bmp)
+        {
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                g.DrawImage(Properties.Resources.Sidebar, 20, 30, 70, 89);
+                g.DrawImage(Properties.Resources.Sidebar, 540, 30, 70, 89);
+            }
+        }
+
+        public void DrawMaster(Bitmap bmp, int who, int start)
+        {
+            if (who < 1 || who > 4) return;
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                start = start * 80;
+                int X = 0;
+                if (who == 1) { start += 40; X = 548; }
+                else if (who == 2) { start += 60; X = 580; }
+                else if (who == 3) { start += 0; X = 30; }
+                else if (who == 4) { start += 20; X = 60; }
+                g.DrawImage(Properties.Resources.Master, new Rectangle(X, 45, 20, 20),
+                    new Rectangle(start, 0, 20, 20), GraphicsUnit.Pixel);
+            }
+        }
+
+        public void DrawOtherMaster(Bitmap bmp, int who, int start)
+        {
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                if (who != 1)
+                    g.DrawImage(Properties.Resources.Master, new Rectangle(548, 45, 20, 20),
+                        new Rectangle(40, 0, 20, 20), GraphicsUnit.Pixel);
+                if (who != 2)
+                    g.DrawImage(Properties.Resources.Master, new Rectangle(580, 45, 20, 20),
+                        new Rectangle(60, 0, 20, 20), GraphicsUnit.Pixel);
+                if (who != 3)
+                    g.DrawImage(Properties.Resources.Master, new Rectangle(31, 45, 20, 20),
+                        new Rectangle(0, 0, 20, 20), GraphicsUnit.Pixel);
+                if (who != 4)
+                    g.DrawImage(Properties.Resources.Master, new Rectangle(61, 45, 20, 20),
+                        new Rectangle(20, 0, 20, 20), GraphicsUnit.Pixel);
+            }
+        }
+
+        public void DrawRank(Bitmap bmp, int number, bool me, bool b)
+        {
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                int X = 0, X2 = 0;
+                if (me) { X = 566; X2 = 46; }
+                else { X = 46; X2 = 566; }
+
+                Rectangle destRect = new Rectangle(X, 88, 25, 25);
+                Rectangle redrawRect = new Rectangle(X2, 88, 25, 25);
+
+                if (!b)
+                {
+                    g.DrawImage(Properties.Resources.Suit, destRect,
+                        new Rectangle(250, 0, 25, 25), GraphicsUnit.Pixel);
+                    return;
+                }
+
+                // 画对应的牌点
+                int srcX = (number - 2) * 25;
+                if (srcX < 0) srcX = 0;
+                g.DrawImage(Properties.Resources.Sidebar, destRect,
+                    new Rectangle(23, 58, 25, 25), GraphicsUnit.Pixel);
+                g.DrawImage(Properties.Resources.Suit, destRect,
+                    new Rectangle(srcX, 50, 25, 25), GraphicsUnit.Pixel);
+                g.DrawImage(Properties.Resources.Sidebar, redrawRect,
+                    new Rectangle(23, 58, 25, 25), GraphicsUnit.Pixel);
+                if (number > 0)
+                {
+                    DrawSuit(g, 0, !me, false);
+                }
+            }
+        }
+
+        #endregion
 
         #endregion
     }

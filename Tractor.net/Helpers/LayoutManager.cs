@@ -45,4 +45,43 @@
         // ===== 牌间距 =====
         public const int SelectedCardOffset = 13;  // 选中牌的Y偏移
     }
+        // ===== 对手出牌区域 =====
+        public const int OtherPlayer2CardX = 320;
+        public const int OtherPlayer2CardY = 55;
+        public const int OtherPlayer2Spacing = 20;
+        public const int OtherPlayer3CardX = 50;
+        public const int OtherPlayer3CardY = 290;
+        public const int OtherPlayer3Spacing = 10;
+        public const int OtherPlayer4CardX = 530;
+        public const int OtherPlayer4CardY = 290;
+        public const int OtherPlayer4Spacing = 10;
+
+        // ===== 侧栏 =====
+        public const int SidebarCardX1 = 20;
+        public const int SidebarCardX2 = 540;
+        public const int SidebarCardY = 30;
+        public const int SidebarCardWidth = 70;
+        public const int SidebarCardHeight = 89;
+
+        // ===== 庄家标识 =====
+        public const int MasterIconX1 = 548;
+        public const int MasterIconX2 = 580;
+        public const int MasterIconX3 = 30;
+        public const int MasterIconX4 = 60;
+        public const int MasterIconY = 45;
+        public const int MasterIconSize = 20;
+
+        // ===== Rank 显示 =====
+        public const int RankIconXMe = 566;
+        public const int RankIconXOther = 46;
+        public const int RankIconY = 88;
+        public const int RankIconSize = 25;
+
+        // ===== 花色显示 =====
+        public const int SuitIconXMe = 563;
+        public const int SuitIconXOther = 43;
+        public const int SuitIconY = 88;
+        public const int SuitIconSize = 25;
+
+    }
 }
