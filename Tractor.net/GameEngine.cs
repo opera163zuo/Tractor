@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Kuaff.Tractor
@@ -14,14 +15,37 @@ namespace Kuaff.Tractor
         private long _pauseMaxMs;
         private CardCommands _wakeupCommand;
 
+        // ====== 步骤5：发牌相关 ======
+        private int _dealCount = 0;
+        private bool _isDebug = false;
+
+        // 外部传入的数据引用
+        private ArrayList[] _pokerLists;
+        private CurrentPoker[] _currentPokers;
+
         /// <summary>
         /// 当前状态引用（供外部读取）。
         /// </summary>
         public CurrentState State => _state;
 
+        /// <summary>
+        /// 当前发牌轮数。
+        /// </summary>
+        public int DealCount => _dealCount;
+
         public GameEngine()
         {
             _state = new CurrentState(0, 0, 0, 0, 0, 0, CardCommands.ReadyCards);
+        }
+
+        /// <summary>
+        /// 设置牌数据引用（MainForm 在开始新游戏时调用）。
+        /// </summary>
+        public void SetGameData(ArrayList[] pokerLists, CurrentPoker[] currentPokers, bool isDebug)
+        {
+            _pokerLists = pokerLists;
+            _currentPokers = currentPokers;
+            _isDebug = isDebug;
         }
 
         /// <summary>
@@ -30,6 +54,7 @@ namespace Kuaff.Tractor
         public void NewGame()
         {
             _state = new CurrentState(0, 0, 0, 0, 0, 0, CardCommands.ReadyCards);
+            _dealCount = 0;
         }
 
         /// <summary>
@@ -43,9 +68,8 @@ namespace Kuaff.Tractor
             switch (_state.CurrentCardCommands)
             {
                 // ====== 步骤4：最简单分支 ======
-
                 case CardCommands.Pause:
-                    long interval = (nowTicks - _pauseStartTicks) / 10000; // Ticks → ms
+                    long interval = (nowTicks - _pauseStartTicks) / 10000;
                     if (interval > _pauseMaxMs)
                     {
                         _state.CurrentCardCommands = _wakeupCommand;
@@ -54,16 +78,53 @@ namespace Kuaff.Tractor
                     break;
 
                 case CardCommands.WaitingShowPass:
-                    // 这个分支在 timer_Tick 中只调用了 DrawCenterImage + Refresh
-                    // 逻辑上只是视觉过渡，Engine 只需标记状态变化。
-                    // 实际渲染由 MainForm 在拿到 TickResult 后处理。
                     result.RenderCommands.Add(new RenderCommand(RenderCmdType.ShowPassImage));
                     _state.CurrentCardCommands = CardCommands.ReadyCards;
                     result.StateChanged = true;
                     break;
 
+                // ====== 步骤5：发牌循环 ======
+                case CardCommands.ReadyCards:
+                {
+                    if (_dealCount == 0 && !_isDebug)
+                    {
+                        result.RenderCommands.Add(new RenderCommand(RenderCmdType.ShowToolbar));
+                    }
+
+                    if (_dealCount < 25)
+                    {
+                        // 数据逻辑：分配牌
+                        if (_pokerLists != null && _currentPokers != null)
+                        {
+                            int card0 = (int)_pokerLists[0][_dealCount];
+                            int card1 = (int)_pokerLists[1][_dealCount];
+                            int card2 = (int)_pokerLists[2][_dealCount];
+                            int card3 = (int)_pokerLists[3][_dealCount];
+
+                            _currentPokers[0].AddCard(card0);
+                            _currentPokers[1].AddCard(card1);
+                            _currentPokers[2].AddCard(card2);
+                            _currentPokers[3].AddCard(card3);
+                        }
+
+                        // 通知渲染器：第 _dealCount 轮的4张牌已分配
+                        result.RenderCommands.Add(new RenderCommand(
+                            RenderCmdType.DealCard,
+                            new DealCardPayload { Round = _dealCount }));
+
+                        _dealCount++;
+                        result.StateChanged = true;
+                    }
+                    else
+                    {
+                        // 25 轮发牌完毕
+                        _state.CurrentCardCommands = CardCommands.DrawCenter8Cards;
+                        result.StateChanged = true;
+                    }
+                    break;
+                }
+
                 default:
-                    // 其他分支后续步骤实现
                     break;
             }
 
@@ -95,14 +156,15 @@ namespace Kuaff.Tractor
     /// </summary>
     public class TickResult
     {
-        /// <summary>
-        /// Engine 内部状态是否发生变化（需要外部同步）。
-        /// </summary>
         public bool StateChanged { get; set; }
-
-        /// <summary>
-        /// 需要外部执行的渲染指令列表。
-        /// </summary>
         public List<RenderCommand> RenderCommands { get; } = new List<RenderCommand>();
+    }
+
+    /// <summary>
+    /// 发牌指令的数据负载。
+    /// </summary>
+    public class DealCardPayload
+    {
+        public int Round { get; set; }
     }
 }

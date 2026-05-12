@@ -339,8 +339,12 @@ namespace Kuaff.Tractor
             //���û�δ����,ѭ��25�ν��Ʒ���
             currentCount = 0;
 
-            //Ŀǰ�����Է���
-            showSuits = 0;
+            // 同步 Engine 数据
+            engine.NewGame();
+            engine.SetGameData(pokerList, currentPokers, gameConfig.IsDebug);
+
+            //
+            showSuits = 0;showSuits = 0;
             whoShowRank = 0;
 
             //�÷�����
@@ -699,29 +703,30 @@ namespace Kuaff.Tractor
             {
                 PlayRandomSongs();
             }
-            //1.����
-            if (currentState.CurrentCardCommands == CardCommands.ReadyCards) //����
+            //1.���� — 通过 Engine 处理
+            if (currentState.CurrentCardCommands == CardCommands.ReadyCards)
             {
-                if (currentCount ==0)
+                TickResult tickResult = engine.Tick(DateTime.Now.Ticks);
+                if (tickResult.StateChanged)
                 {
-                    //��������
-                    if (!gameConfig.IsDebug)
+                    currentState = engine.State;
+                }
+                foreach (var cmd in tickResult.RenderCommands)
+                {
+                    if (cmd.Type == RenderCmdType.ShowToolbar)
                     {
                         drawingFormHelper.DrawToolbar();
                     }
-
+                    else if (cmd.Type == RenderCmdType.DealCard)
+                    {
+                        var payload = (DealCardPayload)cmd.Payload;
+                        // Engine 已完成 card distribution data work
+                        // DrawingFormHelper 只做渲染（无 AddCard / DoRankOrNot）
+                        drawingFormHelper.RenderDealRound(payload.Round);
+                    }
                 }
-
-                if (currentCount < 25)
-                {
-                    drawingFormHelper.ReadyCards(currentCount);
-                    currentCount++;
-                    
-                }
-                else
-                {
-                    currentState.CurrentCardCommands = CardCommands.DrawCenter8Cards;
-                }
+                // 同步 currentCount（虽然 Engine 已管理，保留兼容）
+                currentCount = engine.DealCount;
             }
             else if (currentState.CurrentCardCommands == CardCommands.WaitingShowBottom) //��������Ϻ����������
             {
