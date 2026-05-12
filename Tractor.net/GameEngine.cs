@@ -291,8 +291,17 @@ namespace Kuaff.Tractor
             _currentPokers[playerId - 1] = CommonMethods.parse(
                 _pokerLists[playerId - 1], _state.Suit, _state.Rank);
 
-            // 判断一圈是否结束
-            bool allPlayed = (_currentSendCards[3].Count > 0);
+            // 判断一圈是否结束（所有4个玩家都出了同样数量的牌）
+            bool allPlayed = true;
+            int expectedCount = (_firstSend >= 1 && _firstSend <= 4) ? _currentSendCards[_firstSend - 1].Count : 1;
+            for (int i = 0; i < 4; i++)
+            {
+                if (_currentSendCards[i].Count != expectedCount)
+                {
+                    allPlayed = false;
+                    break;
+                }
+            }
 
             if (allPlayed)
             {
@@ -353,6 +362,20 @@ namespace Kuaff.Tractor
         public void SyncState(CardCommands command)
         {
             _state.CurrentCardCommands = command;
+        }
+
+        public void SetCurrentRank(int rank)
+        {
+            _state.Rank = rank;
+        }
+
+        public void SyncTeamRanks(int ourRank, int opposedRank)
+        {
+            _state.OurCurrentRank = ourRank;
+            _state.OpposedCurrentRank = opposedRank;
+        }
+        {
+            _state.Rank = rank;
         }
     }
 
