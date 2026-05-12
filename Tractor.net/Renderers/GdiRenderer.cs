@@ -66,7 +66,11 @@ namespace Kuaff.Tractor
                     break;
 
                 case RenderCmdType.DrawCenter8:
-                    // 复杂渲染→fallback
+                    if (State != null)
+                    {
+                        DrawCenter8Cards(bmp, State);
+                        handled = true;
+                    }
                     break;
 
                 case RenderCmdType.RedrawMyHand:
@@ -233,6 +237,97 @@ namespace Kuaff.Tractor
             return _config.BackImage;
         }
 
+        private void ClearSuitCards(Graphics g)
+        {
+            if (BackgroundImage == null) return;
+            g.DrawImage(BackgroundImage, new Rectangle(80, 158, 71, 96), new Rectangle(80, 158, 71, 96), GraphicsUnit.Pixel);
+            g.DrawImage(BackgroundImage, new Rectangle(480, 200, 71, 96), new Rectangle(480, 200, 71, 96), GraphicsUnit.Pixel);
+            g.DrawImage(BackgroundImage, new Rectangle(437, 124, 71, 96), new Rectangle(437, 124, 71, 96), GraphicsUnit.Pixel);
+        }
+
+        public void DrawSuitUI(Bitmap bmp, GameState state)
+        {
+            if (bmp == null || state == null || state.State == null) return;
+
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                if (state.ShowSuits == 1)
+                {
+                    if (state.WhoShowRank == 2)
+                    {
+                        g.DrawImage(GetPokerImageByNumber(state.State.Suit * 13 - 13 + state.CurrentRank), 437, 124, 71, 96);
+                    }
+                    else if (state.WhoShowRank == 3)
+                    {
+                        g.DrawImage(GetPokerImageByNumber(state.State.Suit * 13 - 13 + state.CurrentRank), 80, 158, 71, 96);
+                    }
+                    else if (state.WhoShowRank == 4)
+                    {
+                        g.DrawImage(GetPokerImageByNumber(state.State.Suit * 13 - 13 + state.CurrentRank), 480, 200, 71, 96);
+                    }
+                }
+                else if (state.ShowSuits == 2)
+                {
+                    if (state.WhoShowRank == 2)
+                    {
+                        ClearSuitCards(g);
+                        g.DrawImage(GetPokerImageByNumber(state.State.Suit * 13 - 13 + state.CurrentRank), 423, 124, 71, 96);
+                        g.DrawImage(GetPokerImageByNumber(state.State.Suit * 13 - 13 + state.CurrentRank), 437, 124, 71, 96);
+                    }
+                    else if (state.WhoShowRank == 3)
+                    {
+                        ClearSuitCards(g);
+                        g.DrawImage(GetPokerImageByNumber(state.State.Suit * 13 - 13 + state.CurrentRank), 80, 158, 71, 96);
+                        g.DrawImage(GetPokerImageByNumber(state.State.Suit * 13 - 13 + state.CurrentRank), 80, 178, 71, 96);
+                    }
+                    else if (state.WhoShowRank == 4)
+                    {
+                        ClearSuitCards(g);
+                        g.DrawImage(GetPokerImageByNumber(state.State.Suit * 13 - 13 + state.CurrentRank), 480, 200, 71, 96);
+                        g.DrawImage(GetPokerImageByNumber(state.State.Suit * 13 - 13 + state.CurrentRank), 480, 220, 71, 96);
+                    }
+                }
+            }
+        }
+
+        public void DrawRankCardsUI(Bitmap bmp, GameState state)
+        {
+            if (bmp == null || state == null || state.State == null) return;
+            int suit = state.State.Suit;
+            int master = state.State.Master;
+            if (suit <= 0) return;
+
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                if ((master == 1) || (master == 2))
+                {
+                    DrawSuit(g, suit, true, true);
+                }
+                else
+                {
+                    DrawSuit(g, suit, false, true);
+                }
+            }
+
+            if ((master == 1) || (master == 2))
+            {
+                DrawRank(bmp, state.State.OurCurrentRank, true, true);
+            }
+            else
+            {
+                DrawRank(bmp, state.State.OpposedCurrentRank, false, true);
+            }
+
+            DrawMaster(bmp, master, 1);
+            DrawOtherMaster(bmp, master, 1);
+        }
+
+        public void DrawRankOrNotUI(Bitmap bmp, GameState state)
+        {
+            DrawRankCardsUI(bmp, state);
+            DrawSuitUI(bmp, state);
+        }
+
         #endregion
 
         #region 发牌动画
@@ -276,9 +371,207 @@ namespace Kuaff.Tractor
 
         public void DrawMySortedCards(Bitmap bmp, CurrentPoker cp, int cardCount)
         {
-            if (cp == null || State?.PokerLists == null) return;
-            // 复杂手牌排序渲染通过 FallbackRender 转到 DrawingFormHelper
-            // GdiRenderer 暂时只支持简化渲染
+            if (bmp == null || cp == null) return;
+
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                Rectangle rect = new Rectangle(30, 355, 600, 116);
+                if (BackgroundImage != null)
+                {
+                    g.DrawImage(BackgroundImage, rect, rect, GraphicsUnit.Pixel);
+                }
+                else
+                {
+                    g.FillRectangle(Brushes.Transparent, rect);
+                }
+
+                int start = (int)((2780 - cardCount * 75) / 10);
+                int x = start;
+                foreach (int card in GetOrderedHandCards(cp))
+                {
+                    g.DrawImage(GetPokerImageByNumber(card), x, 355, 71, 96);
+                    x += 13;
+                }
+            }
+        }
+
+        public void DrawCenter8Cards(Bitmap bmp, GameState state)
+        {
+            if (bmp == null || state == null || state.State == null || state.PokerLists == null || state.PokerLists.Length < 4) return;
+
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                Rectangle backRect = new Rectangle(77, 121, 477, 254);
+                if (BackgroundImage != null)
+                {
+                    g.DrawImage(BackgroundImage, backRect, backRect, GraphicsUnit.Pixel);
+                }
+            }
+
+            if (state.State.Master == 1)
+            {
+                Get8Cards(state.PokerLists[0], state.PokerLists[1], state.PokerLists[2], state.PokerLists[3]);
+            }
+            else if (state.State.Master == 2)
+            {
+                Get8Cards(state.PokerLists[1], state.PokerLists[0], state.PokerLists[2], state.PokerLists[3]);
+            }
+            else if (state.State.Master == 3)
+            {
+                Get8Cards(state.PokerLists[2], state.PokerLists[1], state.PokerLists[0], state.PokerLists[3]);
+            }
+            else if (state.State.Master == 4)
+            {
+                Get8Cards(state.PokerLists[3], state.PokerLists[1], state.PokerLists[2], state.PokerLists[0]);
+            }
+        }
+
+        public void DrawDealRound(Bitmap bmp, GameState state, int count)
+        {
+            if (bmp == null || state == null || state.PokerLists == null || state.CurrentPokers == null) return;
+            if (count < 0) return;
+
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                DrawCenterAllCards(g, 58 - count * 2);
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                if (state.PokerLists.Length <= i || state.CurrentPokers.Length <= i || state.PokerLists[i] == null || state.CurrentPokers[i] == null) return;
+                if (state.PokerLists[i].Count <= count) return;
+                state.CurrentPokers[i].AddCard((int)state.PokerLists[i][count]);
+            }
+
+            DrawMySortedCards(bmp, state.CurrentPokers[0], state.CurrentPokers[0].Count);
+
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                g.DrawImage(_config.BackImage, 437 - count * 13, 25, 71, 96);
+                g.DrawImage(_config.BackImage, 6, 145 + count * 4, 71, 96);
+                g.DrawImage(_config.BackImage, 554, 241 - count * 4, 71, 96);
+            }
+        }
+
+        public void DrawMyFinishSendedCards(Bitmap bmp, GameState state)
+        {
+            if (bmp == null || state == null || state.CurrentSendCards == null || state.CurrentAllSendPokers == null || state.CurrentPokers == null) return;
+
+            DrawMySendedCardsAction(bmp, state.CurrentSendCards[0]);
+
+            for (int i = 0; i < state.CurrentSendCards[0].Count; i++)
+            {
+                state.CurrentAllSendPokers[0].AddCard((int)state.CurrentSendCards[0][i]);
+            }
+
+            if (state.CurrentPokers[0].Count > 0)
+            {
+                DrawMySortedCards(bmp, state.CurrentPokers[0], state.CurrentPokers[0].Count);
+            }
+            else
+            {
+                using (Graphics g = Graphics.FromImage(bmp))
+                {
+                    Rectangle rect = new Rectangle(30, 355, 560, 116);
+                    if (BackgroundImage != null)
+                    {
+                        g.DrawImage(BackgroundImage, rect, rect, GraphicsUnit.Pixel);
+                    }
+                }
+            }
+
+            DrawScoreImage(bmp, BackgroundImage, state.Scores, state.State.Master);
+
+            if (state.CurrentSendCards[3].Count > 0)
+            {
+                state.State.CurrentCardCommands = CardCommands.DrawOnceFinished;
+            }
+            else
+            {
+                state.WhoseOrder = 4;
+                state.State.CurrentCardCommands = CardCommands.WaitingForSend;
+            }
+        }
+
+        private IEnumerable<int> GetOrderedHandCards(CurrentPoker cp)
+        {
+            int suit = 0;
+            if (State != null && State.State != null)
+            {
+                suit = State.State.Suit;
+            }
+            if (suit == 0)
+            {
+                suit = cp.Suit;
+            }
+
+            int[] suitOrder;
+            switch (suit)
+            {
+                case 1:
+                    suitOrder = new int[] { 2, 3, 4, 1 };
+                    break;
+                case 2:
+                    suitOrder = new int[] { 3, 4, 1, 2 };
+                    break;
+                case 3:
+                    suitOrder = new int[] { 4, 1, 2, 3 };
+                    break;
+                case 4:
+                    suitOrder = new int[] { 1, 2, 3, 4 };
+                    break;
+                case 5:
+                    suitOrder = new int[] { 1, 2, 3, 4, 5 };
+                    break;
+                default:
+                    suitOrder = new int[] { 1, 2, 3, 4 };
+                    break;
+            }
+
+            List<int> cards = new List<int>();
+            foreach (int s in suitOrder)
+            {
+                cards.AddRange(cp.GetSuitCards(s));
+            }
+            return cards;
+        }
+
+        private void DrawCenterAllCards(Graphics g, int num)
+        {
+            if (g == null) return;
+            for (int i = 0; i < num; i++)
+            {
+                g.DrawImage(_config.BackImage, 260 + i * 2, 280, 71, 96);
+            }
+        }
+
+        private void DrawMySendedCardsAction(Bitmap bmp, ArrayList readys)
+        {
+            if (bmp == null || readys == null) return;
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                int start = 296 - readys.Count * 13 / 2;
+                for (int i = 0; i < readys.Count; i++)
+                {
+                    g.DrawImage(GetPokerImageByNumber((int)readys[i]), start + i * 13, 244, 71, 96);
+                }
+            }
+        }
+
+        private static void Get8Cards(ArrayList list0, ArrayList list1, ArrayList list2, ArrayList list3)
+        {
+            list0.Add(list1[25]);
+            list0.Add(list1[26]);
+            list0.Add(list2[25]);
+            list0.Add(list2[26]);
+            list0.Add(list3[25]);
+            list0.Add(list3[26]);
+            list1.RemoveAt(26);
+            list1.RemoveAt(25);
+            list2.RemoveAt(26);
+            list2.RemoveAt(25);
+            list3.RemoveAt(26);
+            list3.RemoveAt(25);
         }
 
         public void DrawBottomCards(Bitmap bmp, ArrayList cards)

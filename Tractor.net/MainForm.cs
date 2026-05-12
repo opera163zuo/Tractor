@@ -105,6 +105,10 @@ namespace Kuaff.Tractor
             currentCount = newState.DealCount;
             showSuits = newState.ShowSuits;
             whoShowRank = newState.WhoShowRank;
+            if (renderer != null)
+            {
+                renderer.State = _gameState;
+            }
         }
 
         private void SyncLocalStateToGameState()
@@ -126,6 +130,10 @@ namespace Kuaff.Tractor
             _gameState.WhoIsBigger = whoIsBigger;
             _gameState.Scores = Scores;
             _gameState.DealCount = currentCount;
+            if (renderer != null)
+            {
+                renderer.State = _gameState;
+            }
         }
         internal GdiRenderer renderer;
 
@@ -187,10 +195,10 @@ namespace Kuaff.Tractor
                 switch (cmdType)
                 {
                     case RenderCmdType.DrawCenter8:
-                        drawingFormHelper.DrawCenter8Cards();
+                        renderer.DrawCenter8Cards(bmp, _gameState);
                         break;
                     case RenderCmdType.RedrawMyHand:
-                        drawingFormHelper.DrawMySortedCards(currentPokers[0], currentPokers[0].Count);
+                        renderer.DrawMySortedCards(bmp, currentPokers[0], currentPokers[0].Count);
                         break;
                                             if (playedP.PlayerId == 1) drawingFormHelper.DrawMyFinishSendedCards();
                         else if (playedP.PlayerId == 2) drawingFormHelper.DrawFrieldUserSendedCards();
@@ -546,7 +554,7 @@ namespace Kuaff.Tractor
                         
                         if (currentState.CurrentCardCommands == CardCommands.DrawMySortedCards)
                         {
-                            drawingFormHelper.DrawMySortedCards(currentPokers[0], currentPokers[0].Count);
+                            renderer.DrawMySortedCards(bmp, currentPokers[0], currentPokers[0].Count);
                         }
                         Refresh();
                     }
@@ -575,6 +583,7 @@ namespace Kuaff.Tractor
                 if (currentState.Suit == 0 && currentPokers[0].Count > 0)
                 {
                     drawingFormHelper.CallDoRankOrNot();
+                    renderer.DrawRankOrNotUI(bmp, _gameState);
                 }
                 // currentCount synced via SyncFromGameState above
             }
@@ -775,7 +784,7 @@ namespace Kuaff.Tractor
 
                 if (currentCount < 25)
                 {
-                    drawingFormHelper.ReadyCards(currentCount);
+                    renderer.DrawDealRound(bmp, _gameState, currentCount);
                     currentCount++;
                     SyncLocalStateToGameState();
                 }
@@ -854,9 +863,9 @@ namespace Kuaff.Tractor
                         }
                         whoseOrder = currentState.Master;
                         firstSend = whoseOrder;
-                        drawingFormHelper.DrawCenter8Cards();
+                        renderer.DrawCenter8Cards(bmp, _gameState);
                         initSendedCards();
-                        drawingFormHelper.DrawMySortedCards(currentPokers[0], currentPokers[0].Count);
+                        renderer.DrawMySortedCards(bmp, currentPokers[0], currentPokers[0].Count);
                         currentState.CurrentCardCommands = CardCommands.WaitingForSending8Cards;
                         SyncLocalStateToGameState();
                         drawingFormHelper.DrawScoreImage(0);
@@ -924,7 +933,7 @@ namespace Kuaff.Tractor
                                 Algorithm.ShouldSendedCards(this, 1, currentPokers, currentSendCards, currentState.Suit, currentRank);
                             else
                                 Algorithm.MustSendedCards(this, 1, currentPokers, currentSendCards, currentState.Suit, currentRank, currentSendCards[firstSend - 1].Count);
-                            drawingFormHelper.DrawMyFinishSendedCards();
+                            renderer.DrawMyFinishSendedCards(bmp, _gameState);
                         }
                         needsRender = false;
                     }
@@ -937,7 +946,7 @@ namespace Kuaff.Tractor
                         else if (currentState.CurrentCardCommands == CardCommands.DrawMySortedCards)
             {
                 // sort my cards and wait for play
-                drawingFormHelper.DrawMySortedCards(currentPokers[0], currentPokers[0].Count);
+                renderer.DrawMySortedCards(bmp, currentPokers[0], currentPokers[0].Count);
                 Refresh();
                 currentState.CurrentCardCommands = CardCommands.WaitingForSend;
                 SyncLocalStateToGameState();
