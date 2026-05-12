@@ -82,6 +82,7 @@
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
     <Compile Include="Algorithms\Algorithm.cs" />
+    <Compile Include="Algorithms\AlgorithmCore.cs" />
     <Compile Include="Dialogs\SelectCardBackImage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -114,6 +115,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Helpers\DrawingFormHelper.cs" />
+
+    <Compile Include="GameEngine.cs" />
+    <Compile Include="GameState.cs" />
+    <Compile Include="Helpers\LayoutManager.cs" />
+    <Compile Include="RenderCommand.cs" />
+    <Compile Include="Renderers\GdiRenderer.cs" />
     <Compile Include="Dialogs\Fere.cs">
       <SubType>Form</SubType>
     </Compile>

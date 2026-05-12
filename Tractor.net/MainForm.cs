@@ -140,6 +140,35 @@ namespace Kuaff.Tractor
             drawingFormHelper = new DrawingFormHelper(this);
             calculateRegionHelper = new CalculateRegionHelper(this);
             renderer = new GdiRenderer(gameConfig);
+
+            renderer.FallbackRender = (cmdType, payload, bmp) =>
+            {
+                switch (cmdType)
+                {
+                    case RenderCmdType.DrawCenter8:
+                        drawingFormHelper.DrawCenter8Cards();
+                        break;
+                    case RenderCmdType.RedrawMyHand:
+                        drawingFormHelper.DrawMySortedCards(currentPokers[0], currentPokers[0].Count);
+                        break;
+                    case RenderCmdType.DrawPlayedCards:
+                        var playedP = (PlayedCardsPayload)payload;
+                        if (playedP.PlayerId == 1) drawingFormHelper.DrawMyFinishSendedCards();
+                        else if (playedP.PlayerId == 2) drawingFormHelper.DrawFrieldUserSendedCards();
+                        else if (playedP.PlayerId == 3) drawingFormHelper.DrawPreviousUserSendedCards();
+                        else if (playedP.PlayerId == 4) drawingFormHelper.DrawNextUserSendedCards();
+                        break;
+                    case RenderCmdType.ShowRoundWinner:
+                        drawingFormHelper.DrawFinishedOnceSendedCards();
+                        break;
+                    case RenderCmdType.ShowRankResult:
+                        drawingFormHelper.DrawFinishedScoreImage();
+                        break;
+                    case RenderCmdType.ShowBottomCards:
+                        drawingFormHelper.DrawBottomCards(mainForm.send8Cards);
+                        break;
+                }
+            };
             renderer.BackgroundImage = image;
 
 
