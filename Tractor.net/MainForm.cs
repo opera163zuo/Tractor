@@ -530,13 +530,39 @@ namespace Kuaff.Tractor
         
         private void HandleCardSelection(MouseEventArgs e)
         {
-            if (myCardsLocation.Count > 0 &&
+            if (e.Button == MouseButtons.Left && myCardsLocation.Count > 0 &&
                 e.X >= (int)myCardsLocation[0] && 
                 e.X <= ((int)myCardsLocation[myCardsLocation.Count - 1] + 71) && 
                 e.Y >= 355 && e.Y < 472)
             {
-                drawingFormHelper.DrawMyPlayingCards(currentPokers[0]);
-                Refresh();
+                if (calculateRegionHelper.CalculateClickedRegion(e, 1))
+                {
+                    drawingFormHelper.DrawMyPlayingCards(currentPokers[0]);
+                    Refresh();
+                }
+            }
+            else if (e.Button == MouseButtons.Right && myCardsLocation.Count > 0)
+            {
+                int i = calculateRegionHelper.CalculateRightClickedRegion(e);
+                if (i > -1 && i < myCardIsReady.Count)
+                {
+                    bool b = (bool)myCardIsReady[i];
+                    int x = (int)myCardsLocation[i];
+                    for (int j = 1; j <= i; j++)
+                    {
+                        if ((int)myCardsLocation[i - j] == (x - 13))
+                        {
+                            myCardIsReady[i - j] = b;
+                            x = x - 13;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    drawingFormHelper.DrawMyPlayingCards(currentPokers[0]);
+                    Refresh();
+                }
             }
         }
         
