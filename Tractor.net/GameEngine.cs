@@ -343,6 +343,12 @@ namespace Kuaff.Tractor
             _firstSend = firstSend;
             _whoIsBigger = whoIsBigger;
         }
+
+        public void SyncRank(int suit, int master)
+        {
+            _state.Suit = suit;
+            _state.Master = master;
+        }
     }
 
     // ====== 数据类定义 ======

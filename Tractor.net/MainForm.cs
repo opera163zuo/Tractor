@@ -720,12 +720,23 @@ namespace Kuaff.Tractor
             }
                         else if (currentState.CurrentCardCommands == CardCommands.DrawCenter8Cards)
             {
+                                // save rank state (set by CallDoRankOrNot during dealing)
+                int savedSuit = currentState.Suit;
+                int savedMaster = currentState.Master;
+                
                 TickResult tickResult = engine.Tick(DateTime.Now.Ticks);
                 if (tickResult.StateChanged)
                 {
                     currentState = engine.State;
                 }
-                foreach (var cmd in tickResult.RenderCommands)
+                // restore rank if AI called it
+                if (savedSuit != 0)
+                {
+                    currentState.Suit = savedSuit;
+                    currentState.Master = savedMaster;
+                    engine.SyncRank(savedSuit, savedMaster);
+                }
+                                foreach (var cmd in tickResult.RenderCommands)
                 {
                     if (cmd.Type == RenderCmdType.DrawCenter8)
                     {

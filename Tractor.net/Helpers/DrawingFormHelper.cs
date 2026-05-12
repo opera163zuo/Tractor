@@ -163,6 +163,9 @@ namespace Kuaff.Tractor
         }
 
         private void DrawSuitCards(Graphics g)
+
+        private void DrawSuitCards(Graphics g)
+
         {
 
 
