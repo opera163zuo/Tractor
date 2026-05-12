@@ -349,6 +349,11 @@ namespace Kuaff.Tractor
             _state.Suit = suit;
             _state.Master = master;
         }
+
+        public void SyncState(CardCommands command)
+        {
+            _state.CurrentCardCommands = command;
+        }
     }
 
     // ====== 数据类定义 ======

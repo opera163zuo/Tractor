@@ -773,11 +773,11 @@ namespace Kuaff.Tractor
                         }
                         whoseOrder = currentState.Master;
                         firstSend = whoseOrder;
-                        SetPauseSet(gameConfig.Get8CardsTime, CardCommands.DrawMySortedCards);
                         drawingFormHelper.DrawCenter8Cards();
                         initSendedCards();
                         drawingFormHelper.DrawMySortedCards(currentPokers[0], currentPokers[0].Count);
                         currentState.CurrentCardCommands = CardCommands.WaitingForSending8Cards;
+                        engine.SyncState(CardCommands.WaitingForSending8Cards);
                         drawingFormHelper.DrawScoreImage(0);
                     }
                 }
@@ -862,7 +862,15 @@ namespace Kuaff.Tractor
                     Refresh();
                 }
             }
-                        else if (currentState.CurrentCardCommands == CardCommands.Pause)
+                        else if (currentState.CurrentCardCommands == CardCommands.DrawMySortedCards)
+            {
+                // sort my cards and wait for play
+                drawingFormHelper.DrawMySortedCards(currentPokers[0], currentPokers[0].Count);
+                Refresh();
+                currentState.CurrentCardCommands = CardCommands.WaitingForSend;
+                engine.SyncState(CardCommands.WaitingForSend);
+            }
+            else if (currentState.CurrentCardCommands == CardCommands.Pause)
             {
                 TickResult tickResult = engine.Tick(DateTime.Now.Ticks);
                 if (tickResult.StateChanged)
