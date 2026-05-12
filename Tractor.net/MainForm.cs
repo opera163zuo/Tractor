@@ -1184,10 +1184,14 @@ namespace Kuaff.Tractor
                 if (currentState.Master == 1 || currentState.Master == 2)
                 {
                     currentRank = currentState.OurCurrentRank;
+                    engine.SetCurrentRank(currentRank);
+                    engine.SyncTeamRanks(currentState.OurCurrentRank, currentState.OpposedCurrentRank);
                 }
                 else if(currentState.Master == 3 || currentState.Master == 4)
                 {
                     currentRank = currentState.OpposedCurrentRank;
+                    engine.SetCurrentRank(currentRank);
+                    engine.SyncTeamRanks(currentState.OurCurrentRank, currentState.OpposedCurrentRank);
                 }
                 else
                 {

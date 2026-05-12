@@ -363,6 +363,20 @@ namespace Kuaff.Tractor
         {
             _state.CurrentCardCommands = command;
         }
+
+        public void SetCurrentRank(int rank)
+        {
+            _state.Rank = rank;
+        }
+
+        public void SyncTeamRanks(int ourRank, int opposedRank)
+        {
+            _state.OurCurrentRank = ourRank;
+            _state.OpposedCurrentRank = opposedRank;
+        }
+        {
+            _state.Rank = rank;
+        }
     }
 
     // ====== 数据类定义 ======
