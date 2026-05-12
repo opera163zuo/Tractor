@@ -437,6 +437,7 @@ namespace Kuaff.Tractor
 
             form.initSendedCards();
             form.currentState.CurrentCardCommands = CardCommands.DrawMySortedCards;
+            form.engine.SyncState(CardCommands.DrawMySortedCards);
         }
 
         /// <summary>

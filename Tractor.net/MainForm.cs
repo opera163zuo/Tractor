@@ -620,6 +620,7 @@ namespace Kuaff.Tractor
                     }
                     initSendedCards();
                     currentState.CurrentCardCommands = CardCommands.DrawMySortedCards;
+                    engine.SyncState(CardCommands.DrawMySortedCards);
                 }
 
 
@@ -842,18 +843,7 @@ namespace Kuaff.Tractor
                     }
                 }
             }
-            else if (currentState.CurrentCardCommands == CardCommands.DrawMySortedCards) //4.画我的牌
-            {
 
-                //将最后自己的牌进行排序显示
-                SetPauseSet(gameConfig.SortCardsTime, CardCommands.DrawMySortedCards);
-
-                drawingFormHelper.DrawMySortedCards(currentPokers[0], currentPokers[0].Count);
-                Refresh();
-
-                currentState.CurrentCardCommands = CardCommands.WaitingForSend;
-
-            }
                         else if (currentState.CurrentCardCommands == CardCommands.WaitingForSend)
             {
                 engine.SyncOrder(whoseOrder, firstSend, whoIsBigger);
@@ -910,11 +900,13 @@ namespace Kuaff.Tractor
                 if (currentPokers[0].Count > 0)
                 {
                     currentState.CurrentCardCommands = CardCommands.WaitingForSend;
+                    engine.SyncState(CardCommands.WaitingForSend);
                 }
             }
             else if (currentState.CurrentCardCommands == CardCommands.DrawOnceRank) //如果本轮大家都出完牌
             {
                 currentState.CurrentCardCommands = CardCommands.Undefined;
+                engine.SyncState(CardCommands.Undefined);
                 init();
             }
         }
