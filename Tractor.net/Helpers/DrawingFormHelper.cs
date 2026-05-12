@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -160,13 +160,9 @@ namespace Kuaff.Tractor
                     break;  // 已亮主，退出
                 }
             }
-        
-            // sync to engine
-            mainForm.engine.SyncRank(mainForm.currentState.Suit, mainForm.currentState.Master);
-        
+        }
 
         private void DrawSuitCards(Graphics g)
-
         {
 
 
