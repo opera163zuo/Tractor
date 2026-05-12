@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -161,8 +161,6 @@ namespace Kuaff.Tractor
                 }
             }
         }
-
-        private void DrawSuitCards(Graphics g)
 
         private void DrawSuitCards(Graphics g)
         {
