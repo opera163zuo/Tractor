@@ -1,4 +1,4 @@
-.banner {
+ï»¿.banner {
 	color: #FFFFFF;
 	background-color: #0033FF;
 	background-position: right top;
@@ -9,7 +9,7 @@
 	height: 54px;
 	width: 100%;
 	font-weight: bold;
-	font-family: "ËÎÌå";
+	font-family: "å®‹ä½“";
 	font-size: 12pt;
 	text-align: left;
 	vertical-align: top;
@@ -21,6 +21,6 @@
 	background-repeat: no-repeat;
 }
 .content {
-	font-family: "ËÎÌå";
+	font-family: "å®‹ä½“";
 	font-size: 10pt;
 }
