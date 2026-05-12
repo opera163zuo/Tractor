@@ -1,4 +1,4 @@
-锘縩amespace Kuaff.Tractor
+锘块敇绺゛mespace Kuaff.Tractor
 {
     partial class SelectCardsImage
     {
@@ -42,7 +42,7 @@
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(64, 24);
             this.button2.TabIndex = 7;
-            this.button2.Text = "取消";
+            this.button2.Text = "鍙栨秷";
             this.button2.UseVisualStyleBackColor = true;
             // 
             // button1
@@ -51,7 +51,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(64, 24);
             this.button1.TabIndex = 6;
-            this.button1.Text = "确定";
+            this.button1.Text = "纭畾";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -75,7 +75,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(57, 12);
             this.label1.TabIndex = 4;
-            this.label1.Text = "选择图案";
+            this.label1.Text = "閫夋嫨鍥炬";
             // 
             // SelectCardsImage
             // 
@@ -93,7 +93,7 @@
             this.MinimizeBox = false;
             this.Name = "SelectCardsImage";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "选择牌面图案";
+            this.Text = "閫夋嫨鐗岄潰鍥炬";
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -1,4 +1,4 @@
-ï»¿namespace Kuaff.Tractor
+ï»¿é”˜ç¸©amespace Kuaff.Tractor
 {
     partial class TotalScores
     {
@@ -45,7 +45,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(41, 12);
             this.label1.TabIndex = 0;
-            this.label1.Text = "±¾·½£º";
+            this.label1.Text = "æœ¬æ–¹ï¼š";
             // 
             // label2
             // 
@@ -70,7 +70,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(41, 12);
             this.label4.TabIndex = 2;
-            this.label4.Text = "¶Ô·½£º";
+            this.label4.Text = "å¯¹æ–¹ï¼š";
             // 
             // groupBox1
             // 
@@ -80,7 +80,7 @@
             this.groupBox1.Size = new System.Drawing.Size(188, 54);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "ÌáÊ¾";
+            this.groupBox1.Text = "æç¤º";
             // 
             // textBox1
             // 
@@ -92,7 +92,7 @@
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(159, 28);
             this.textBox1.TabIndex = 1;
-            this.textBox1.Text = "´Ó2´òµ½ÍõÎªÒ»ÂÖ£»\r\nÃ¿´òÒ»¸öÊı×ÖÎªÒ»¾Ö";
+            this.textBox1.Text = "ä»2æ‰“åˆ°ç‹ä¸ºä¸€è½®ï¼›\r\næ¯æ‰“ä¸€ä¸ªæ•°å­—ä¸ºä¸€å±€";
             // 
             // TotalScores
             // 
@@ -110,7 +110,7 @@
             this.MinimizeBox = false;
             this.Name = "TotalScores";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "¼Æ·ÖÅÆ";
+            this.Text = "è®¡åˆ†ç‰Œ";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

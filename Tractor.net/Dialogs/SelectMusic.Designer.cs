@@ -1,4 +1,4 @@
-Ôªønamespace Kuaff.Tractor
+ÔªøÈîòÁ∏©amespace Kuaff.Tractor
 {
     partial class SelectMusic
     {
@@ -44,7 +44,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(57, 12);
             this.label1.TabIndex = 0;
-            this.label1.Text = "—°‘Ò“Ù¿÷";
+            this.label1.Text = "ÈÄâÊã©Èü≥‰πê";
             // 
             // music
             // 
@@ -64,7 +64,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(64, 24);
             this.button1.TabIndex = 2;
-            this.button1.Text = "»∑∂®";
+            this.button1.Text = "Á°ÆÂÆö";
             this.button1.UseVisualStyleBackColor = true;
             // 
             // button2
@@ -74,7 +74,7 @@
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(64, 24);
             this.button2.TabIndex = 3;
-            this.button2.Text = "»°œ˚";
+            this.button2.Text = "ÂèñÊ∂à";
             this.button2.UseVisualStyleBackColor = true;
             // 
             // SelectMusic
@@ -93,7 +93,7 @@
             this.MinimizeBox = false;
             this.Name = "SelectMusic";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "—°‘Ò±≥æ∞“Ù¿÷";
+            this.Text = "ÈÄâÊã©ËÉåÊôØÈü≥‰πê";
             this.ResumeLayout(false);
             this.PerformLayout();
 
