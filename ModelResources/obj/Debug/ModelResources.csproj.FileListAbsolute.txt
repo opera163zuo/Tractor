@@ -10,3 +10,15 @@ C:\chaos\Source\Repos\smallnest\Tractor\ModelResources\bin\Debug\ICSharpCode.Sha
 C:\chaos\Source\Repos\smallnest\Tractor\ModelResources\bin\Debug\ICSharpCode.SharpZipLib.xml
 C:\chaos\Source\Repos\smallnest\Tractor\ModelResources\obj\Debug\ModelResources.csprojAssemblyReference.cache
 C:\chaos\Source\Repos\smallnest\Tractor\ModelResources\obj\Debug\ModelResources.csproj.CopyComplete
+d:\tracker\ModelResources\bin\Debug\Kuaff.ModelResources.dll
+d:\tracker\ModelResources\bin\Debug\Kuaff.ModelResources.pdb
+d:\tracker\ModelResources\bin\Debug\ICSharpCode.SharpZipLib.dll
+d:\tracker\ModelResources\bin\Debug\ICSharpCode.SharpZipLib.pdb
+d:\tracker\ModelResources\bin\Debug\ICSharpCode.SharpZipLib.xml
+d:\tracker\ModelResources\obj\Debug\Kuaff.ModelResources.Kuaff.Model.resources
+d:\tracker\ModelResources\obj\Debug\ModelResources.csproj.GenerateResource.Cache
+d:\tracker\ModelResources\obj\Debug\Kuaff.ModelResources.dll
+d:\tracker\ModelResources\obj\Debug\Kuaff.ModelResources.pdb
+d:\tracker\ModelResources\obj\Debug\ModelResources.csproj.AssemblyReference.cache
+d:\tracker\ModelResources\obj\Debug\ModelResources.csproj.CoreCompileInputs.cache
+d:\tracker\ModelResources\obj\Debug\ModelRes.49AE5B93.Up2Date

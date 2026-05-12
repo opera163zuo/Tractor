@@ -1,4 +1,4 @@
-﻿锘縩amespace Kuaff.Tractor
+﻿namespace Kuaff.Tractor
 {
     partial class SetSpeedDialog
     {

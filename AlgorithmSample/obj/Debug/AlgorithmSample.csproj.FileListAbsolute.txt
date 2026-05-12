@@ -5,3 +5,10 @@ C:\chaos\Source\Repos\smallnest\Tractor\Tractor.net\bin\Debug\plugins\Kuaff.Trac
 C:\chaos\Source\Repos\smallnest\Tractor\AlgorithmSample\obj\Debug\AlgorithmSample.csprojAssemblyReference.cache
 C:\chaos\Source\Repos\smallnest\Tractor\AlgorithmSample\obj\Debug\AlgorithmSample.csproj.CoreCompileInputs.cache
 C:\chaos\Source\Repos\smallnest\Tractor\AlgorithmSample\obj\Debug\AlgorithmSample.csproj.CopyComplete
+d:\tracker\Tractor.net\bin\Debug\plugins\Kuaff.Tractor.AlgorithmSample.dll
+d:\tracker\Tractor.net\bin\Debug\plugins\Kuaff.Tractor.AlgorithmSample.pdb
+d:\tracker\AlgorithmSample\obj\Debug\Kuaff.Tractor.AlgorithmSample.dll
+d:\tracker\AlgorithmSample\obj\Debug\Kuaff.Tractor.AlgorithmSample.pdb
+d:\tracker\AlgorithmSample\obj\Debug\AlgorithmSample.csproj.AssemblyReference.cache
+d:\tracker\AlgorithmSample\obj\Debug\AlgorithmSample.csproj.CoreCompileInputs.cache
+d:\tracker\AlgorithmSample\obj\Debug\Algorith.177C7395.Up2Date

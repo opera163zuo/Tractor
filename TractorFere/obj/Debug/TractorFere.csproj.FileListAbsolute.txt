@@ -10,3 +10,15 @@ C:\chaos\Source\Repos\smallnest\Tractor\TractorFere\bin\Debug\ICSharpCode.SharpZ
 C:\chaos\Source\Repos\smallnest\Tractor\TractorFere\bin\Debug\ICSharpCode.SharpZipLib.pdb
 C:\chaos\Source\Repos\smallnest\Tractor\TractorFere\bin\Debug\ICSharpCode.SharpZipLib.xml
 C:\chaos\Source\Repos\smallnest\Tractor\TractorFere\obj\Debug\TractorFere.csproj.CopyComplete
+d:\tracker\TractorFere\bin\Debug\Kuaff.TractorFere.dll
+d:\tracker\TractorFere\bin\Debug\Kuaff.TractorFere.pdb
+d:\tracker\TractorFere\bin\Debug\ICSharpCode.SharpZipLib.dll
+d:\tracker\TractorFere\bin\Debug\ICSharpCode.SharpZipLib.pdb
+d:\tracker\TractorFere\bin\Debug\ICSharpCode.SharpZipLib.xml
+d:\tracker\TractorFere\obj\Debug\Kuaff.TractorFere.Properties.Resources.resources
+d:\tracker\TractorFere\obj\Debug\TractorFere.csproj.GenerateResource.Cache
+d:\tracker\TractorFere\obj\Debug\Kuaff.TractorFere.dll
+d:\tracker\TractorFere\obj\Debug\Kuaff.TractorFere.pdb
+d:\tracker\TractorFere\obj\Debug\TractorFere.csproj.AssemblyReference.cache
+d:\tracker\TractorFere\obj\Debug\TractorFere.csproj.CoreCompileInputs.cache
+d:\tracker\TractorFere\obj\Debug\TractorF.DC9257D1.Up2Date

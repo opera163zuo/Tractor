@@ -9,3 +9,15 @@ C:\chaos\Source\Repos\smallnest\Tractor\OperaResources\bin\Debug\ICSharpCode.Sha
 C:\chaos\Source\Repos\smallnest\Tractor\OperaResources\bin\Debug\ICSharpCode.SharpZipLib.pdb
 C:\chaos\Source\Repos\smallnest\Tractor\OperaResources\bin\Debug\ICSharpCode.SharpZipLib.xml
 C:\chaos\Source\Repos\smallnest\Tractor\OperaResources\obj\Debug\OperaResources.csproj.CopyComplete
+d:\tracker\OperaResources\bin\Debug\Kuaff.OperaResources.dll
+d:\tracker\OperaResources\bin\Debug\Kuaff.OperaResources.pdb
+d:\tracker\OperaResources\bin\Debug\ICSharpCode.SharpZipLib.dll
+d:\tracker\OperaResources\bin\Debug\ICSharpCode.SharpZipLib.pdb
+d:\tracker\OperaResources\bin\Debug\ICSharpCode.SharpZipLib.xml
+d:\tracker\OperaResources\obj\Debug\Kuaff.OperaResources.Kuaff.Opera.resources
+d:\tracker\OperaResources\obj\Debug\OperaResources.csproj.GenerateResource.Cache
+d:\tracker\OperaResources\obj\Debug\Kuaff.OperaResources.dll
+d:\tracker\OperaResources\obj\Debug\Kuaff.OperaResources.pdb
+d:\tracker\OperaResources\obj\Debug\OperaResources.csproj.AssemblyReference.cache
+d:\tracker\OperaResources\obj\Debug\OperaResources.csproj.CoreCompileInputs.cache
+d:\tracker\OperaResources\obj\Debug\OperaRes.D9A6E9FD.Up2Date

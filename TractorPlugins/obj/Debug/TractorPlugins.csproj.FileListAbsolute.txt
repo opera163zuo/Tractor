@@ -8,3 +8,13 @@ C:\chaos\Source\Repos\smallnest\Tractor\TractorPlugins\bin\Debug\ICSharpCode.Sha
 C:\chaos\Source\Repos\smallnest\Tractor\TractorPlugins\bin\Debug\ICSharpCode.SharpZipLib.pdb
 C:\chaos\Source\Repos\smallnest\Tractor\TractorPlugins\bin\Debug\ICSharpCode.SharpZipLib.xml
 C:\chaos\Source\Repos\smallnest\Tractor\TractorPlugins\obj\Debug\TractorPlugins.csproj.CopyComplete
+d:\tracker\TractorPlugins\bin\Debug\Kuaff.Tractor.Plugins.dll
+d:\tracker\TractorPlugins\bin\Debug\Kuaff.Tractor.Plugins.pdb
+d:\tracker\TractorPlugins\bin\Debug\ICSharpCode.SharpZipLib.dll
+d:\tracker\TractorPlugins\bin\Debug\ICSharpCode.SharpZipLib.pdb
+d:\tracker\TractorPlugins\bin\Debug\ICSharpCode.SharpZipLib.xml
+d:\tracker\TractorPlugins\obj\Debug\Kuaff.Tractor.Plugins.dll
+d:\tracker\TractorPlugins\obj\Debug\Kuaff.Tractor.Plugins.pdb
+d:\tracker\TractorPlugins\obj\Debug\TractorPlugins.csproj.AssemblyReference.cache
+d:\tracker\TractorPlugins\obj\Debug\TractorPlugins.csproj.CoreCompileInputs.cache
+d:\tracker\TractorPlugins\obj\Debug\TractorP.7F269BE5.Up2Date
