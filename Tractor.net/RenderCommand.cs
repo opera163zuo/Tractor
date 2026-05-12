@@ -44,6 +44,7 @@ namespace Kuaff.Tractor
     public class PlayResult
     {
         public bool IsValid { get; set; } = true;
+        public GameState NewState { get; set; }
         public List<RenderCommand> RenderCommands { get; } = new List<RenderCommand>();
 
         public static PlayResult Invalid()

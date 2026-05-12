@@ -95,6 +95,7 @@ namespace Kuaff.Tractor
             pokerList = newState.PokerLists;
             currentPokers = newState.CurrentPokers;
             currentSendCards = newState.CurrentSendCards;
+            currentAllSendPokers = newState.CurrentAllSendPokers;
             send8Cards = newState.Send8Cards;
             whoseOrder = newState.WhoseOrder;
             firstSend = newState.FirstSend;
@@ -104,6 +105,27 @@ namespace Kuaff.Tractor
             currentCount = newState.DealCount;
             showSuits = newState.ShowSuits;
             whoShowRank = newState.WhoShowRank;
+        }
+
+        private void SyncLocalStateToGameState()
+        {
+            if (_gameState == null) return;
+            _gameState.Config = gameConfig;
+            _gameState.State = currentState;
+            _gameState.PokerLists = pokerList;
+            _gameState.CurrentPokers = currentPokers;
+            _gameState.CurrentSendCards = currentSendCards;
+            _gameState.CurrentAllSendPokers = currentAllSendPokers;
+            _gameState.Send8Cards = send8Cards;
+            _gameState.CurrentRank = currentRank;
+            _gameState.IsNew = isNew;
+            _gameState.ShowSuits = showSuits;
+            _gameState.WhoShowRank = whoShowRank;
+            _gameState.WhoseOrder = whoseOrder;
+            _gameState.FirstSend = firstSend;
+            _gameState.WhoIsBigger = whoIsBigger;
+            _gameState.Scores = Scores;
+            _gameState.DealCount = currentCount;
         }
         internal GdiRenderer renderer;
 
@@ -378,7 +400,11 @@ namespace Kuaff.Tractor
             myCardsNumber= new ArrayList();
             myCardIsReady= new ArrayList();
             send8Cards= new ArrayList();
-
+            showSuits = 0;
+            whoShowRank = 0;
+            Scores = 0;
+            whoseOrder = 0;
+            firstSend = 0;
 
             //设置命令
             currentState.CurrentCardCommands = CardCommands.ReadyCards;
@@ -395,7 +421,7 @@ namespace Kuaff.Tractor
                 PokerLists = pokerList,
                 CurrentPokers = currentPokers,
                 CurrentSendCards = currentSendCards,
-                CurrentAllSendPokers = new CurrentPoker[4] { new CurrentPoker(), new CurrentPoker(), new CurrentPoker(), new CurrentPoker() },
+                CurrentAllSendPokers = currentAllSendPokers,
                 Send8Cards = send8Cards,
                 State = currentState,
                 CurrentRank = currentRank,
@@ -408,13 +434,7 @@ namespace Kuaff.Tractor
                 Scores = Scores,
                 DealCount = currentCount,
             };
-            //目前不可以反牌
-            showSuits = 0;
-            whoShowRank = 0;
-
-            //得分清零
-            Scores = 0;
-            
+            SyncLocalStateToGameState();
 
             //绘制Sidebar
             drawingFormHelper.DrawSidebar(g);
@@ -658,7 +678,7 @@ namespace Kuaff.Tractor
                     }
                     initSendedCards();
                     currentState.CurrentCardCommands = CardCommands.DrawMySortedCards;
-                    /* SyncState removed - state managed via GameState */
+                    SyncLocalStateToGameState();
                 }
 
 
@@ -711,6 +731,7 @@ namespace Kuaff.Tractor
 
 
                     drawingFormHelper.DrawMyFinishSendedCards();
+                    SyncLocalStateToGameState();
                 }
             }
 
@@ -762,11 +783,12 @@ namespace Kuaff.Tractor
                 {
                     drawingFormHelper.ReadyCards(currentCount);
                     currentCount++;
-                    
+                    SyncLocalStateToGameState();
                 }
                 else
                 {
                     currentState.CurrentCardCommands = CardCommands.DrawCenter8Cards;
+                    SyncLocalStateToGameState();
                 }
             }
             else if (currentState.CurrentCardCommands == CardCommands.WaitingShowBottom) //翻底牌完毕后的清理工作
@@ -799,7 +821,7 @@ namespace Kuaff.Tractor
                 {
                     currentState.Suit = savedSuit;
                     currentState.Master = savedMaster;
-                    /* SyncRank removed - state managed via GameState */
+                    SyncLocalStateToGameState();
                 }
                                 foreach (var cmd in tickResult.RenderCommands)
                 {
@@ -842,7 +864,7 @@ namespace Kuaff.Tractor
                         initSendedCards();
                         drawingFormHelper.DrawMySortedCards(currentPokers[0], currentPokers[0].Count);
                         currentState.CurrentCardCommands = CardCommands.WaitingForSending8Cards;
-                        /* SyncState removed - state managed via GameState */
+                        SyncLocalStateToGameState();
                         drawingFormHelper.DrawScoreImage(0);
                     }
                 }
@@ -854,14 +876,14 @@ namespace Kuaff.Tractor
                 //drawingFormHelper.DrawScoreImage(0);
                 Refresh();
                 currentState.CurrentCardCommands = CardCommands.ReadyCards;
+                SyncLocalStateToGameState();
             }
                         else if (currentState.CurrentCardCommands == CardCommands.WaitingForSending8Cards)
             {
                 TickResult tickResult = engine.Tick(_gameState, DateTime.Now.Ticks);
-                if (tickResult.StateChanged)
+                if (tickResult.StateChanged && tickResult.NewState != null)
                 {
-                    currentState = _gameState.State;
-                    /* SyncOrder removed - state managed via GameState */
+                    SyncFromGameState(tickResult.NewState);
                 }
                 foreach (var cmd in tickResult.RenderCommands)
                 {
@@ -924,7 +946,7 @@ namespace Kuaff.Tractor
                 drawingFormHelper.DrawMySortedCards(currentPokers[0], currentPokers[0].Count);
                 Refresh();
                 currentState.CurrentCardCommands = CardCommands.WaitingForSend;
-                /* SyncState removed - state managed via GameState */
+                SyncLocalStateToGameState();
             }
             else if (currentState.CurrentCardCommands == CardCommands.Pause)
             {
@@ -942,7 +964,7 @@ namespace Kuaff.Tractor
                     // reset whoIsBigger for new round, will be updated by play
                     if (whoIsBigger < 1 || whoIsBigger > 4) whoIsBigger = firstSend;
                     currentState.CurrentCardCommands = CardCommands.WaitingForSend;
-                    /* SyncState removed - state managed via GameState */
+                    SyncLocalStateToGameState();
                 }
             }
             else if (currentState.CurrentCardCommands == CardCommands.DrawOnceRank) //如果本轮大家都出完牌
@@ -961,6 +983,7 @@ namespace Kuaff.Tractor
             sleepTime = DateTime.Now.Ticks;
             wakeupCardCommands = wakeup;
             currentState.CurrentCardCommands = CardCommands.Pause;
+            SyncLocalStateToGameState();
         }
 
 
