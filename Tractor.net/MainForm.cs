@@ -84,6 +84,27 @@ namespace Kuaff.Tractor
         internal CardCommands wakeupCardCommands;
 
         internal GameEngine engine = new GameEngine();
+
+        internal GameState _gameState;
+
+        private void SyncFromGameState(GameState newState)
+        {
+            if (newState == null) return;
+            _gameState = newState;
+            currentState = newState.State;
+            pokerList = newState.PokerLists;
+            currentPokers = newState.CurrentPokers;
+            currentSendCards = newState.CurrentSendCards;
+            send8Cards = newState.Send8Cards;
+            whoseOrder = newState.WhoseOrder;
+            firstSend = newState.FirstSend;
+            whoIsBigger = newState.WhoIsBigger;
+            currentRank = newState.CurrentRank;
+            Scores = newState.Scores;
+            currentCount = newState.DealCount;
+            showSuits = newState.ShowSuits;
+            whoShowRank = newState.WhoShowRank;
+        }
         internal GdiRenderer renderer;
 
         //*绘画辅助类
@@ -369,7 +390,24 @@ namespace Kuaff.Tractor
 
 
             engine.NewGame();
-            engine.SetGameData(pokerList, currentPokers, currentSendCards, send8Cards, gameConfig, gameConfig.IsDebug);
+            _gameState = new Kuaff.Tractor.GameState {
+                Config = gameConfig,
+                PokerLists = pokerList,
+                CurrentPokers = currentPokers,
+                CurrentSendCards = currentSendCards,
+                CurrentAllSendPokers = new CurrentPoker[4] { new CurrentPoker(), new CurrentPoker(), new CurrentPoker(), new CurrentPoker() },
+                Send8Cards = send8Cards,
+                State = currentState,
+                CurrentRank = currentRank,
+                IsNew = isNew,
+                ShowSuits = showSuits,
+                WhoShowRank = whoShowRank,
+                WhoseOrder = whoseOrder,
+                FirstSend = firstSend,
+                WhoIsBigger = whoIsBigger,
+                Scores = Scores,
+                DealCount = currentCount,
+            };
             //目前不可以反牌
             showSuits = 0;
             whoShowRank = 0;
@@ -469,7 +507,7 @@ namespace Kuaff.Tractor
                     {
                         if (selected.Count == 8)
                         {
-                            result = engine.PlayerSend8Cards(selected);
+                            result = engine.PlayerSend8Cards(_gameState, selected);
                             hasValid = true;
                         }
                     }
@@ -477,17 +515,17 @@ namespace Kuaff.Tractor
                     {
                         if (selected.Count > 0)
                         {
-                            result = engine.PlayerPlayCard(1, selected);
+                            result = engine.PlayerPlayCard(_gameState, 1, selected);
                             hasValid = true;
                         }
                     }
                     
                     if (hasValid && result != null)
                     {
-                        currentState = engine.State;
-                        whoseOrder = engine.WhoseOrder;
-                        firstSend = engine.FirstSend;
-                        // whoIsBigger will be updated by the normal play flow
+                        if (result?.NewState != null)
+                        {
+                            SyncFromGameState(result.NewState);
+                        }
                         
                         foreach (var cmd in result.RenderCommands)
                             renderer.Execute(cmd, bmp, currentState);
@@ -502,10 +540,10 @@ namespace Kuaff.Tractor
             }
             else             if (currentState.CurrentCardCommands == CardCommands.ReadyCards)
             {
-                TickResult tickResult = engine.Tick(DateTime.Now.Ticks);
-                if (tickResult.StateChanged)
+                TickResult tickResult = engine.Tick(_gameState, DateTime.Now.Ticks);
+                if (tickResult.StateChanged && tickResult.NewState != null)
                 {
-                    currentState = engine.State;
+                    SyncFromGameState(tickResult.NewState);
                 }
                 foreach (var cmd in tickResult.RenderCommands)
                 {
@@ -524,7 +562,7 @@ namespace Kuaff.Tractor
                 {
                     drawingFormHelper.CallDoRankOrNot();
                 }
-                currentCount = engine.DealCount;
+                // currentCount synced via SyncFromGameState above
             }
         }
         
@@ -620,7 +658,7 @@ namespace Kuaff.Tractor
                     }
                     initSendedCards();
                     currentState.CurrentCardCommands = CardCommands.DrawMySortedCards;
-                    engine.SyncState(CardCommands.DrawMySortedCards);
+                    /* SyncState removed - state managed via GameState */
                 }
 
 
@@ -751,17 +789,17 @@ namespace Kuaff.Tractor
                 int savedSuit = currentState.Suit;
                 int savedMaster = currentState.Master;
                 
-                TickResult tickResult = engine.Tick(DateTime.Now.Ticks);
-                if (tickResult.StateChanged)
+                TickResult tickResult = engine.Tick(_gameState, DateTime.Now.Ticks);
+                if (tickResult.StateChanged && tickResult.NewState != null)
                 {
-                    currentState = engine.State;
+                    SyncFromGameState(tickResult.NewState);
                 }
                 // restore rank if AI called it
                 if (savedSuit != 0)
                 {
                     currentState.Suit = savedSuit;
                     currentState.Master = savedMaster;
-                    engine.SyncRank(savedSuit, savedMaster);
+                    /* SyncRank removed - state managed via GameState */
                 }
                                 foreach (var cmd in tickResult.RenderCommands)
                 {
@@ -804,7 +842,7 @@ namespace Kuaff.Tractor
                         initSendedCards();
                         drawingFormHelper.DrawMySortedCards(currentPokers[0], currentPokers[0].Count);
                         currentState.CurrentCardCommands = CardCommands.WaitingForSending8Cards;
-                        engine.SyncState(CardCommands.WaitingForSending8Cards);
+                        /* SyncState removed - state managed via GameState */
                         drawingFormHelper.DrawScoreImage(0);
                     }
                 }
@@ -819,11 +857,11 @@ namespace Kuaff.Tractor
             }
                         else if (currentState.CurrentCardCommands == CardCommands.WaitingForSending8Cards)
             {
-                TickResult tickResult = engine.Tick(DateTime.Now.Ticks);
+                TickResult tickResult = engine.Tick(_gameState, DateTime.Now.Ticks);
                 if (tickResult.StateChanged)
                 {
-                    currentState = engine.State;
-                    engine.SyncOrder(whoseOrder, firstSend, whoIsBigger);
+                    currentState = _gameState.State;
+                    /* SyncOrder removed - state managed via GameState */
                 }
                 foreach (var cmd in tickResult.RenderCommands)
                 {
@@ -846,11 +884,11 @@ namespace Kuaff.Tractor
 
                         else if (currentState.CurrentCardCommands == CardCommands.WaitingForSend)
             {
-                engine.SyncOrder(whoseOrder, firstSend, whoIsBigger);
-                TickResult tickResult = engine.Tick(DateTime.Now.Ticks);
-                if (tickResult.StateChanged)
+                /* SyncOrder removed - state managed via GameState */
+                TickResult tickResult = engine.Tick(_gameState, DateTime.Now.Ticks);
+                if (tickResult.StateChanged && tickResult.NewState != null)
                 {
-                    currentState = engine.State;
+                    SyncFromGameState(tickResult.NewState);
                 }
                 // ensure whoIsBigger is valid before AI play dispatch
                 if (whoIsBigger < 1 || whoIsBigger > 4) whoIsBigger = whoseOrder;
@@ -886,14 +924,14 @@ namespace Kuaff.Tractor
                 drawingFormHelper.DrawMySortedCards(currentPokers[0], currentPokers[0].Count);
                 Refresh();
                 currentState.CurrentCardCommands = CardCommands.WaitingForSend;
-                engine.SyncState(CardCommands.WaitingForSend);
+                /* SyncState removed - state managed via GameState */
             }
             else if (currentState.CurrentCardCommands == CardCommands.Pause)
             {
-                TickResult tickResult = engine.Tick(DateTime.Now.Ticks);
-                if (tickResult.StateChanged)
+                TickResult tickResult = engine.Tick(_gameState, DateTime.Now.Ticks);
+                if (tickResult.StateChanged && tickResult.NewState != null)
                 {
-                    currentState = engine.State;
+                    SyncFromGameState(tickResult.NewState);
                 }
             }
             else if (currentState.CurrentCardCommands == CardCommands.DrawOnceFinished) //如果是大家都出完牌
@@ -904,13 +942,13 @@ namespace Kuaff.Tractor
                     // reset whoIsBigger for new round, will be updated by play
                     if (whoIsBigger < 1 || whoIsBigger > 4) whoIsBigger = firstSend;
                     currentState.CurrentCardCommands = CardCommands.WaitingForSend;
-                    engine.SyncState(CardCommands.WaitingForSend);
+                    /* SyncState removed - state managed via GameState */
                 }
             }
             else if (currentState.CurrentCardCommands == CardCommands.DrawOnceRank) //如果本轮大家都出完牌
             {
                 currentState.CurrentCardCommands = CardCommands.Undefined;
-                engine.SyncState(CardCommands.Undefined);
+                /* SyncState removed - state managed via GameState */
                 init();
             }
         }
@@ -1184,14 +1222,14 @@ namespace Kuaff.Tractor
                 if (currentState.Master == 1 || currentState.Master == 2)
                 {
                     currentRank = currentState.OurCurrentRank;
-                    engine.SetCurrentRank(currentRank);
-                    engine.SyncTeamRanks(currentState.OurCurrentRank, currentState.OpposedCurrentRank);
+                    /* SetCurrentRank removed */
+                    /* SyncTeamRanks removed */
                 }
                 else if(currentState.Master == 3 || currentState.Master == 4)
                 {
                     currentRank = currentState.OpposedCurrentRank;
-                    engine.SetCurrentRank(currentRank);
-                    engine.SyncTeamRanks(currentState.OurCurrentRank, currentState.OpposedCurrentRank);
+                    /* SetCurrentRank removed */
+                    /* SyncTeamRanks removed */
                 }
                 else
                 {
@@ -1388,4 +1426,5 @@ namespace Kuaff.Tractor
 
                
     }
-}
+}        
+        // ====== GameState（Phase A 数据流纯化） ======
