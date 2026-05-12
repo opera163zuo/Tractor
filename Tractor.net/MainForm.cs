@@ -500,8 +500,31 @@ namespace Kuaff.Tractor
                     }
                 }
             }
-            else if (currentState.CurrentCardCommands == CardCommands.ReadyCards)
+            else             if (currentState.CurrentCardCommands == CardCommands.ReadyCards)
             {
+                TickResult tickResult = engine.Tick(DateTime.Now.Ticks);
+                if (tickResult.StateChanged)
+                {
+                    currentState = engine.State;
+                }
+                foreach (var cmd in tickResult.RenderCommands)
+                {
+                    if (cmd.Type == RenderCmdType.ShowToolbar)
+                    {
+                        drawingFormHelper.DrawToolbar();
+                    }
+                    else if (cmd.Type == RenderCmdType.DealCard)
+                    {
+                        var payload = (DealCardPayload)cmd.Payload;
+                        drawingFormHelper.RenderDealRound(payload.Round);
+                    }
+                }
+                // AI 叫主逻辑：每轮发牌后调用
+                if (currentState.Suit == 0 && currentPokers[0].Count > 0)
+                {
+                    drawingFormHelper.CallDoRankOrNot();
+                }
+                currentCount = engine.DealCount;
             }
         }
         

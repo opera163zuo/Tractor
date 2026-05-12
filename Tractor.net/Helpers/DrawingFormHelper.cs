@@ -122,6 +122,47 @@ namespace Kuaff.Tractor
 
             g.Dispose();
         }
+        /// <summary>
+        ///  每轮发牌后调用 AI 叫主逻辑（由 Engine.ReadyCards 触发）。
+        /// 替代原有 ReadyCards() 中逐人调 DoRankOrNot 的逻辑。
+        /// </summary>
+        internal void CallDoRankOrNot()
+        {
+            if (mainForm.currentState.Suit != 0)
+                return;  // 已有玩家亮主
+
+            for (int user = 1; user <= 4; user++)
+            {
+                CurrentPoker cp = mainForm.currentPokers[user - 1];
+                if (cp == null || cp.Rank == 53)
+                    continue;
+
+                int suit = 0;
+                if (user == 1 && !mainForm.gameConfig.IsDebug)
+                {
+                    // 玩家1（自己）不自动亮主，等待手动操作
+                    continue;
+                }
+                else
+                {
+                    suit = Algorithm.ShouldSetRank(mainForm, user);
+                }
+
+                if (suit > 0)
+                {
+                    mainForm.showSuits = 1;
+                    mainForm.whoShowRank = user;
+                    mainForm.currentState.Suit = suit;
+                    if ((mainForm.currentRank == 0) && mainForm.isNew)
+                    {
+                        mainForm.currentState.Master = user;
+                    }
+                    break;  // 已亮主，退出
+                }
+            }
+        }
+
+        private void DrawSuitCards(Graphics g)
 
         private void DrawSuitCards(Graphics g)
         {
