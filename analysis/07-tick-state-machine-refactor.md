@@ -1,4 +1,4 @@
-# CardCommands 状态机重构分析：timer_Tick 职责拆分方案
+﻿# CardCommands 状态机重构分析：timer_Tick 职责拆分方案
 
 **分析目标**: MainForm.timer_Tick（~250行, 行680-935），将混合的游戏逻辑/渲染/UI代码拆分为 Engine.Tick() + Renderer.Render() + Form 协调三层。
 

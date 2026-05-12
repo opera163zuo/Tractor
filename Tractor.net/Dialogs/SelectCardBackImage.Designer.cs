@@ -1,4 +1,4 @@
-namespace Kuaff.Tractor
+﻿namespace Kuaff.Tractor
 {
     partial class SelectCardbackImage
     {

@@ -1,4 +1,4 @@
-namespace Kuaff.TractorFere
+﻿namespace Kuaff.TractorFere
 {
     partial class Fere
     {
