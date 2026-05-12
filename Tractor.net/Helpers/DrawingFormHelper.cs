@@ -35,7 +35,8 @@ namespace Kuaff.Tractor
         /// ���������˻����ƺ�Ӧ�õ����㷨�еķ������ж��Ƿ�Ӧ��������
         /// </summary>
         /// <param name="count">���ƴ�����һ����25���ƣ�ÿ��25�ţ����ׯ���յ�</param>
-        internal void ReadyCards(int count)
+        internal void ReadyCards(int count)【已迁移到 GdiRenderer.DrawDealCard，请用 RenderDealRound】
+        
         {
 
             //�õ�������ͼ���Graphics
@@ -200,7 +201,8 @@ namespace Kuaff.Tractor
         /// <summary>
         /// ����һ���ƣ���Ҫ������������
         /// </summary>
-        internal void DrawCenterImage()
+        internal void DrawCenterImage()【已迁移到 GdiRenderer.DrawCenterImage】
+        
         {
             Graphics g = Graphics.FromImage(mainForm.bmp);
             Rectangle rect = new Rectangle(77, 124, 476, 244);
@@ -211,7 +213,8 @@ namespace Kuaff.Tractor
         /// <summary>
         /// ������ͼƬ
         /// </summary>
-        internal void DrawPassImage()
+        internal void DrawPassImage()【已迁移到 GdiRenderer.DrawPassImage】
+        
         {
             Graphics g = Graphics.FromImage(mainForm.bmp);
             Rectangle rect = new Rectangle(110, 150, 400, 199);
@@ -491,7 +494,8 @@ namespace Kuaff.Tractor
         /// <param name="suit">��ɫ</param>
         /// <param name="me">���ҷ����ǶԷ�</param>
         /// <param name="b">�Ƿ���ɫ</param>
-        internal void DrawSuit(Graphics g, int suit, bool me, bool b)
+        internal void DrawSuit(【已迁移到 GdiRenderer.DrawSuit】
+        Graphics g, int suit, bool me, bool b)
         {
             int X = 0;
             int X2 = 0;
@@ -564,7 +568,8 @@ namespace Kuaff.Tractor
         /// <summary>
         /// ��������
         /// </summary>
-        internal void DrawToolbar()
+        internal void DrawToolbar()【已迁移到 GdiRenderer.DrawToolbar】
+        
         {
             Graphics g = Graphics.FromImage(mainForm.bmp);
             g.DrawImage(Properties.Resources.Toolbar, new Rectangle(415, 325, 129, 29), new Rectangle(0, 0, 129, 29), GraphicsUnit.Pixel);
@@ -2187,7 +2192,8 @@ namespace Kuaff.Tractor
             mainForm.Refresh();
         }
 
-        internal void DrawScoreImage(int scores)
+        internal void DrawScoreImage【已迁移到 GdiRenderer.DrawScoreImage】
+        (int scores)
         {
             Graphics g = Graphics.FromImage(mainForm.bmp);
             Bitmap bmp = global::Kuaff.Tractor.Properties.Resources.scores;
@@ -2281,7 +2287,8 @@ namespace Kuaff.Tractor
         #region ����ʱ�ĸ�������
 
         //�����ƺŵõ���Ӧ���Ƶ�ͼƬ
-        private Bitmap getPokerImageByNumber(int number)
+        private Bitmap getPokerImageByNumber(int number)【已迁移到 GdiRenderer.GetPokerImageByNumber】
+        
         {
             Bitmap bitmap = null;
 
@@ -2301,7 +2308,8 @@ namespace Kuaff.Tractor
         /// �ػ����򱳾�
         /// </summary>
         /// <param name="g">������ͼ���Graphics</param>
-        internal void DrawBackground(Graphics g)
+        internal void DrawBackground【已迁移到 GdiRenderer.DrawBackground】
+        (Graphics g)
         {
             //Bitmap image = global::Kuaff.Tractor.Properties.Resources.Backgroud;
             g.DrawImage(mainForm.image, mainForm.ClientRectangle, mainForm.ClientRectangle,GraphicsUnit.Pixel);
