@@ -157,8 +157,11 @@ namespace Kuaff.Tractor
                     {
                         mainForm.currentState.Master = user;
                     }
-                    break;  // 已亮主，退出
-                }
+                    break            // sync rank to engine
+            mainForm.engine.SyncRank(mainForm.currentState.Suit, mainForm.currentState.Master);
+        }
+
+        private void DrawSuitCards(Graphics g)              }
             }
         }
 
