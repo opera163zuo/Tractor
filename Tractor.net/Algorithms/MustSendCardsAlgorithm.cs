@@ -48,6 +48,9 @@ namespace Kuaff.Tractor
         //whoseOrder是第二个出牌
         internal static void WhoseOrderIs2(MainForm mainForm, CurrentPoker[] currentPokers, int whoseOrder, ArrayList sendedCards, int count, int suit, int rank, int firstSuit)
         {
+            if (mainForm.whoIsBigger < 1 || mainForm.whoIsBigger > 4)
+                mainForm.whoIsBigger = mainForm.firstSend;
+
             ArrayList firstSendCards = mainForm.currentSendCards[mainForm.firstSend-1]; //首家出牌
             CurrentPoker firstCP = new CurrentPoker();
             firstCP.Suit = suit;
@@ -1460,6 +1463,9 @@ namespace Kuaff.Tractor
         //whoseOrder是第三个出牌
         internal static void WhoseOrderIs3(MainForm mainForm, CurrentPoker[] currentPokers, int whoseOrder, ArrayList sendedCards, int count, int suit, int rank, int firstSuit)
         {
+            if (mainForm.whoIsBigger < 1 || mainForm.whoIsBigger > 4)
+                mainForm.whoIsBigger = mainForm.firstSend;
+
             ArrayList firstSendCards = mainForm.currentSendCards[mainForm.firstSend - 1]; //首家出的牌
             CurrentPoker firstCP = new CurrentPoker();
             firstCP.Suit = suit;
@@ -1958,6 +1964,9 @@ namespace Kuaff.Tractor
         //whoseOrder是第四个出牌
         internal static void WhoseOrderIs4(MainForm mainForm, CurrentPoker[] currentPokers, int whoseOrder, ArrayList sendedCards, int count, int suit, int rank, int firstSuit)
         {
+            if (mainForm.whoIsBigger < 1 || mainForm.whoIsBigger > 4)
+                mainForm.whoIsBigger = mainForm.firstSend;
+
             ArrayList firstSendCards = mainForm.currentSendCards[mainForm.firstSend - 1]; //首家出的牌
             CurrentPoker firstCP = new CurrentPoker();
             firstCP.Suit = suit;

@@ -487,7 +487,7 @@ namespace Kuaff.Tractor
                         currentState = engine.State;
                         whoseOrder = engine.WhoseOrder;
                         firstSend = engine.FirstSend;
-                        whoIsBigger = engine.WhoIsBigger;
+                        // whoIsBigger will be updated by the normal play flow
                         
                         foreach (var cmd in result.RenderCommands)
                             renderer.Execute(cmd, bmp, currentState);
@@ -852,6 +852,8 @@ namespace Kuaff.Tractor
                 {
                     currentState = engine.State;
                 }
+                // ensure whoIsBigger is valid before AI play dispatch
+                if (whoIsBigger < 1 || whoIsBigger > 4) whoIsBigger = whoseOrder;
                 bool needsRender = true;
                 foreach (var cmd in tickResult.RenderCommands)
                 {
@@ -899,6 +901,8 @@ namespace Kuaff.Tractor
                 drawingFormHelper.DrawFinishedOnceSendedCards(); //完成清理工作
                 if (currentPokers[0].Count > 0)
                 {
+                    // reset whoIsBigger for new round, will be updated by play
+                    if (whoIsBigger < 1 || whoIsBigger > 4) whoIsBigger = firstSend;
                     currentState.CurrentCardCommands = CardCommands.WaitingForSend;
                     engine.SyncState(CardCommands.WaitingForSend);
                 }
