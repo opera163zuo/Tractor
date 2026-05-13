@@ -547,31 +547,7 @@ namespace Kuaff.Tractor
                     TrySubmitSelectedCards();
                 }
             }
-            else if (currentState.CurrentCardCommands == CardCommands.ReadyCards)
-            {
-                TickResult tickResult = engine.Tick(_gameState, DateTime.Now.Ticks);
-                if (tickResult.StateChanged && tickResult.NewState != null)
-                {
-                    SyncFromGameState(tickResult.NewState);
-                }
-                foreach (var cmd in tickResult.RenderCommands)
-                {
-                    if (cmd.Type == RenderCmdType.ShowToolbar)
-                    {
-                        drawingFormHelper.DrawToolbar();
-                    }
-                    else if (cmd.Type == RenderCmdType.DealCard)
-                    {
-                        var payload = (DealCardPayload)cmd.Payload;
-                        drawingFormHelper.RenderDealRound(payload.Round);
-                    }
-                }
-                if (currentState.Suit == 0 && currentPokers[0].Count > 0)
-                {
-                    drawingFormHelper.CallDoRankOrNot();
-                    renderer.DrawRankOrNotUI(bmp, _gameState);
-                }
-            }
+
         }
 
         private void TrySubmitSelectedCards()
@@ -717,6 +693,32 @@ namespace Kuaff.Tractor
             else if (musicFile.Length > 0 && (!MciSoundPlayer.IsPlaying()) && RandomPlayToolStripMenuItem.Checked)
             {
                 PlayRandomSongs();
+            }
+            //1.分牌
+            else if (currentState.CurrentCardCommands == CardCommands.ReadyCards)
+            {
+                TickResult tickResult = engine.Tick(_gameState, DateTime.Now.Ticks);
+                if (tickResult.StateChanged && tickResult.NewState != null)
+                {
+                    SyncFromGameState(tickResult.NewState);
+                }
+                foreach (var cmd in tickResult.RenderCommands)
+                {
+                    if (cmd.Type == RenderCmdType.ShowToolbar)
+                    {
+                        drawingFormHelper.DrawToolbar();
+                    }
+                    else if (cmd.Type == RenderCmdType.DealCard)
+                    {
+                        var payload = (DealCardPayload)cmd.Payload;
+                        drawingFormHelper.RenderDealRound(payload.Round);
+                    }
+                }
+                if (currentState.Suit == 0 && currentPokers[0].Count > 0)
+                {
+                    drawingFormHelper.CallDoRankOrNot();
+                    renderer.DrawRankOrNotUI(bmp, _gameState);
+                }
             }
             //1.分牌
             else if (currentState.CurrentCardCommands == CardCommands.WaitingShowBottom) //翻底牌完毕后
