@@ -119,6 +119,7 @@ namespace Kuaff.Tractor
             {
                 currentState.CurrentCardCommands = CardCommands.Pause;
                 SetPauseSet(gameConfig.FinishedOncePauseTime, CardCommands.DrawOnceFinished);
+                if (firstSend < 1 || firstSend > 4) firstSend = whoseOrder;
                 whoIsBigger = TractorRules.GetNextOrder(this);
                 drawingFormHelper.DrawWhoWinThisTime();
             }
@@ -718,6 +719,7 @@ namespace Kuaff.Tractor
                 {
                     drawingFormHelper.CallDoRankOrNot();
                     renderer.DrawRankOrNotUI(bmp, _gameState);
+                    SyncLocalStateToGameState();
                 }
             }
             //1.分牌
