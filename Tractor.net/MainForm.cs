@@ -89,17 +89,54 @@ namespace Kuaff.Tractor
         internal GameState _gameState;
 
 
+        private int NormalizeFirstSend(int fallbackPlayerId)
+        {
+            if (firstSend >= 1 && firstSend <= 4)
+            {
+                return firstSend;
+            }
+
+            if (currentState.Master >= 1 && currentState.Master <= 4)
+            {
+                firstSend = currentState.Master;
+            }
+            else if (whoseOrder >= 1 && whoseOrder <= 4)
+            {
+                firstSend = whoseOrder;
+            }
+            else
+            {
+                for (int i = 0; i < currentSendCards.Length; i++)
+                {
+                    if (currentSendCards[i] != null && currentSendCards[i].Count > 0)
+                    {
+                        firstSend = i + 1;
+                        break;
+                    }
+                }
+            }
+
+            if (firstSend < 1 || firstSend > 4)
+            {
+                firstSend = fallbackPlayerId;
+            }
+
+            return firstSend;
+        }
+
         /// <summary>
         /// AI出牌收口：获取AI选牌→推进状态机→同步状态→返回出牌列表
         /// </summary>
         internal ArrayList EnginePlayAiCards(int playerId)
         {
+            int normalizedFirstSend = NormalizeFirstSend(playerId);
+
             // AI 选牌（Algorithm 会直接修改 form 的 currentSendCards/pokerList）
             ArrayList played;
-            if (currentSendCards[firstSend - 1].Count > 0)
+            if (normalizedFirstSend >= 1 && normalizedFirstSend <= 4 && currentSendCards[normalizedFirstSend - 1].Count > 0)
             {
                 played = Algorithm.MustSendedCards(this, playerId, currentPokers, currentSendCards,
-                    currentState.Suit, currentRank, currentSendCards[firstSend - 1].Count);
+                    currentState.Suit, currentRank, currentSendCards[normalizedFirstSend - 1].Count);
             }
             else
             {
@@ -109,8 +146,6 @@ namespace Kuaff.Tractor
 
             // 状态机推进：判断是否该进入 DrawOnceFinished
             bool isLastPlayer = false;
-            int prevPlayer = (playerId == 1) ? 4 : (playerId - 1);
-            int prevPrev = (prevPlayer == 1) ? 4 : (prevPlayer - 1);
             if (playerId == 4 && currentSendCards[1].Count > 0) isLastPlayer = true;
             else if (playerId == 2 && currentSendCards[2].Count > 0) isLastPlayer = true;
             else if (playerId == 3 && currentSendCards[0].Count > 0) isLastPlayer = true;
@@ -119,7 +154,7 @@ namespace Kuaff.Tractor
             {
                 currentState.CurrentCardCommands = CardCommands.Pause;
                 SetPauseSet(gameConfig.FinishedOncePauseTime, CardCommands.DrawOnceFinished);
-                if (firstSend < 1 || firstSend > 4) firstSend = whoseOrder;
+                NormalizeFirstSend(playerId);
                 whoIsBigger = TractorRules.GetNextOrder(this);
                 drawingFormHelper.DrawWhoWinThisTime();
             }
@@ -784,6 +819,16 @@ namespace Kuaff.Tractor
                                 bottom.Add(pokerList[3][0]); bottom.Add(pokerList[3][1]);
                                 int suit = CommonMethods.GetSuit((int)bottom[2]);
                                 currentState.Suit = suit;
+                                if (currentState.Master < 1 || currentState.Master > 4)
+                                {
+                                    // 无人亮主且选择翻底牌时，第三张底牌来自 2 号位，按该位定庄。
+                                    currentState.Master = 2;
+                                }
+                                showSuits = 1;
+                                whoShowRank = currentState.Master;
+                                whoseOrder = currentState.Master;
+                                firstSend = currentState.Master;
+                                SyncLocalStateToGameState();
                                 Graphics g = Graphics.FromImage(bmp);
                                 if (currentState.Master == 1 || currentState.Master == 2)
                                     drawingFormHelper.DrawSuit(g, suit, true, true);

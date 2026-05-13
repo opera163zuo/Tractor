@@ -695,9 +695,72 @@ namespace Kuaff.Tractor
         }
 
        
+        private static int ResolveLeadOrder(MainForm mainForm)
+        {
+            if (mainForm.firstSend >= 1 && mainForm.firstSend <= 4)
+            {
+                return mainForm.firstSend;
+            }
+
+            if (mainForm.currentState.Master >= 1 && mainForm.currentState.Master <= 4)
+            {
+                return mainForm.currentState.Master;
+            }
+
+            if (mainForm.whoseOrder >= 1 && mainForm.whoseOrder <= 4)
+            {
+                return mainForm.whoseOrder;
+            }
+
+            if (mainForm.currentSendCards != null)
+            {
+                for (int i = 0; i < mainForm.currentSendCards.Length; i++)
+                {
+                    if (mainForm.currentSendCards[i] != null && mainForm.currentSendCards[i].Count > 0)
+                    {
+                        return i + 1;
+                    }
+                }
+            }
+
+            return 1;
+        }
+
         //确定下一次该谁出牌
         internal static int GetNextOrder(MainForm mainForm)
         {
+            int order = ResolveLeadOrder(mainForm);
+            if (mainForm.firstSend < 1 || mainForm.firstSend > 4)
+            {
+                mainForm.firstSend = order;
+            }
+
+            if (mainForm.currentSendCards == null || mainForm.currentSendCards.Length < 4)
+            {
+                return order;
+            }
+
+            if (mainForm.currentSendCards[order - 1] == null || mainForm.currentSendCards[order - 1].Count == 0)
+            {
+                for (int i = 0; i < mainForm.currentSendCards.Length; i++)
+                {
+                    if (mainForm.currentSendCards[i] != null && mainForm.currentSendCards[i].Count > 0)
+                    {
+                        order = i + 1;
+                        if (mainForm.firstSend < 1 || mainForm.firstSend > 4)
+                        {
+                            mainForm.firstSend = order;
+                        }
+                        break;
+                    }
+                }
+            }
+
+            if (mainForm.currentSendCards[order - 1] == null || mainForm.currentSendCards[order - 1].Count == 0)
+            {
+                return order;
+            }
+
             CurrentPoker[] cp = new CurrentPoker[4];
             int suit = mainForm.currentState.Suit;
             int rank = mainForm.currentRank;
@@ -710,17 +773,8 @@ namespace Kuaff.Tractor
             cp[2].Sort();
             cp[3].Sort();
 
-
-
-            int count = mainForm.currentSendCards[0].Count;
-            
-
-            int order = mainForm.firstSend;
-
-            int firstSuit = CommonMethods.GetSuit((int)mainForm.currentSendCards[order-1][0],suit,rank);
-
-
-
+            int count = mainForm.currentSendCards[order - 1].Count;
+            int firstSuit = CommonMethods.GetSuit((int)mainForm.currentSendCards[order - 1][0], suit, rank);
             int[] users = CommonMethods.OtherUsers(order);
 
             //如果是混合牌（甩牌或者多个对）,返回首家order
