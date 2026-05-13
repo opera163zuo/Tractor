@@ -362,7 +362,7 @@ namespace Kuaff.Tractor
 
             if (menuItem.Text.Equals("开始新游戏"))
             {
-                PauseGametoolStripMenuItem.Text = "鏆傚仠娓告垙";
+                PauseGametoolStripMenuItem.Text = "暂停游戏";
 
 
                 //新游戏初始状态，我家和敌方都从2开始，令牌为开始发牌
@@ -466,7 +466,7 @@ namespace Kuaff.Tractor
 
             //缁樺埗Sidebar
             drawingFormHelper.DrawSidebar(g);
-            //缁樺埗涓滃崡瑗垮寳
+            //绘制东南西北
             drawingFormHelper.DrawOtherMaster(g, 0, 0);
 
             if (currentState.Master != 0)
@@ -509,7 +509,7 @@ namespace Kuaff.Tractor
                 if (b)
                 {
                     timer.Stop();
-                    PauseGametoolStripMenuItem.Text = "缁х画娓告垙";
+                    PauseGametoolStripMenuItem.Text = "继续游戏";
                     PauseGametoolStripMenuItem.Image = Properties.Resources.MenuResume;
                 }
             }
@@ -718,31 +718,7 @@ namespace Kuaff.Tractor
             {
                 PlayRandomSongs();
             }
-            //1.鍒嗙墝
-            if (currentState.CurrentCardCommands == CardCommands.ReadyCards) //鍒嗙墝
-            {
-                if (currentCount ==0)
-                {
-                    //鐢诲伐鍏锋爮
-                    if (!gameConfig.IsDebug)
-                    {
-                        drawingFormHelper.DrawToolbar();
-                    }
-
-                }
-
-                if (currentCount < 25)
-                {
-                    renderer.DrawDealRound(bmp, _gameState, currentCount);
-                    currentCount++;
-                    SyncLocalStateToGameState();
-                }
-                else
-                {
-                    currentState.CurrentCardCommands = CardCommands.DrawCenter8Cards;
-                    SyncLocalStateToGameState();
-                }
-            }
+            //1.分牌
             else if (currentState.CurrentCardCommands == CardCommands.WaitingShowBottom) //翻底牌完毕后
             {
                 drawingFormHelper.DrawCenterImage();
@@ -967,7 +943,7 @@ namespace Kuaff.Tractor
                 gameConfig.CardImageName = "";
 
             }
-            else if (menuItem.Text.Equals("棣欒溅缇庡コ"))
+            else if (menuItem.Text.Equals("香车美女"))
             {
                 gameConfig.CardsResourceManager = Kuaff_Model.ResourceManager;
                 CommonToolStripMenuItem.CheckState = CheckState.Unchecked;
@@ -1004,12 +980,12 @@ namespace Kuaff.Tractor
                 }
             }
         }
-        //鐗岃儗鍥剧墖
+        //牌背图片
         private void SelectBackImage_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
 
-            if (menuItem.Text.Equals("钄氳摑涓栫晫"))
+            if (menuItem.Text.Equals("蔚蓝世界"))
             {
                 gameConfig.BackImage = Kuaff_Cards.back;
                 BlueWorldToolStripMenuItem.CheckState = CheckState.Checked;
@@ -1019,7 +995,7 @@ namespace Kuaff.Tractor
                 CustomBackImageToolStripMenuItem.CheckState = CheckState.Unchecked;
                 CustomBackImageToolStripMenuItem.Text = "自定义";
             }
-            else if (menuItem.Text.Equals("闈掓订骞村崕"))
+            else if (menuItem.Text.Equals("青涩年华"))
             {
                 gameConfig.BackImage = Kuaff_Cards.back2;
                 BlueWorldToolStripMenuItem.CheckState = CheckState.Unchecked;
@@ -1029,7 +1005,7 @@ namespace Kuaff.Tractor
                 CustomBackImageToolStripMenuItem.CheckState = CheckState.Unchecked;
                 CustomBackImageToolStripMenuItem.Text = "自定义";
             }
-            else if (menuItem.Text.Equals("鑽夊師缇氱緤"))
+            else if (menuItem.Text.Equals("草原羚羊"))
             {
                 gameConfig.BackImage = Kuaff_Cards.back3;
                 BlueWorldToolStripMenuItem.CheckState = CheckState.Unchecked;
@@ -1055,13 +1031,13 @@ namespace Kuaff.Tractor
             }
         }
 
-        //閫夋嫨鑳屾櫙鍥剧墖
+        //选择背景图片
         private void SelectImage_Click(object sender, EventArgs e)
         {
-            PauseGametoolStripMenuItem.Text = "鏆傚仠娓告垙";
+            PauseGametoolStripMenuItem.Text = "暂停游戏";
 
             ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-            if (menuItem.Text.Equals("澶哥埗绉戞妧"))
+            if (menuItem.Text.Equals("老爷科技"))
             {
                 KuaffToolStripMenuItem.CheckState = CheckState.Checked;
                 image = global::Kuaff.Tractor.Properties.Resources.Backgroud;
@@ -1071,7 +1047,7 @@ namespace Kuaff.Tractor
                 g.DrawImage(image, ClientRectangle, ClientRectangle,GraphicsUnit.Pixel);
 
                 init();
-                //缁樺埗涓滃崡瑗垮寳
+                //绘制东南西北
 
                 drawingFormHelper.DrawOtherMaster(g, 0, 0);
 
@@ -1102,7 +1078,7 @@ namespace Kuaff.Tractor
                     g.DrawImage(image, ClientRectangle, ClientRectangle, GraphicsUnit.Pixel);
 
                     init();
-                    //缁樺埗涓滃崡瑗垮寳
+                    //绘制东南西北
 
                     drawingFormHelper.DrawOtherMaster(g, 0, 0);
 
@@ -1192,7 +1168,7 @@ namespace Kuaff.Tractor
         //璇诲彇鐗屽眬
         private void RestoreToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PauseGametoolStripMenuItem.Text = "鏆傚仠娓告垙";
+            PauseGametoolStripMenuItem.Text = "暂停游戏";
 
             Stream stream = null;
             try
@@ -1256,16 +1232,16 @@ namespace Kuaff.Tractor
         private void PauseGametoolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
-            if (menuItem.Text.Equals("鏆傚仠娓告垙"))
+            if (menuItem.Text.Equals("暂停游戏"))
             {
                 timer.Stop();
-                menuItem.Text = "缁х画娓告垙";
+                menuItem.Text = "继续游戏";
                 menuItem.Image = Properties.Resources.MenuResume;
             }
             else
             {
                 timer.Start();
-                menuItem.Text = "鏆傚仠娓告垙";
+                menuItem.Text = "暂停游戏";
                 menuItem.Image = Properties.Resources.MenuPause;
             }
         }
