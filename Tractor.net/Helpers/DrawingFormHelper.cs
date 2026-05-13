@@ -74,7 +74,7 @@ namespace Kuaff.Tractor
             else
             {
 
-                MyRankOrNot(mainForm.currentPokers[0]);
+                DoRankOrNotLogic(mainForm.currentPokers[0], 1);
             }
             mainForm.Refresh();
 
@@ -1899,7 +1899,7 @@ private void DoRankOrNotLogic(CurrentPoker currentPoker, int user)
             mainForm.SyncLocalStateToGameState();
         }
 
-        private void DrawWhoWinThisTime()
+        internal void DrawWhoWinThisTime()
         {
             //谁赢了这一圈
             int whoWin = TractorRules.GetNextOrder(mainForm);
@@ -2127,18 +2127,5 @@ private void DoRankOrNotLogic(CurrentPoker currentPoker, int user)
             mainForm.Refresh();
         }
     
-        internal bool DoRankNot()
-        {
-            if (mainForm.currentState == null) return false;
-            if (mainForm.currentState.Suit == -1)
-            {
-                if (mainForm.pokerList[0].Count > 0) {
-                    int last1 = (int)mainForm.pokerList[0][mainForm.pokerList[0].Count - 1];
-                    mainForm.currentState.Suit = last1 % 4;
-                    mainForm.currentState.Rank = mainForm.currentRank;
-                }
-            }
-            return true;
-        }
     }
 }

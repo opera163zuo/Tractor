@@ -77,6 +77,8 @@ namespace Kuaff.Tractor
 
         public CardCommands CurrentCardCommands; //当前命令
 
+        public CurrentState() { }
+
         public CurrentState(int ourCurrentRank, int opposedCurrentRank, int suit, int master, int ourTotalRound, int opposedTotalRound, CardCommands currentCardCommands)
         {
             OurCurrentRank = ourCurrentRank;
