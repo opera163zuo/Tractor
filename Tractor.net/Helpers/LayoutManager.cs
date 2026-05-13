@@ -44,7 +44,6 @@
 
         // ===== 牌间距 =====
         public const int SelectedCardOffset = 13;  // 选中牌的Y偏移
-    }
         // ===== 对手出牌区域 =====
         public const int OtherPlayer2CardX = 320;
         public const int OtherPlayer2CardY = 55;

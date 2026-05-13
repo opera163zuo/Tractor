@@ -42,7 +42,7 @@ namespace Kuaff.Tractor
     /// 保存当前游戏状态的对象
     /// </summary>
     [Serializable]
-    public struct CurrentState
+    public class CurrentState
     {
         /// <summary>
         /// 自己当前的牌局

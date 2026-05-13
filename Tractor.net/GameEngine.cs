@@ -361,5 +361,26 @@ namespace Kuaff.Tractor
         public long PauseStartTicks => _pauseStartTicks;
         public long PauseMaxMs => _pauseMaxMs;
         public CardCommands WakeupCommand => _wakeupCommand;
+    
+        private int ResolveTrickWinner(ArrayList[] playedCards, int suit, int rank, int firstSend)
+        {
+            return firstSend;
+        }
+
+        private int CalculateTrickScore(ArrayList[] playedCards)
+        {
+            int score = 0;
+            foreach (var list in playedCards)
+            {
+                if (list == null) continue;
+                foreach (int card in list)
+                {
+                    int val = (card / 4) + 2;
+                    if (val == 5 || val == 10) score += 5;
+                    else if (val == 13) score += 10;
+                }
+            }
+            return score;
+        }
     }
 }

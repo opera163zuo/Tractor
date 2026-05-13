@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -983,7 +983,7 @@ namespace Kuaff.Tractor
             else if (currentState.CurrentCardCommands == CardCommands.DrawOnceRank) //如果这轮大家都出完牌
             {
                 currentState.CurrentCardCommands = CardCommands.Undefined;
-                /* SyncState removed - state managed via GameState */
+                TractorRules.GetNextMasterUser(this);
                 init();
             }
         }
