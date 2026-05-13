@@ -503,31 +503,6 @@ namespace Kuaff.Tractor
                     TrySubmitSelectedCards();
                 }
             }
-            else if (currentState.CurrentCardCommands == CardCommands.ReadyCards)
-            {
-                TickResult tickResult = engine.Tick(_gameState, DateTime.Now.Ticks);
-                if (tickResult.StateChanged && tickResult.NewState != null)
-                {
-                    SyncFromGameState(tickResult.NewState);
-                }
-                foreach (var cmd in tickResult.RenderCommands)
-                {
-                    if (cmd.Type == RenderCmdType.ShowToolbar)
-                    {
-                        drawingFormHelper.DrawToolbar();
-                    }
-                    else if (cmd.Type == RenderCmdType.DealCard)
-                    {
-                        var payload = (DealCardPayload)cmd.Payload;
-                        drawingFormHelper.RenderDealRound(payload.Round);
-                    }
-                }
-                if (currentState.Suit == 0 && currentPokers[0].Count > 0)
-                {
-                    drawingFormHelper.CallDoRankOrNot();
-                    renderer.DrawRankOrNotUI(bmp, _gameState);
-                }
-            }
         }
 
         private void TrySubmitSelectedCards()
@@ -674,31 +649,34 @@ namespace Kuaff.Tractor
             {
                 PlayRandomSongs();
             }
-            //1.鍒嗙墝
-            if (currentState.CurrentCardCommands == CardCommands.ReadyCards) //鍒嗙墝
+            //1.分牌
+            else if (currentState.CurrentCardCommands == CardCommands.ReadyCards)
             {
-                if (currentCount ==0)
+                TickResult tickResult = engine.Tick(_gameState, DateTime.Now.Ticks);
+                if (tickResult.StateChanged && tickResult.NewState != null)
                 {
-                    //鐢诲伐鍏锋爮
-                    if (!gameConfig.IsDebug)
+                    SyncFromGameState(tickResult.NewState);
+                }
+                foreach (var cmd in tickResult.RenderCommands)
+                {
+                    if (cmd.Type == RenderCmdType.ShowToolbar)
                     {
                         drawingFormHelper.DrawToolbar();
                     }
-
+                    else if (cmd.Type == RenderCmdType.DealCard)
+                    {
+                        var payload = (DealCardPayload)cmd.Payload;
+                        drawingFormHelper.RenderDealRound(payload.Round);
+                    }
                 }
-
-                if (currentCount < 25)
+                if (currentState.Suit == 0 && currentPokers[0].Count > 0)
                 {
-                    renderer.DrawDealRound(bmp, _gameState, currentCount);
-                    currentCount++;
-                    SyncLocalStateToGameState();
-                }
-                else
-                {
-                    currentState.CurrentCardCommands = CardCommands.DrawCenter8Cards;
+                    drawingFormHelper.CallDoRankOrNot();
+                    renderer.DrawRankOrNotUI(bmp, _gameState);
                     SyncLocalStateToGameState();
                 }
             }
+            //1.分牌
             else if (currentState.CurrentCardCommands == CardCommands.WaitingShowBottom) //翻底牌完毕后
             {
                 drawingFormHelper.DrawCenterImage();
