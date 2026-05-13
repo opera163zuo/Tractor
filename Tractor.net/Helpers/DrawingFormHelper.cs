@@ -705,184 +705,72 @@ private void DoRankOrNotLogic(CurrentPoker currentPoker, int user)
                 }
             }
 
-        }        /// <param name="e"></param>
+        }
+
+        /// <summary>
+        /// 判断最后是否有人亮主。
+        /// 原版逻辑只检查 currentState.Suit 是否仍为 0；
+        /// Phase B 拆分后该方法丢失，导致叫主收尾分支直接断裂。
+        /// </summary>
+        internal bool DoRankNot()
+        {
+            return mainForm.currentState.Suit == 0;
+        }
+
+        /// <param name="e"></param>
         internal void IsClickedRanked(MouseEventArgs e)
         {
             bool[] suits = Algorithm.CanSetRank(mainForm, mainForm.currentPokers[0]);
 
-            if (suits[0]) //如果红桃
+            TryApplyClickedRank(e, suits[0], new Rectangle(417, 327, 25, 25), 1, false);
+            TryApplyClickedRank(e, suits[1], new Rectangle(443, 327, 25, 25), 2, false);
+            TryApplyClickedRank(e, suits[2], new Rectangle(468, 327, 25, 25), 3, false);
+            TryApplyClickedRank(e, suits[3], new Rectangle(493, 327, 25, 25), 4, false);
+            TryApplyClickedRank(e, suits[4], new Rectangle(518, 327, 25, 25), 5, true);
+        }
+
+        private void TryApplyClickedRank(MouseEventArgs e, bool canApply, Rectangle regionRect, int suit, bool isNoTrump)
+        {
+            if (!canApply)
             {
-                Region region = new Region(new Rectangle(417, 327, 25, 25));
-                if (region.IsVisible(e.X, e.Y))
+                return;
+            }
+
+            using (Region region = new Region(regionRect))
+            {
+                if (!region.IsVisible(e.X, e.Y))
                 {
-                    mainForm.showSuits++;
-                    mainForm.whoShowRank = 1;
-
-                    mainForm.currentState.Suit = 1;
-                    if ((mainForm.currentRank == 0) && mainForm.isNew)
-                    {
-                        mainForm.currentState.Master = 1;
-                    }
-                    Graphics g = Graphics.FromImage(mainForm.bmp);
-
-                    if ((mainForm.currentState.Master == 1) || (mainForm.currentState.Master == 2))
-                    {
-                        DrawSuit(g, 1, true, true);
-                        DrawRank(g, mainForm.currentState.OurCurrentRank, true, true);
-                    }
-                    else
-                    {
-                        DrawSuit(g, 1, false, true);
-                        DrawRank(g, mainForm.currentState.OpposedCurrentRank, false, true);
-                    }
-
-                    
-                    DrawMaster(g, mainForm.currentState.Master, 1);
-                    DrawOtherMaster(g, mainForm.currentState.Master, 1);
-
-                    ClearSuitCards(g);
-                    g.Dispose();
+                    return;
                 }
             }
-            if (suits[1]) //如果黑桃
+
+            mainForm.showSuits = isNoTrump ? 3 : mainForm.showSuits + 1;
+            mainForm.whoShowRank = 1;
+            mainForm.currentState.Suit = suit;
+            if ((mainForm.currentRank == 0) && mainForm.isNew)
             {
-                Region region = new Region(new Rectangle(443, 327, 25, 25));
-                if (region.IsVisible(e.X, e.Y))
-                {
-                    mainForm.showSuits++;
-                    mainForm.whoShowRank = 1;
-                    Graphics g = Graphics.FromImage(mainForm.bmp);
-                    mainForm.currentState.Suit = 2;
-                    if ((mainForm.currentRank == 0) && mainForm.isNew)
-                    {
-                        mainForm.currentState.Master = 1;
-                    
-                    }
-
-
-                    if ((mainForm.currentState.Master == 1) || (mainForm.currentState.Master == 2))
-                    {
-                        DrawSuit(g, 2, true, true);
-                        DrawRank(g, mainForm.currentState.OurCurrentRank, true, true);
-                    }
-                    else
-                    {
-                        DrawSuit(g, 2, false, true);
-                        DrawRank(g, mainForm.currentState.OpposedCurrentRank, false, true);
-                    }
-                    DrawMaster(g, mainForm.currentState.Master, 1);
-                    DrawOtherMaster(g, mainForm.currentState.Master, 1);
-
-
-                    ClearSuitCards(g);
-                    g.Dispose();
-                }
+                mainForm.currentState.Master = 1;
             }
-            if (suits[2]) //如果方块
+
+            using (Graphics g = Graphics.FromImage(mainForm.bmp))
             {
-                Region region = new Region(new Rectangle(468, 327, 25, 25));
-                if (region.IsVisible(e.X, e.Y))
+                if ((mainForm.currentState.Master == 1) || (mainForm.currentState.Master == 2))
                 {
-                    mainForm.showSuits++;
-                    mainForm.whoShowRank = 1;
-                    Graphics g = Graphics.FromImage(mainForm.bmp);
-                    mainForm.currentState.Suit = 3;
-                    if ((mainForm.currentRank == 0) && mainForm.isNew)
-                    {
-                        mainForm.currentState.Master = 1;
-                        
-                    }
-
-
-                    if ((mainForm.currentState.Master == 1) || (mainForm.currentState.Master == 2))
-                    {
-                        DrawSuit(g, 3, true, true);
-                        DrawRank(g, mainForm.currentState.OurCurrentRank, true, true);
-                    }
-                    else
-                    {
-                        DrawSuit(g, 3, false, true);
-                        DrawRank(g, mainForm.currentState.OpposedCurrentRank, false, true);
-                    }
-                    DrawMaster(g, mainForm.currentState.Master, 1);
-                    DrawOtherMaster(g, mainForm.currentState.Master, 1);
-
-
-                    
-                    ClearSuitCards(g);
-                    g.Dispose();
+                    DrawSuit(g, suit, true, true);
+                    DrawRank(g, mainForm.currentState.OurCurrentRank, true, true);
                 }
-            }
-            if (suits[3]) //如果梅花
-            {
-                Region region = new Region(new Rectangle(493, 327, 25, 25));
-                if (region.IsVisible(e.X, e.Y))
+                else
                 {
-                    mainForm.showSuits++;
-                    mainForm.whoShowRank = 1;
-                    Graphics g = Graphics.FromImage(mainForm.bmp);
-                    mainForm.currentState.Suit = 4;
-                    if ((mainForm.currentRank == 0) && mainForm.isNew)
-                    {
-                        mainForm.currentState.Master = 1;
-                        
-                    }
-
-
-                    if ((mainForm.currentState.Master == 1) || (mainForm.currentState.Master == 2))
-                    {
-                        DrawSuit(g, 4, true, true);
-                        DrawRank(g, mainForm.currentState.OurCurrentRank, true, true);
-                    }
-                    else
-                    {
-                        DrawSuit(g, 4, false, true);
-                        DrawRank(g, mainForm.currentState.OpposedCurrentRank, false, true);
-                    }
-                    DrawMaster(g, mainForm.currentState.Master, 1);
-                    DrawOtherMaster(g, mainForm.currentState.Master, 1);
-
-                    
-                    ClearSuitCards(g);
-                    g.Dispose();
+                    DrawSuit(g, suit, false, true);
+                    DrawRank(g, mainForm.currentState.OpposedCurrentRank, false, true);
                 }
+
+                DrawMaster(g, mainForm.currentState.Master, 1);
+                DrawOtherMaster(g, mainForm.currentState.Master, 1);
+                ClearSuitCards(g);
             }
-            if (suits[4]) //如果王
-            {
-                Region region = new Region(new Rectangle(518, 327, 25, 25));
-                if (region.IsVisible(e.X, e.Y))
-                {
-                    mainForm.showSuits = 3;
-                    mainForm.whoShowRank = 1;
-                    Graphics g = Graphics.FromImage(mainForm.bmp);
-                    mainForm.currentState.Suit = 5;
-                    if ((mainForm.currentRank == 0) && mainForm.isNew)
-                    {
-                        mainForm.currentState.Master = 1;
-                        
-                    }
 
-
-
-                    if ((mainForm.currentState.Master == 1) || (mainForm.currentState.Master == 2))
-                    {
-                        DrawSuit(g, 5, true, true);
-                        DrawRank(g, mainForm.currentState.OurCurrentRank, true, true);
-                    }
-                    else
-                    {
-                        DrawSuit(g, 5, false, true);
-                        DrawRank(g, mainForm.currentState.OpposedCurrentRank, false, true);
-                    }
-
-                    DrawMaster(g, mainForm.currentState.Master, 1);
-                    DrawOtherMaster(g, mainForm.currentState.Master, 1);
-
-
-                    ClearSuitCards(g);
-                    g.Dispose();
-                }
-            }
+            SyncRankStateToGameState();
         }
         #endregion // 判断是否亮主
 
@@ -1708,8 +1596,7 @@ private void DoRankOrNotLogic(CurrentPoker currentPoker, int user)
                 mainForm.currentState.CurrentCardCommands = CardCommands.WaitingForSend;
             }
 
-
-
+            mainForm.SyncLocalStateToGameState();
         }
 
         /// <summary>
@@ -1717,20 +1604,11 @@ private void DoRankOrNotLogic(CurrentPoker currentPoker, int user)
         /// </summary>
         internal void DrawNextUserSendedCards()
         {
-            mainForm.currentState.CurrentCardCommands = CardCommands.Undefined;
-            //画NextUser出的牌
-            if (mainForm.currentSendCards[0].Count > 0) //随牌
-            {
-                DrawNextUserSendedCardsAction(Algorithm.MustSendedCards(mainForm, 4, mainForm.currentPokers, mainForm.currentSendCards, mainForm.currentState.Suit, mainForm.currentRank, mainForm.currentSendCards[mainForm.firstSend - 1].Count));
-            }
-            else
-            {
-                DrawNextUserSendedCardsAction(Algorithm.ShouldSendedCards(mainForm, 4, mainForm.currentPokers, mainForm.currentSendCards, mainForm.currentState.Suit, mainForm.currentRank));
-                mainForm.whoseOrder = 2;
-            }
+            // AI出牌收口到引擎
+            ArrayList played = mainForm.EnginePlayAiCards(4);
+            DrawNextUserSendedCardsAction(played);
 
-            //考虑是否盖住的问题
-            //我已经出牌，应该将我重画
+            //重绘盖住区域
             int myCount = mainForm.currentSendCards[0].Count;
             if (myCount > 0)
             {
@@ -1748,22 +1626,6 @@ private void DoRankOrNotLogic(CurrentPoker currentPoker, int user)
 
             DrawScoreImage(mainForm.Scores);
             mainForm.Refresh();
-
-            //
-            if (mainForm.currentSendCards[1].Count > 0)
-            {
-                mainForm.currentState.CurrentCardCommands = CardCommands.Pause;
-                mainForm.SetPauseSet(mainForm.gameConfig.FinishedOncePauseTime, CardCommands.DrawOnceFinished);
-
-                DrawWhoWinThisTime();
-            }
-            else
-            {
-                mainForm.whoseOrder = 2;
-                mainForm.currentState.CurrentCardCommands = CardCommands.WaitingForSend;
-            }
-
-
         }
 
         /// <summary>
@@ -1771,20 +1633,11 @@ private void DoRankOrNotLogic(CurrentPoker currentPoker, int user)
         /// </summary>
         internal void DrawFrieldUserSendedCards()
         {
-            mainForm.currentState.CurrentCardCommands = CardCommands.Undefined;
-            //画FrieldUser出的牌
-            if (mainForm.currentSendCards[3].Count > 0) //随牌
-            {
-                DrawFrieldUserSendedCardsAction(Algorithm.MustSendedCards(mainForm, 2, mainForm.currentPokers, mainForm.currentSendCards, mainForm.currentState.Suit, mainForm.currentRank, mainForm.currentSendCards[mainForm.firstSend - 1].Count));
-            }
-            else
-            {
-                DrawFrieldUserSendedCardsAction(Algorithm.ShouldSendedCards(mainForm, 2, mainForm.currentPokers, mainForm.currentSendCards, mainForm.currentState.Suit, mainForm.currentRank));
-            }
+            // AI出牌收口到引擎
+            ArrayList played = mainForm.EnginePlayAiCards(2);
+            DrawFrieldUserSendedCardsAction(played);
 
-
-            //考虑是否盖住的问题
-            //如果下家已经出牌，应该将下家重画,重画下家时，有可能盖住我
+            //重绘盖住区域
             int myCount = mainForm.currentSendCards[3].Count;
             if (myCount > 0)
             {
@@ -1812,22 +1665,6 @@ private void DoRankOrNotLogic(CurrentPoker currentPoker, int user)
 
             DrawScoreImage(mainForm.Scores);
             mainForm.Refresh();
-
-            //
-            if (mainForm.currentSendCards[2].Count > 0)
-            {
-                mainForm.currentState.CurrentCardCommands = CardCommands.Pause;
-                mainForm.SetPauseSet(mainForm.gameConfig.FinishedOncePauseTime, CardCommands.DrawOnceFinished);
-
-                DrawWhoWinThisTime();
-            }
-            else
-            {
-                mainForm.whoseOrder = 3;
-                mainForm.currentState.CurrentCardCommands = CardCommands.WaitingForSend;
-            }
-
-            //
         }
 
         /// <summary>
@@ -1835,20 +1672,11 @@ private void DoRankOrNotLogic(CurrentPoker currentPoker, int user)
         /// </summary>
         internal void DrawPreviousUserSendedCards()
         {
-            mainForm.currentState.CurrentCardCommands = CardCommands.Undefined;
-            //画PreviousUser出的牌
-            if (mainForm.currentSendCards[1].Count > 0) //随牌
-            {
-                DrawPreviousUserSendedCardsAction(Algorithm.MustSendedCards(mainForm, 3, mainForm.currentPokers, mainForm.currentSendCards, mainForm.currentState.Suit, mainForm.currentRank, mainForm.currentSendCards[mainForm.firstSend - 1].Count));
-            }
-            else
-            {
-                DrawPreviousUserSendedCardsAction(Algorithm.ShouldSendedCards(mainForm, 3, mainForm.currentPokers, mainForm.currentSendCards, mainForm.currentState.Suit, mainForm.currentRank));
-            }
+            // AI出牌收口到引擎
+            ArrayList played = mainForm.EnginePlayAiCards(3);
+            DrawPreviousUserSendedCardsAction(played);
 
-
-            //考虑是否盖住的问题
-            //我已经出牌，应该将我重画
+            //重绘盖住区域
             int myCount = mainForm.currentSendCards[0].Count;
             if (myCount > 0)
             {
@@ -1866,23 +1694,6 @@ private void DoRankOrNotLogic(CurrentPoker currentPoker, int user)
 
             DrawScoreImage(mainForm.Scores);
             mainForm.Refresh();
-
-
-            //
-            if (mainForm.currentSendCards[0].Count > 0)
-            {
-                mainForm.currentState.CurrentCardCommands = CardCommands.Pause;
-                mainForm.SetPauseSet(mainForm.gameConfig.FinishedOncePauseTime, CardCommands.DrawOnceFinished);
-
-                DrawWhoWinThisTime();
-            }
-            else
-            {
-                mainForm.whoseOrder = 1;
-                mainForm.currentState.CurrentCardCommands = CardCommands.WaitingForMySending;
-            }
-
-
         }
 
         //大家都出完一次牌，则计算得分多少，下次该谁出牌
@@ -2085,9 +1896,7 @@ private void DoRankOrNotLogic(CurrentPoker currentPoker, int user)
             DrawCenterImage();
             DrawScoreImage(mainForm.Scores);
             mainForm.Refresh();
-
-
-
+            mainForm.SyncLocalStateToGameState();
         }
 
         private void DrawWhoWinThisTime()

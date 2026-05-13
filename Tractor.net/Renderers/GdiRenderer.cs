@@ -84,7 +84,14 @@ namespace Kuaff.Tractor
                 case RenderCmdType.DrawPlayedCards:
                     if (State != null && cmd.Payload is PlayedCardsPayload played)
                     {
-                        DrawOtherPlayerPlayedCards(bmp, State, played.PlayerId);
+                        if (played.PlayerId == 1)
+                        {
+                            DrawMyFinishSendedCards(bmp, State);
+                        }
+                        else
+                        {
+                            DrawOtherPlayerPlayedCards(bmp, State, played.PlayerId);
+                        }
                         handled = true;
                     }
                     break;
@@ -482,21 +489,12 @@ namespace Kuaff.Tractor
 
             DrawScoreImage(bmp, BackgroundImage, state.Scores, state.State.Master);
 
-            if (state.CurrentSendCards[3].Count > 0)
-            {
-                state.State.CurrentCardCommands = CardCommands.DrawOnceFinished;
-            }
-            else
-            {
-                state.WhoseOrder = 4;
-                state.State.CurrentCardCommands = CardCommands.WaitingForSend;
-            }
         }
 
         private IEnumerable<int> GetOrderedHandCards(CurrentPoker cp)
         {
             int suit = 0;
-            if (State != null && State.State != null)
+            if (State != null)
             {
                 suit = State.State.Suit;
             }
