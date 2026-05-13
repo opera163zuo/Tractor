@@ -1,4 +1,4 @@
-﻿# 渲染管线分析 — DrawingFormHelper.cs
+# 渲染管线分析 — DrawingFormHelper.cs
 
 **文件**: `/tmp/tractor-analysis/Tractor.net/Helpers/DrawingFormHelper.cs`  
 **总行数**: 2355  

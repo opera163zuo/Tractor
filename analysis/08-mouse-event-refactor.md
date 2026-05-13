@@ -1,4 +1,4 @@
-﻿# 08 · 鼠标事件重构方案：逻辑与渲染分离
+# 08 · 鼠标事件重构方案：逻辑与渲染分离
 
 > 项目：拖拉机游戏 C# WinForms .NET 4.6.1  
 > 范围：MainForm_MouseClick（~150行，409–558）和 MainForm_MouseDoubleClick（~65行，562–624）  

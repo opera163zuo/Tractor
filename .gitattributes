@@ -1,0 +1,26 @@
+# Normalize line endings for all text files
+* text=auto
+
+# C# source files: CRLF on checkout (Windows standard)
+*.cs text eol=crlf
+
+# Batch files: CRLF
+*.bat text eol=crlf
+
+# Project/config files: CRLF
+*.csproj text eol=crlf
+*.sln text eol=crlf
+*.resx text eol=crlf
+*.config text eol=crlf
+*.xml text eol=crlf
+*.md text
+*.txt text
+*.html text
+*.css text
+
+# Ignore generated and binary
+/bin/ -text
+/obj/ -text
+*.pdb binary
+*.exe binary
+*.dll binary

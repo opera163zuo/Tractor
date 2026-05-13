@@ -1,4 +1,4 @@
-﻿# 06 — 算法迁移方案：Algorithm 系列类到 GameEngine
+# 06 — 算法迁移方案：Algorithm 系列类到 GameEngine
 
 > **目标**：将 Algorithm.cs、TractorRules.cs、MustSendCardsAlgorithm.cs、ShouldSendedCardsAlgorithm.cs 四类中的 `mainForm` 依赖全部解除，改为 GameEngine 实例方法。
 

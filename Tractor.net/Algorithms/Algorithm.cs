@@ -365,7 +365,18 @@ namespace Kuaff.Tractor
         #region 扣牌算法
         internal static void Send8Cards(MainForm form, int user)
         {
-           
+            if (form == null)
+            {
+                throw new ArgumentNullException(nameof(form));
+            }
+            if (form.pokerList == null || user < 1 || user > form.pokerList.Length)
+            {
+                return;
+            }
+            if (form.pokerList[user - 1] == null)
+            {
+                return;
+            }
 
             int suit = form.currentState.Suit;
             int rank = form.currentRank;

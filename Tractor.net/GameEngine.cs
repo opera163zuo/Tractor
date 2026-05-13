@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -142,7 +142,8 @@ namespace Kuaff.Tractor
                 {
                     int master = gs.State.Master;
                     bool isDebug = gs.Config?.IsDebug ?? false;
-                    bool shouldAutoSend = (master != 1 || isDebug);
+                    bool hasValidMaster = master >= 1 && master <= 4;
+                    bool shouldAutoSend = hasValidMaster && (master != 1 || isDebug);
 
                     if (shouldAutoSend)
                     {

@@ -1,4 +1,4 @@
-﻿# 拖拉机游戏状态机分析文档
+# 拖拉机游戏状态机分析文档
 
 > 分析目标：MainForm.cs + DrawingFormHelper.cs 中的游戏状态机
 > 项目：四人拖拉机（升级/80分）Windows桌面游戏（C# WinForms .NET 4.6.1）
