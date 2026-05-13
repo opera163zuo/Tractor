@@ -1,6 +1,7 @@
 ﻿﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -86,6 +87,53 @@ namespace Kuaff.Tractor
         internal GameEngine engine = new GameEngine();
 
         internal GameState _gameState;
+
+
+        /// <summary>
+        /// AI出牌收口：获取AI选牌→推进状态机→同步状态→返回出牌列表
+        /// </summary>
+        internal ArrayList EnginePlayAiCards(int playerId)
+        {
+            // AI 选牌（Algorithm 会直接修改 form 的 currentSendCards/pokerList）
+            ArrayList played;
+            if (currentSendCards[firstSend - 1].Count > 0)
+            {
+                played = Algorithm.MustSendedCards(this, playerId, currentPokers, currentSendCards,
+                    currentState.Suit, currentRank, currentSendCards[firstSend - 1].Count);
+            }
+            else
+            {
+                played = Algorithm.ShouldSendedCards(this, playerId, currentPokers, currentSendCards,
+                    currentState.Suit, currentRank);
+            }
+
+            // 状态机推进：判断是否该进入 DrawOnceFinished
+            bool isLastPlayer = false;
+            int prevPlayer = (playerId == 1) ? 4 : (playerId - 1);
+            int prevPrev = (prevPlayer == 1) ? 4 : (prevPlayer - 1);
+            if (playerId == 4 && currentSendCards[1].Count > 0) isLastPlayer = true;
+            else if (playerId == 2 && currentSendCards[2].Count > 0) isLastPlayer = true;
+            else if (playerId == 3 && currentSendCards[0].Count > 0) isLastPlayer = true;
+
+            if (isLastPlayer)
+            {
+                currentState.CurrentCardCommands = CardCommands.Pause;
+                SetPauseSet(gameConfig.FinishedOncePauseTime, CardCommands.DrawOnceFinished);
+                whoIsBigger = TractorRules.GetNextOrder(this);
+                drawingFormHelper.DrawWhoWinThisTime();
+            }
+            else
+            {
+                int next = (playerId % 4) + 1;
+                whoseOrder = next;
+                currentState.CurrentCardCommands = (next == 1)
+                    ? CardCommands.WaitingForMySending
+                    : CardCommands.WaitingForSend;
+            }
+
+            SyncLocalStateToGameState();
+            return played;
+        }
 
         private void SyncFromGameState(GameState newState)
         {
