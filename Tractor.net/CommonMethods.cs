@@ -349,6 +349,10 @@ namespace Kuaff.Tractor
         /// <returns>最大的牌</returns>
         internal static int GetMaxCard(ArrayList sendCards,int suit,int rank)
         {
+            if (sendCards == null || sendCards.Count == 0)
+            {
+                return -1;
+            }
             CurrentPoker cp = new CurrentPoker();
             cp.Suit = suit;
             cp.Rank = rank;
