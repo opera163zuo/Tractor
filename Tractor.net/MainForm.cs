@@ -848,10 +848,6 @@ namespace Kuaff.Tractor
             {
                 /* SyncOrder removed - state managed via GameState */
                 TickResult tickResult = engine.Tick(_gameState, DateTime.Now.Ticks);
-                if (tickResult.StateChanged && tickResult.NewState != null)
-                {
-                    SyncFromGameState(tickResult.NewState);
-                }
                 // ensure whoIsBigger is valid before AI play dispatch
                 if (whoIsBigger < 1 || whoIsBigger > 4) whoIsBigger = whoseOrder;
                 bool needsRender = true;
@@ -861,9 +857,18 @@ namespace Kuaff.Tractor
                     {
                         var payload = (AiPlayPayload)cmd.Payload;
                         int pid = payload.PlayerId;
-                        if (pid == 2) drawingFormHelper.DrawFrieldUserSendedCards();
-                        else if (pid == 3) drawingFormHelper.DrawPreviousUserSendedCards();
-                        else if (pid == 4) drawingFormHelper.DrawNextUserSendedCards();
+                        if (pid == 2) { 
+                            drawingFormHelper.DrawFrieldUserSendedCards();
+                            renderer.DrawMySortedCards(bmp, currentPokers[0], currentPokers[0].Count);
+                        }
+                        else if (pid == 3) { 
+                            drawingFormHelper.DrawPreviousUserSendedCards(); 
+                            renderer.DrawMySortedCards(bmp, currentPokers[0], currentPokers[0].Count);
+                        }
+                        else if (pid == 4) { 
+                            drawingFormHelper.DrawNextUserSendedCards();
+                            renderer.DrawMySortedCards(bmp, currentPokers[0], currentPokers[0].Count);
+                        }
                         else if (pid == 1)
                         {
                             if (firstSend == 1)
@@ -874,6 +879,16 @@ namespace Kuaff.Tractor
                         }
                         needsRender = false;
                     }
+                }
+                // Sync state AFTER AI plays so EnginePlayAiCards' changes aren't overwritten
+                if (tickResult.StateChanged && tickResult.NewState != null)
+                {
+                    var savedCmd = currentState.CurrentCardCommands;
+                    var savedOrder = whoseOrder;
+                    SyncFromGameState(tickResult.NewState);
+                    // Restore state that EnginePlayAiCards just set
+                    currentState.CurrentCardCommands = savedCmd;
+                    whoseOrder = savedOrder;
                 }
                 if (needsRender)
                 {
