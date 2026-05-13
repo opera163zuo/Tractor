@@ -28,6 +28,7 @@ namespace Kuaff.Tractor
             if (mainForm._gameState == null)
                 return;
 
+            mainForm.currentState.Rank = mainForm.currentRank;
             mainForm._gameState.State = mainForm.currentState;
             mainForm._gameState.CurrentPokers = mainForm.currentPokers;
             mainForm._gameState.CurrentRank = mainForm.currentRank;
@@ -74,7 +75,7 @@ namespace Kuaff.Tractor
             else
             {
 
-                DoRankOrNotLogic(mainForm.currentPokers[0], 1);
+                MyRankOrNot(mainForm.currentPokers[0]);
             }
             mainForm.Refresh();
 
@@ -1604,11 +1605,20 @@ private void DoRankOrNotLogic(CurrentPoker currentPoker, int user)
         /// </summary>
         internal void DrawNextUserSendedCards()
         {
-            // AI出牌收口到引擎
-            ArrayList played = mainForm.EnginePlayAiCards(4);
-            DrawNextUserSendedCardsAction(played);
+            mainForm.currentState.CurrentCardCommands = CardCommands.Undefined;
+            //画NextUser出的牌
+            if (mainForm.currentSendCards[0].Count > 0) //随牌
+            {
+                DrawNextUserSendedCardsAction(Algorithm.MustSendedCards(mainForm, 4, mainForm.currentPokers, mainForm.currentSendCards, mainForm.currentState.Suit, mainForm.currentRank, mainForm.currentSendCards[mainForm.firstSend - 1].Count));
+            }
+            else
+            {
+                DrawNextUserSendedCardsAction(Algorithm.ShouldSendedCards(mainForm, 4, mainForm.currentPokers, mainForm.currentSendCards, mainForm.currentState.Suit, mainForm.currentRank));
+                mainForm.whoseOrder = 2;
+            }
 
-            //重绘盖住区域
+            //考虑是否盖住的问题
+            //我已经出牌，应该将我重画
             int myCount = mainForm.currentSendCards[0].Count;
             if (myCount > 0)
             {
@@ -1626,6 +1636,22 @@ private void DoRankOrNotLogic(CurrentPoker currentPoker, int user)
 
             DrawScoreImage(mainForm.Scores);
             mainForm.Refresh();
+
+            //
+            if (mainForm.currentSendCards[1].Count > 0)
+            {
+                mainForm.currentState.CurrentCardCommands = CardCommands.Pause;
+                mainForm.SetPauseSet(mainForm.gameConfig.FinishedOncePauseTime, CardCommands.DrawOnceFinished);
+
+                DrawWhoWinThisTime();
+            }
+            else
+            {
+                mainForm.whoseOrder = 2;
+                mainForm.currentState.CurrentCardCommands = CardCommands.WaitingForSend;
+            }
+
+            mainForm.SyncLocalStateToGameState();
         }
 
         /// <summary>
@@ -1633,11 +1659,20 @@ private void DoRankOrNotLogic(CurrentPoker currentPoker, int user)
         /// </summary>
         internal void DrawFrieldUserSendedCards()
         {
-            // AI出牌收口到引擎
-            ArrayList played = mainForm.EnginePlayAiCards(2);
-            DrawFrieldUserSendedCardsAction(played);
+            mainForm.currentState.CurrentCardCommands = CardCommands.Undefined;
+            //画FrieldUser出的牌
+            if (mainForm.currentSendCards[3].Count > 0) //随牌
+            {
+                DrawFrieldUserSendedCardsAction(Algorithm.MustSendedCards(mainForm, 2, mainForm.currentPokers, mainForm.currentSendCards, mainForm.currentState.Suit, mainForm.currentRank, mainForm.currentSendCards[mainForm.firstSend - 1].Count));
+            }
+            else
+            {
+                DrawFrieldUserSendedCardsAction(Algorithm.ShouldSendedCards(mainForm, 2, mainForm.currentPokers, mainForm.currentSendCards, mainForm.currentState.Suit, mainForm.currentRank));
+            }
 
-            //重绘盖住区域
+
+            //考虑是否盖住的问题
+            //如果下家已经出牌，应该将下家重画,重画下家时，有可能盖住我
             int myCount = mainForm.currentSendCards[3].Count;
             if (myCount > 0)
             {
@@ -1665,6 +1700,23 @@ private void DoRankOrNotLogic(CurrentPoker currentPoker, int user)
 
             DrawScoreImage(mainForm.Scores);
             mainForm.Refresh();
+
+            //
+            if (mainForm.currentSendCards[2].Count > 0)
+            {
+                mainForm.currentState.CurrentCardCommands = CardCommands.Pause;
+                mainForm.SetPauseSet(mainForm.gameConfig.FinishedOncePauseTime, CardCommands.DrawOnceFinished);
+
+                DrawWhoWinThisTime();
+            }
+            else
+            {
+                mainForm.whoseOrder = 3;
+                mainForm.currentState.CurrentCardCommands = CardCommands.WaitingForSend;
+            }
+
+            mainForm.SyncLocalStateToGameState();
+            //
         }
 
         /// <summary>
@@ -1672,11 +1724,20 @@ private void DoRankOrNotLogic(CurrentPoker currentPoker, int user)
         /// </summary>
         internal void DrawPreviousUserSendedCards()
         {
-            // AI出牌收口到引擎
-            ArrayList played = mainForm.EnginePlayAiCards(3);
-            DrawPreviousUserSendedCardsAction(played);
+            mainForm.currentState.CurrentCardCommands = CardCommands.Undefined;
+            //画PreviousUser出的牌
+            if (mainForm.currentSendCards[1].Count > 0) //随牌
+            {
+                DrawPreviousUserSendedCardsAction(Algorithm.MustSendedCards(mainForm, 3, mainForm.currentPokers, mainForm.currentSendCards, mainForm.currentState.Suit, mainForm.currentRank, mainForm.currentSendCards[mainForm.firstSend - 1].Count));
+            }
+            else
+            {
+                DrawPreviousUserSendedCardsAction(Algorithm.ShouldSendedCards(mainForm, 3, mainForm.currentPokers, mainForm.currentSendCards, mainForm.currentState.Suit, mainForm.currentRank));
+            }
 
-            //重绘盖住区域
+
+            //考虑是否盖住的问题
+            //我已经出牌，应该将我重画
             int myCount = mainForm.currentSendCards[0].Count;
             if (myCount > 0)
             {
@@ -1694,6 +1755,23 @@ private void DoRankOrNotLogic(CurrentPoker currentPoker, int user)
 
             DrawScoreImage(mainForm.Scores);
             mainForm.Refresh();
+
+
+            //
+            if (mainForm.currentSendCards[0].Count > 0)
+            {
+                mainForm.currentState.CurrentCardCommands = CardCommands.Pause;
+                mainForm.SetPauseSet(mainForm.gameConfig.FinishedOncePauseTime, CardCommands.DrawOnceFinished);
+
+                DrawWhoWinThisTime();
+            }
+            else
+            {
+                mainForm.whoseOrder = 1;
+                mainForm.currentState.CurrentCardCommands = CardCommands.WaitingForMySending;
+            }
+
+            mainForm.SyncLocalStateToGameState();
         }
 
         //大家都出完一次牌，则计算得分多少，下次该谁出牌
@@ -1899,7 +1977,7 @@ private void DoRankOrNotLogic(CurrentPoker currentPoker, int user)
             mainForm.SyncLocalStateToGameState();
         }
 
-        internal void DrawWhoWinThisTime()
+        private void DrawWhoWinThisTime()
         {
             //谁赢了这一圈
             int whoWin = TractorRules.GetNextOrder(mainForm);
@@ -2126,6 +2204,5 @@ private void DoRankOrNotLogic(CurrentPoker currentPoker, int user)
 
             mainForm.Refresh();
         }
-    
     }
 }

@@ -21,7 +21,7 @@ namespace Kuaff.Tractor
         //判断我出的牌是否合法
         internal static bool IsInvalid(MainForm mainForm, ArrayList[] currentSendedCards, int who)
         {
-            
+
             CurrentPoker[] cp = new CurrentPoker[4];
             int suit = mainForm.currentState.Suit;
             int first = mainForm.firstSend;
@@ -59,7 +59,7 @@ namespace Kuaff.Tractor
             cp[2].Sort();
             cp[3].Sort();
 
-            
+
 
             //如果我出牌
             if (first == who)
@@ -86,7 +86,7 @@ namespace Kuaff.Tractor
 
                 //得到第一个家伙出的花色
                 int previousSuit = CommonMethods.GetSuit((int)currentSendedCards[first - 1][0], suit, rank);
-               
+
                 //0.如果我是混合的，则判断我手中是否还剩出的花色，如果剩,false;如果不剩;true
                 if (cp[who-1].IsMixed())
                 {
@@ -106,7 +106,7 @@ namespace Kuaff.Tractor
 
 
                 //如果确实花色不一致
-                if (mysuit != previousSuit) 
+                if (mysuit != previousSuit)
                 {
                     //而且确实没有此花色
                     if (tmpCP.HasSomeCards(previousSuit))
@@ -147,7 +147,7 @@ namespace Kuaff.Tractor
                     }
                 }
 
-                
+
 
                 if (firstPairs > 0)
                 {
@@ -189,7 +189,7 @@ namespace Kuaff.Tractor
 
                 cp[who - 1].AddCard((int)currentSendedCard[i]);
                 list.Add((int)currentSendedCard[i]);
-               
+
             }
             int[] users = CommonMethods.OtherUsers(who);
 
@@ -312,7 +312,7 @@ namespace Kuaff.Tractor
         //根据得分判断应该跳几级
         internal static void GetNextRank(MainForm mainForm, bool success)
         {
-            
+
             int user = mainForm.currentState.Master; //打本次时的主
             int rank = 0;
 
@@ -338,7 +338,7 @@ namespace Kuaff.Tractor
             }
 
 
-            
+
             string mustRank = "," + mainForm.gameConfig.MustRank + ",";
 
             if ((user == 1) || (user == 2))
@@ -421,7 +421,7 @@ namespace Kuaff.Tractor
                     rank = 53;
                 }
 
-              
+
                 mainForm.currentState.OurCurrentRank = rank;
                 mainForm.currentRank = rank;
             }
@@ -496,7 +496,7 @@ namespace Kuaff.Tractor
                     rank = 53;
                 }
 
-                
+
                 mainForm.currentState.OpposedCurrentRank = rank;
                 mainForm.currentRank = rank;
             }
@@ -521,9 +521,9 @@ namespace Kuaff.Tractor
                 if ((who == 1) || (who == 2))
                 {
                     success = true;
-                    
+
                 }
-               
+
             }
             else if (mainForm.currentState.Master == 3)
             {
@@ -531,7 +531,7 @@ namespace Kuaff.Tractor
                 {
                     success = true;
                 }
-                
+
             }
             else if (mainForm.currentState.Master == 4)
             {
@@ -597,10 +597,10 @@ namespace Kuaff.Tractor
             return master;
         }
 
-       
+
         internal static void GetNextMasterUser(MainForm mainForm)
         {
-            
+
 
             //最后一把谁赢得
             int who = GetNextOrder(mainForm);
@@ -612,7 +612,7 @@ namespace Kuaff.Tractor
             CP.Rank = mainForm.currentRank;
             CP = CommonMethods.parse(mainForm.currentSendCards[who - 1],CP.Suit,CP.Rank);
 
-           
+
             if (!lastMasterOk)
             {
                 CalculateScore(mainForm);
@@ -694,73 +694,10 @@ namespace Kuaff.Tractor
             }
         }
 
-       
-        private static int ResolveLeadOrder(MainForm mainForm)
-        {
-            if (mainForm.firstSend >= 1 && mainForm.firstSend <= 4)
-            {
-                return mainForm.firstSend;
-            }
-
-            if (mainForm.currentState.Master >= 1 && mainForm.currentState.Master <= 4)
-            {
-                return mainForm.currentState.Master;
-            }
-
-            if (mainForm.whoseOrder >= 1 && mainForm.whoseOrder <= 4)
-            {
-                return mainForm.whoseOrder;
-            }
-
-            if (mainForm.currentSendCards != null)
-            {
-                for (int i = 0; i < mainForm.currentSendCards.Length; i++)
-                {
-                    if (mainForm.currentSendCards[i] != null && mainForm.currentSendCards[i].Count > 0)
-                    {
-                        return i + 1;
-                    }
-                }
-            }
-
-            return 1;
-        }
 
         //确定下一次该谁出牌
         internal static int GetNextOrder(MainForm mainForm)
         {
-            int order = ResolveLeadOrder(mainForm);
-            if (mainForm.firstSend < 1 || mainForm.firstSend > 4)
-            {
-                mainForm.firstSend = order;
-            }
-
-            if (mainForm.currentSendCards == null || mainForm.currentSendCards.Length < 4)
-            {
-                return order;
-            }
-
-            if (mainForm.currentSendCards[order - 1] == null || mainForm.currentSendCards[order - 1].Count == 0)
-            {
-                for (int i = 0; i < mainForm.currentSendCards.Length; i++)
-                {
-                    if (mainForm.currentSendCards[i] != null && mainForm.currentSendCards[i].Count > 0)
-                    {
-                        order = i + 1;
-                        if (mainForm.firstSend < 1 || mainForm.firstSend > 4)
-                        {
-                            mainForm.firstSend = order;
-                        }
-                        break;
-                    }
-                }
-            }
-
-            if (mainForm.currentSendCards[order - 1] == null || mainForm.currentSendCards[order - 1].Count == 0)
-            {
-                return order;
-            }
-
             CurrentPoker[] cp = new CurrentPoker[4];
             int suit = mainForm.currentState.Suit;
             int rank = mainForm.currentRank;
@@ -773,8 +710,17 @@ namespace Kuaff.Tractor
             cp[2].Sort();
             cp[3].Sort();
 
-            int count = mainForm.currentSendCards[order - 1].Count;
-            int firstSuit = CommonMethods.GetSuit((int)mainForm.currentSendCards[order - 1][0], suit, rank);
+
+
+            int count = mainForm.currentSendCards[0].Count;
+
+
+            int order = mainForm.firstSend;
+
+            int firstSuit = CommonMethods.GetSuit((int)mainForm.currentSendCards[order-1][0],suit,rank);
+
+
+
             int[] users = CommonMethods.OtherUsers(order);
 
             //如果是混合牌（甩牌或者多个对）,返回首家order
@@ -845,27 +791,27 @@ namespace Kuaff.Tractor
             else if ((count> 1) && (cp[order -1].GetPairs().Count == 0)) //甩多个单张牌
             {
                 int orderMax = (int)mainForm.currentSendCards[order - 1][0];
-                int tmpMax = (int)mainForm.currentSendCards[users[0] - 1][0]; 
+                int tmpMax = (int)mainForm.currentSendCards[users[0] - 1][0];
                 if (!CommonMethods.CompareTo(orderMax, tmpMax, suit, rank, firstSuit))
                 {
                     order = users[0];
                     orderMax = tmpMax;
                 }
 
-                tmpMax = (int)mainForm.currentSendCards[users[1] - 1][0]; 
+                tmpMax = (int)mainForm.currentSendCards[users[1] - 1][0];
                 if (!CommonMethods.CompareTo(orderMax, tmpMax, suit, rank, firstSuit))
                 {
                     order = users[1];
                     orderMax = tmpMax;
                 }
-                tmpMax = (int)mainForm.currentSendCards[users[2] - 1][0]; 
+                tmpMax = (int)mainForm.currentSendCards[users[2] - 1][0];
                 if (!CommonMethods.CompareTo(orderMax, tmpMax, suit, rank, firstSuit))
                 {
                     order = users[2];
                     orderMax = tmpMax;
                 }
             }
-            
+
             else if (cp[order - 1].HasTractors())
             {
                 //如果有拖拉机
@@ -938,20 +884,20 @@ namespace Kuaff.Tractor
             {
                 //如果是单张牌
                 int orderMax = (int)mainForm.currentSendCards[order - 1][0];
-                int tmpMax = (int)mainForm.currentSendCards[users[0] - 1][0]; 
+                int tmpMax = (int)mainForm.currentSendCards[users[0] - 1][0];
                 if (!CommonMethods.CompareTo(orderMax, tmpMax, suit, rank, firstSuit))
                 {
                     order = users[0];
                     orderMax = tmpMax;
                 }
 
-                tmpMax = (int)mainForm.currentSendCards[users[1] - 1][0]; 
+                tmpMax = (int)mainForm.currentSendCards[users[1] - 1][0];
                 if (!CommonMethods.CompareTo(orderMax, tmpMax, suit, rank, firstSuit))
                 {
                     order = users[1];
                     orderMax = tmpMax;
                 }
-                tmpMax = (int)mainForm.currentSendCards[users[2] - 1][0]; 
+                tmpMax = (int)mainForm.currentSendCards[users[2] - 1][0];
                 if (!CommonMethods.CompareTo(orderMax, tmpMax, suit, rank, firstSuit))
                 {
                     order = users[2];
@@ -987,7 +933,7 @@ namespace Kuaff.Tractor
 
             score = score * howmany;
             mainForm.Scores += score;
-   
+
         }
 
         private static int GetScores(ArrayList list)
@@ -1027,7 +973,7 @@ namespace Kuaff.Tractor
             cp.Suit = suit;
             cp.Rank = rank;
 
-            
+
             for (int i = 0; i < mainForm.myCardIsReady.Count; i++)
             {
                 if ((bool)mainForm.myCardIsReady[i])
@@ -1041,7 +987,7 @@ namespace Kuaff.Tractor
             cp = CommonMethods.parse(list, cp.Suit, cp.Rank);
             cp.Sort();
 
-           
+
 
             if (list.Count == 1) //如果是单张牌
             {
@@ -1104,7 +1050,7 @@ namespace Kuaff.Tractor
                     ArrayList list2 = mainForm.currentPokers[users[1]].GetPairs(firstSuit);
                     ArrayList list3 = mainForm.currentPokers[users[2]].GetPairs(firstSuit);
 
-                    
+
                     int max4 = -1;
                     int max2 = -1;
                     int max3 = -1;
@@ -1122,7 +1068,7 @@ namespace Kuaff.Tractor
                         max2 = (int)list2[list2.Count - 1];
                     }
 
-                    
+
 
                     for (int i = 0; i < list0.Count; i++)
                     {
@@ -1200,7 +1146,7 @@ namespace Kuaff.Tractor
             for (int i = 0; i < sendCards.Count; i++)
             {
                  list.Add(sendCards[i]);
-                
+
             }
 
             int firstSuit = CommonMethods.GetSuit((int)list[0], cp.Suit, cp.Rank);
